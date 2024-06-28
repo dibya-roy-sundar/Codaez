@@ -37,13 +37,6 @@ const userSchema = new Schema({
         maxRating: Number,
         maxRank: String,
     },
-    gfg: {
-        type: String,
-    },
-    hr: {
-        //hackerrank
-        type: String,
-    },
     cc: {
         username: String,
         rating: Number,
@@ -51,6 +44,13 @@ const userSchema = new Schema({
         maxRating: Number,
         countryRank: Number,
         stars: String,
+    },
+    gfg: {
+        type: String,
+    },
+    hr: {
+        //hackerrank
+        type: String,
     },
     follower: [
         {
@@ -78,8 +78,12 @@ userSchema.methods.getJWTToken = function () {
     });
 }
 
-userSchema.statics.findAndValidate = async function (email, password) {
-    const foundUser = await this.findOne({ email }).select("+password");
+userSchema.statics.findAndValidate = async function (email,username, password) {
+    const foundUser = await this.findOne(
+        {
+            $or:[{username},{email}]
+        }
+    ).select("+password");
     //if a user is found, this means that the username is already in use
     if (!foundUser) return false;
 

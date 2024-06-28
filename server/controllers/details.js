@@ -1,166 +1,76 @@
-const jsdom = require('jsdom');
-const { JSDOM } = jsdom;
-const axios = require('axios');
+const User = require('../models/user');
+const ErrorHand = require('../utils/errorHand');
 
-module.exports.getDetails = async (req, res, next) => {
+module.exports.getUserDetails = async (req, res, next) => {
     const { platform } = req.params;
 
 
-    if (platform == 'codeforces') {
-        try {
-            const username = req.user.cf.username;
-            async function postData(url = "", data = {}) {
-                const response = await fetch(url);
-                return response.json();
+    if (platform === 'codeforces') {
+            const username = req.user.cf?.username;
+            if(!username){
+                return next(new ErrorHand("pls add your codeforces username",400))
             }
-            postData(`https://codeforces.com/api/user.info?handles=${username}`).then((data) => {
-                if (data.result) {
-                    const result = {
-                        handle: data.result[0].handle,
-                        rating: data.result[0].rating,
-                        rank: data.result[0].rank,
-                        maxRating: data.result[0].maxRating,
-                        maxRank: data.result[0].maxRank,
-                    }
-                    res.status(200).json({
-                        success: true,
-                        platform: platform,
-                        result
-                    });
-                }
-                else if (data.comment) {
-                    res.status(200).json({
-                        success: false,
-                        platform: platform,
-                        msg: data.comment
-                    });
-                }
-                else {
-                    res.status(200).json({
-                        success: false,
-                        platform: platform,
-                        data
-                    });
-                }
-            });
-        } catch (err) {
-            console.log(err);
-            res.status(500).json({
-                status: false,
-                error: err,
-            })
-        }
+            res.status(200).json({
+                status:true,
+                result:req.user.cf
+            })   
 
     }
-    else if (platform == 'leetcode') {
-        try {
-            const query = `
-            query userContestRankingInfo($username: String!) {
-                userContestRanking(username: $username) {
-                  attendedContestsCount
-                  rating
-                  globalRanking
-                  totalParticipants
-                  topPercentage
-                  badge {
-                    name
-                  }
-                }
-                userContestRankingHistory(username: $username) {
-                  attended
-                  trendDirection
-                  problemsSolved
-                  totalProblems
-                  finishTimeInSeconds
-                  rating
-                  ranking
-                  contest {
-                    title
-                    startTime
-                  }
-                }
-              }
-            `;
-            const username = req.user.lc.username;
-            fetch('https://leetcode.com/graphql', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Referer': 'https://leetcode.com'
-                },
-                body: JSON.stringify({ query: query, variables: { username: username } }),
-            })
-                .then(result => result.json())
-                .then(data => {
-                    if (data.errors) {
-                        res.status(500).json({
-                            status: false,
-                            data
-                        });
-                    } else {
-                        const result = {
-                            handle: username,
-                            rating: data.data.userContestRanking.rating,
-                            rank: data.data.userContestRanking.globalRanking,
-                            topPercentage: data.data.userContestRanking.topPercentage,
-                            badge: data.data.userContestRanking.badge,
-                            attendedContestsCount: data.data.userContestRanking.attendedContestsCount
-                        }
-                        res.status(200).json({
-                            status: true,
-                            result
-                        });
-                    }
-                })
-                .catch(err => {
-                    console.error('Error', err);
-                    res.status(500).json({
-                        status: false,
-                        err
-                    });
-                });
-        }
-        catch (err) {
-            console.log(err);
-        }
-    }
-    else if (platform == 'codechef') {
-        const username = req.user.cc.username;
-        try {
-            let data = await axios.get(`https://www.codechef.com/users/${username}`);
-            let dom = new JSDOM(data.data);
-            let document = dom.window.document;
-            const result = {
-                username: document.querySelector('.user-details-container').children[0].children[1].textContent,
-                rating: parseInt(document.querySelector(".rating-number").textContent),
-                maxRating: parseInt(document.querySelector(".rating-number").parentNode.children[4].textContent.split('Rating')[1]),
-                rank: parseInt(document.querySelector('.rating-ranks').children[0].children[0].children[0].children[0].innerHTML),
-                countryRank: parseInt(document.querySelector('.rating-ranks').children[0].children[1].children[0].children[0].innerHTML),
-                stars: document.querySelector('.rating').textContent || "unrated",
+    else if (platform === 'leetcode') {
+                        
+            const username = req.user.lc?.username;
+            if(!username){
+                return next(new ErrorHand("pls add your leetcode username",400))
             }
-            res.status(200).send({
-                success: true,
-                result
-            });
-        } catch (err) {
-            res.status(500).json({
-                success: false,
-                error: err
-            });
-        }
+            res.status(200).json({
+                status:true,
+                result:req.user.lc
+            })
+           
+       
     }
-    // else if (platform == 'hacckerrank') { }
-    // else if (platform == 'gfg') {
-    // mittaly0rzu
-    // dibyasundarroy
-    // }
+    else if (platform === 'codechef') {
+        const username = req.user.cc.username;
+        if(!username){
+            return next(new ErrorHand("pls add your codechef username",400))
+        }
+        res.status(200).json({
+            status:true,
+            result:req.user.cc
+        })  
+    }
     else {
         res.status(500).json({
             status: false,
+            message:"platform is not available"
         })
     }
-    // res.status(200).json({
-    //     status: true,
-    //     plat: platform,
-    // });
+    
+}
+
+module.exports.getLeaderboardDetails=async (req,res) =>{
+    const user=await User.findById(req.user._id).populate('following')
+
+     const followingUserRatings=user.following.map((item) =>{
+        return {
+            username:item.username,
+            lc:item.lc,
+            cf:item.cf,
+            cc:item.cc,
+        }
+     })
+     const currentUserRating={
+        lc:user.lc,
+        cf:user.cf,
+        cc:user.cc
+     }
+
+     res.status(200).json({
+        status:true,
+        result:{
+            currentUserRating,
+            followingUserRatings
+        }
+     })
+
 }

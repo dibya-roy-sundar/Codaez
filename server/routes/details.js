@@ -1,9 +1,10 @@
 const express = require('express');
-const { getDetails } = require('../controllers/details');
+const { getUserDetails, getLeaderboardDetails } = require('../controllers/details');
 const catchAsync = require('../utils/catchAsync');
 const { isLoggedIn } = require('../utils/isLoggedIn');
 const router = express.Router({ mergeParams: true });
 
-router.route('/:platform').get(catchAsync(isLoggedIn), catchAsync(getDetails));
+router.route('/leaderboard').get(catchAsync(isLoggedIn),catchAsync(getLeaderboardDetails))
+router.route('/:platform').get(catchAsync(isLoggedIn), catchAsync(getUserDetails));
 
 module.exports = router;

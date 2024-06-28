@@ -4,6 +4,7 @@ const ApiFeatures = require('../utils/apiFeatures.js');
 const ErrorHand = require('../utils/errorHand.js');
 const sendjwtToken = require('../utils/sendjwtToken');
 const bcrypt = require('bcrypt');
+const mongoose=require('mongoose')
 
 module.exports.register = async (req, res) => {
     const { username, name, email, password } = req.body;
@@ -30,9 +31,15 @@ module.exports.register = async (req, res) => {
 };
 
 module.exports.login = async (req, res, next) => {
-    const { email, password } = req.body;
+    const { username,email, password } = req.body;
 
-    const user = await User.findAndValidate(email, password);
+    if(!(username || email)){
+        return next(new ErrorHand("Email or Username is required",400))
+    }
+
+
+
+    const user = await User.findAndValidate(email,username, password);
 
     if (!user) {
         return next(new ErrorHand("Invalid email or password", 404));
@@ -56,7 +63,7 @@ module.exports.logout = async (req, res, next) => {
 module.exports.changePassword = async (req, res, next) => {
     const { oldpw, newpw } = req.body;
     //current logged in userdetails
-    console.log(req.user);
+    // console.log(req.user);
 
     const result = await bcrypt.compare(oldpw, req.user.password);
     if (!result) {
@@ -104,11 +111,43 @@ module.exports.userDetails = async (req, res, next) => {
 }
 
 module.exports.sendFollowRequest = async (req, res, next) => {
-    const { userId } = req.body;
-    const user = await User.findById(userId);
+    // const { userId } = req.body;
+    // const user = await User.findById(userId);//reciever
+    
+    // for testing 
+    const {username}=req.body;
+    if(!username){
+        return next(new ErrorHand("username is required",400))
+    }
+    
+    const user=await User.findOne({username});
+
+    if(!user){
+        return next(new ErrorHand("user not found",404));
+    }
+
+    if(user.username===req.user.username){
+        return next(new ErrorHand("can't send friend request to yourself",401))
+    }
+
+    const pendingrequest=await FRequest.findOne({
+        senderusername:req.user.username,
+        recieverusername:user.username
+    })
+    if(pendingrequest){
+        return next(new ErrorHand("already sent freind request",400))
+    }
+    if(user.follower.some((el)=> el.toString() === req.user._id.toString())){
+        return next(new ErrorHand("already a follower",400));
+    }
+   
+
+
+
     const fRequest = new FRequest({
         senderusername: req.user.username,
-        sendername: req.user.name
+        sendername: req.user.name,
+        recieverusername:user.username,
     });
     user.fRequests.push(fRequest);
     await fRequest.save();
@@ -124,24 +163,34 @@ module.exports.sendFollowRequest = async (req, res, next) => {
 module.exports.acceptFollowRequest = async (req, res, next) => {
     const { reqId } = req.body;
     const frequest = await FRequest.findById(reqId);
+
+    if(req.user.username!==frequest.recieverusername){
+      return   next(new ErrorHand("You have not authorized to do this",401));
+    }
+
     const user = await User.findOne({ username: frequest.senderusername }); //sender or follower
     req.user.follower.push(user);
     user.following.push(req.user);
     await user.save();
     await req.user.save();
+
     await User.findByIdAndUpdate(req.user._id, { $pull: { fRequests: reqId } });
-
-
     await FRequest.findByIdAndDelete(reqId);
 
     res.status(200).json({
         status: true,
-        msg: `${frequest.senderusername} was added as a follower`,
+        msg: `${frequest.sendername} was added as a follower`,
     })
 }
 
 module.exports.rejectFollowRequest = async (req, res, next) => {
     const { reqId } = req.body;
+
+    const frequest = await FRequest.findById(reqId);
+    if(req.user.username!==frequest.recieverusername){
+        return   next(new ErrorHand("You have not authorized to do this",401));
+      }
+
     await User.findByIdAndUpdate(req.user._id, { $pull: { fRequests: reqId } });
     await FRequest.findByIdAndDelete(reqId);
 
