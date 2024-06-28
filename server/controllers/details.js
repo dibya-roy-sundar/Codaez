@@ -8,7 +8,7 @@ module.exports.getDetails = async (req, res, next) => {
 
     if (platform == 'codeforces') {
         try {
-            const username = req.user.cf;
+            const username = req.user.cf.username;
             async function postData(url = "", data = {}) {
                 const response = await fetch(url);
                 return response.json();
@@ -81,7 +81,7 @@ module.exports.getDetails = async (req, res, next) => {
                 }
               }
             `;
-            const username = req.user.lc;
+            const username = req.user.lc.username;
             fetch('https://leetcode.com/graphql', {
                 method: 'POST',
                 headers: {
@@ -125,7 +125,7 @@ module.exports.getDetails = async (req, res, next) => {
         }
     }
     else if (platform == 'codechef') {
-        const username = req.user.cc;
+        const username = req.user.cc.username;
         try {
             let data = await axios.get(`https://www.codechef.com/users/${username}`);
             let dom = new JSDOM(data.data);

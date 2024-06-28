@@ -23,10 +23,19 @@ const userSchema = new Schema({
         required: [true, "Password is required"],
     },
     lc: {
-        type: String,
+        username: String,
+        rating: Number,
+        rank: Number,
+        topPercentage: Number,
+        badge: String,
+        attendedContestsCount: Number,
     },
     cf: {
-        type: String,
+        username: String,
+        rating: Number,
+        rank: String,
+        maxRating: Number,
+        maxRank: String,
     },
     gfg: {
         type: String,
@@ -36,8 +45,12 @@ const userSchema = new Schema({
         type: String,
     },
     cc: {
-        //codechef
-        type: String,
+        username: String,
+        rating: Number,
+        rank: Number,
+        maxRating: Number,
+        countryRank: Number,
+        stars: String,
     },
     follower: [
         {
