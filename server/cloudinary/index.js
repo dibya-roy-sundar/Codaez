@@ -10,7 +10,7 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
     cloudinary,
     params: {
-        folder: 'ORENTAL',
+        folder: 'codeup',
         allowedFormats: ['jpeg', 'png', 'jpg']
     }
 })

@@ -5,7 +5,7 @@ const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 const axios = require('axios');
 
-module.exports.getCodeforcesData=catchAsync(async (req,username)=>{
+module.exports.getCodeforcesData=async (req,username,next)=>{
     try {
         async function postData(url = "", data = {}) {
             const response = await fetch(url);
@@ -21,25 +21,26 @@ module.exports.getCodeforcesData=catchAsync(async (req,username)=>{
                     maxRating: data.result[0].maxRating,
                     maxRank: data.result[0].maxRank,
                 }
-                await User.findByIdAndUpdate(req.user._id,{$set:{cf:result}},{new:true});
+                req.user=await User.findByIdAndUpdate(req.user._id,{$set:{cf:result}},{new:true});
                 return result;
             }
             else if (data.comment) {
-               throw new ErrorHand(data.comment || "data fetching error in codeforces",500)
+               return next(new ErrorHand(data.comment || "data fetching error in codeforces",500))
             }
             else {
-                throw new ErrorHand(data || "data fetching error in codeforces",500)
+                return  next(new ErrorHand(data || "data fetching error in codeforces",500))
             }
         })
         
     } catch (error) {
-        console.log(err);
-        throw new ErrorHand("error while fetching codeforces data",500);
+        req.user=await User.findByIdAndUpdate(req.user._id,{$set:{cf:{username}}},{new:true})
+        console.log(error);
+        return next( new ErrorHand("error while fetching codeforces data",500));
     }
-})
+}
 
 
-module.exports.getLeetcodeData=catchAsync(async (req,username) =>{
+module.exports.getLeetcodeData=async (req,username,next) =>{
 try {
     const query = `
     query userContestRankingInfo($username: String!) {
@@ -80,7 +81,7 @@ try {
         .then(result => result.json())
         .then(async (data) => {
             if (data.errors) {
-              throw new ErrorHand(data.errors?.message,500)
+              return next(new ErrorHand(data.errors?.message,500))
             } else {
                 const result = {
                     username: username,
@@ -90,18 +91,19 @@ try {
                     badge: data.data.userContestRanking.badge,
                     attendedContestsCount: data.data.userContestRanking.attendedContestsCount
                 }
-               await User.findByIdAndUpdate(req.user._id,{$set:{lc:result}},{new:true});
+               req.user=await User.findByIdAndUpdate(req.user._id,{$set:{lc:result}},{new:true});
                return result
             }
         })    
 } catch (error) {
-    console.log(err);
-    throw new ErrorHand("error while fetching leetcode data",500);
+    req.user=await User.findByIdAndUpdate(req.user._id,{$set:{lc:{username}}},{new:true})
+    console.log(error);
+    return next(new ErrorHand("error while fetching leetcode data",500));
 }
-})
+}
 
 
-module.exports.getCodechefData=catchAsync(async (req,username)=>{
+module.exports.getCodechefData=async (req,username,next)=>{
     try {
         let data = await axios.get(`https://www.codechef.com/users/${username}`);
         let dom = new JSDOM(data.data);
@@ -114,11 +116,14 @@ module.exports.getCodechefData=catchAsync(async (req,username)=>{
             countryRank: parseInt(document.querySelector('.rating-ranks').children[0].children[1].children[0].children[0].innerHTML),
             stars: document.querySelector('.rating').textContent || "unrated",
         }
-        await User.findByIdAndUpdate(req.user._id,{$set:{cc:result}},{new:true});
+        req.user=await User.findByIdAndUpdate(req.user._id,{$set:{cc:result}},{new:true});
         return result;
         
     } catch (error) {
-        console.log(err);
-        throw new ErrorHand("error while fetching codechef data",500);
+        req.user=await User.findByIdAndUpdate(req.user._id,{$set:{cc:{username}}},{new:true})
+        console.log(error);
+        console.log("error while fetching codechef data");
+        return next()
+        // return next(new ErrorHand("error while fetching codechef data",500));
     }
-})
+}

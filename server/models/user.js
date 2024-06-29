@@ -22,6 +22,10 @@ const userSchema = new Schema({
         type: String,
         required: [true, "Password is required"],
     },
+    avatar:{
+        url: String,
+        filename: String,
+    },
     lc: {
         username: String,
         rating: Number,

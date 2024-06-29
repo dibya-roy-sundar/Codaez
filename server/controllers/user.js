@@ -1,3 +1,5 @@
+const { getLeetcodeData, getCodeforcesData, getCodechefData } = require('../ApiCalls/index.js');
+const { cloudinary } = require('../cloudinary/index.js');
 const FRequest = require('../models/frequests.js');
 const User = require('../models/user.js');
 const ApiFeatures = require('../utils/apiFeatures.js');
@@ -17,13 +19,20 @@ module.exports.register = async (req, res) => {
             error: "Email already in use"
         })
     }
+    const avatar={
+        url:req.file?.path || "",
+        filename:req.file?.filename || ""
+    };
+
+
 
     const hash = await bcrypt.hash(password, 12);
     const user = new User({
         username,
         name,
         email,
-        password: hash
+        password: hash,
+        avatar
     });
     await user.save();
 
@@ -93,11 +102,25 @@ module.exports.changePassword = async (req, res, next) => {
 //   });
 
 module.exports.setUsername = async (req, res, next) => {
-    req.user = await User.findOneAndUpdate({ username: req.user.username }, { ...req.body }, { new: true });
+    const {lc,cc,cf}=req.body
+    if((lc && lc.username?.trim().length===0) || (cc && cc.username?.trim().length===0) || (cf && cf.username?.trim().length===0)){
+        return next(new ErrorHand("username is required"))
+    }
+
+
+    await Promise.all([
+         getCodechefData(req,cc?.username,next),
+         getLeetcodeData(req,lc?.username,next),
+         getCodeforcesData(req,cf?.username,next)
+    ])
+    
+
+
+
     res.status(200).json({
         status: true,
         message: "Username updated",
-        user: req.user,
+        user:req.user,
     })
 }
 
@@ -198,4 +221,30 @@ module.exports.rejectFollowRequest = async (req, res, next) => {
         status: true,
         msg: `Request rejected`,
     })
+}
+
+
+module.exports.updateProfile=async (req,res,next) =>{
+    const user=await User.findByIdAndUpdate(req.user._id,{...req.body},{new:true});
+
+    if(req.file){
+        await cloudinary.uploader.destroy(user.avatar.filename);
+        user.avatar={
+            url:req.file.path,
+            filename:req.file.filename
+        }
+        await user.save()
+    }
+
+    if(req.body.password){
+        const password=await bcrypt.hash(req.body.password,12);
+        user.password=password;
+        await user.save();
+    }
+    res.status(200).json({
+        success:true,
+        message:"user profile updated",
+        user
+    })
+
 }
