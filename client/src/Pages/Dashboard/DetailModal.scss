@@ -1,0 +1,59 @@
+$grey: #333333;
+$purple: #703BF7;
+$darkpurple: #814fff;
+
+.detailModal {
+    margin: auto;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border: 2px solid $purple;
+    background: $grey;
+    color: white;
+    text-align: center;
+    width: 20rem;
+
+    &>div{
+        padding: 0.25rem 0;
+    }
+
+    .logo {
+        display: flex;
+        justify-content: center;
+
+        img {
+            height: 5rem;
+        }
+    }
+
+    .block{
+        background-color: white;
+        border-radius: 1rem;
+        color: black;
+        width: fit-content;
+        padding: 0.2rem 0.5rem;
+        margin: auto;
+    }
+
+    form {
+        text-align: center;
+
+        .btn {
+            border: none;
+            border-radius: 0.25rem;
+            color: white;
+            padding: 0.5rem 1.25rem;
+            background-color: $purple;
+            transition: all 0.2s ease-in-out;
+            font-weight: 500;
+            cursor: pointer;
+
+            &:hover {
+                background-color: $darkpurple;
+            }
+        }
+    }
+
+    &::backdrop{
+        background: rgba(0, 0, 0, 0.5);
+    }
+}
