@@ -1,0 +1,59 @@
+$grey: #333333;
+$purple: #703BF7;
+$darkpurple: #814fff;
+.container{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    justify-content: flex-start;
+    position: relative;
+    .eye{
+        position: absolute;
+        right: 3%;
+        top: 65%;
+        color: white;
+        cursor: pointer;
+    }
+    .icon{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.5rem;
+        img{
+            height:1.5rem;
+            width:1.5rem;
+        }
+        label{
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: whitesmoke;
+        }
+    }
+   
+    p{
+        color: #b5b1b1;
+        font-size: 1.25rem;
+        margin: 0.5rem;
+    }
+    input{
+        // width: 100%;
+        padding: 0.5rem;
+        font-size: 1.25rem;
+        color: #b5b1b1;
+        border-radius: 12px;
+        background: #414141;
+        border: none;
+        padding-right: 3.2rem;
+        
+        
+        
+    }
+    
+    input:focus{
+        outline-width: 2px;
+        outline-style: solid;
+        outline-color: $darkpurple;
+    }
+   
+    
+}

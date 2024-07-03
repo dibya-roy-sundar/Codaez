@@ -1,0 +1,17 @@
+$grey: #333333;
+$purple: #703BF7;
+$darkpurple: #814fff;
+dialog{
+    padding: 2rem;
+    border-radius: 0.5rem;
+    border: 1px solid $purple;
+    background: $grey;
+    text-align: center;
+    width: 40rem;
+    position: absolute;
+    left: 55%;
+    top: 48%;
+    transform: translate(-50%, -50%);
+    
+  
+}
