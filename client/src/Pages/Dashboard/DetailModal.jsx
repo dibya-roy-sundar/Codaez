@@ -17,10 +17,10 @@ const DetailModal = forwardRef(({ details }, ref) => {
             <div className="logo">
                 <img src={details.logo} alt="" />
             </div>
-            <div><div className="block">{details.username}</div></div>
-            <div>Rating: {details.rating}</div>
+            <div><div className="block">{details.username || '--'}</div></div>
+            <div>Rating: {details.rating || '--'}</div>
             {details.maxRating && <div>Max Rating: {details.maxRating}</div>}
-            <div>Rank: {details.rank}</div>
+            <div>Rank: {details.rank ||'--'}</div>
             {details.maxRank && <div>Max Rank: {details.maxRank}</div>}
             {details.countryRank && <div>Country Rank: {details.countryRank}</div>}
             {details.topPercentage && <div>Top Percentage: {details.topPercentage}</div>}
