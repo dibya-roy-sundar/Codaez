@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-key */
 import './Dashboard.scss';
 import leetcode from "../../assets/leetcode.png";
 import codeforces from "../../assets/codeforces.png";

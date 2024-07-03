@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable react/display-name */
 import { forwardRef, useImperativeHandle, useRef } from "react";
 import "./DetailModal.scss";
 
