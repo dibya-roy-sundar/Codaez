@@ -11,9 +11,9 @@ const Navbar = () => {
     const [value, setValue] = useState("");
     const [openOptions, setOpenoptions] = useState(false);
     const [inputvalue,setinputvalue]=useState("");
-    const inputref=useRef()
+    const inputref=useRef();
 
-    const {data,loading,error}=useFetch(`/userdetails?keyword=${inputvalue}`)
+    const {data,loading,error}=useFetch(`/userdetails?keyword=${inputvalue}`, inputvalue.length>0)
     if(data){
         searchData=data.users;
     }
