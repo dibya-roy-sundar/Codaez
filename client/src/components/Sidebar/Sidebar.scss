@@ -1,0 +1,71 @@
+$darkgrey: #212121;
+$grey: #333333;
+$purple: #703BF7;
+$darkpurple: #814fff;
+
+.sidebar {
+    background-color: $darkgrey;
+    width: fit-content;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+
+    .top {
+        img {
+            height: 2rem;
+            width: 2rem;
+        }
+    }
+
+    .middle {
+        // height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .bottom {
+        cursor: pointer;
+    }
+
+    .linkBlock {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        border-radius: 0.5rem;
+        padding: 0.5rem;
+        transition: all 0.2s ease-in-out;
+        position: relative;
+
+        .linktag {
+            visibility: hidden;
+            position: absolute;
+            left: 100%;
+            font-size: 0.75rem;
+            background-color: $grey;
+            border-radius: 0.5rem;
+            padding: 0.25rem 0.5rem;
+        }
+
+        svg {
+            font-size: 1.5rem;
+        }
+
+        &:hover {
+            background-color: $grey;
+
+            .linktag {
+                visibility: visible;
+            }
+        }
+    }
+}

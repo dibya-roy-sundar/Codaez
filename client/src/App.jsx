@@ -6,13 +6,13 @@ import Landing from './Pages/Landing/Landing';
 import Leaderboard from './Pages/Leaderboard/Leaderboard';
 import Profile from './Pages/Profile/Profile';
 import Navbar from './Pages/Navbar/Navbar'
+import Sidebar from './components/Sidebar/Sidebar';
 
 const Layout = () => {
     return (
         <div className='app'>
-            {/* <Navbar /> */}
             <Navbar />
-            {/* <Sidebar /> */}
+            <Sidebar />
             <Outlet  />
             {/* <Footer /> */}
         </div>

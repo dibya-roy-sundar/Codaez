@@ -23,7 +23,6 @@ const Auth = () => {
                 [e.target.name]: e.target.value,
             }
         })
-        console.log(loginUserCredentials)
     }
 
     const handleLoginSubmit = async (e) => {
