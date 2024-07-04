@@ -11,6 +11,7 @@ const cors = require('cors');
 const userRoutes = require('./routes/user');
 const detailsRoutes = require('./routes/details');
 const error = require('./middlewares/error');
+const { refreshData } = require('./ApiCalls');
 
 const dbUrl = process.env.ATLAS_URL;
 mongoose.connect(dbUrl)
@@ -34,6 +35,10 @@ app.use('/api/v1', userRoutes);
 app.use('/api/v1/details', detailsRoutes);
 
 app.use(error);
+
+// setInterval(() => {
+//     refreshData();
+// }, 100000000);
 
 const port = process.env.PORT;
 app.listen(port, () => {
