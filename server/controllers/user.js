@@ -6,7 +6,6 @@ const ApiFeatures = require('../utils/apiFeatures.js');
 const ErrorHand = require('../utils/errorHand.js');
 const sendjwtToken = require('../utils/sendjwtToken');
 const bcrypt = require('bcrypt');
-const mongoose=require('mongoose')
 
 module.exports.register = async (req, res) => {
     const { username, name, email, password } = req.body;
@@ -19,9 +18,9 @@ module.exports.register = async (req, res) => {
             error: "Email already in use"
         })
     }
-    const avatar={
-        url:req.file?.path || "",
-        filename:req.file?.filename || ""
+    const avatar = {
+        url: req.file?.path || "",
+        filename: req.file?.filename || ""
     };
 
 
@@ -40,15 +39,15 @@ module.exports.register = async (req, res) => {
 };
 
 module.exports.login = async (req, res, next) => {
-    const { username,email, password } = req.body;
+    const { username, email, password } = req.body;
 
-    if(!(username || email)){
-        return next(new ErrorHand("Email or Username is required",400))
+    if (!(username || email)) {
+        return next(new ErrorHand("Email or Username is required", 400))
     }
 
 
 
-    const user = await User.findAndValidate(email,username, password);
+    const user = await User.findAndValidate(email, username, password);
 
     if (!user) {
         return next(new ErrorHand("Invalid email or password", 404));
@@ -102,25 +101,25 @@ module.exports.changePassword = async (req, res, next) => {
 //   });
 
 module.exports.setUsername = async (req, res, next) => {
-    const {lc,cc,cf}=req.body
-    if((lc && lc.username?.trim().length===0) || (cc && cc.username?.trim().length===0) || (cf && cf.username?.trim().length===0)){
+    const { lc, cc, cf } = req.body
+    if ((lc && lc.username?.trim().length === 0) || (cc && cc.username?.trim().length === 0) || (cf && cf.username?.trim().length === 0)) {
         return next(new ErrorHand("username is required"))
     }
 
 
     await Promise.all([
-         getCodechefData(req,cc?.username,next),
-         getLeetcodeData(req,lc?.username,next),
-         getCodeforcesData(req,cf?.username,next)
+        getCodechefData(req, cc?.username, next),
+        getLeetcodeData(req, lc?.username, next),
+        getCodeforcesData(req, cf?.username, next)
     ])
-    
+
 
 
 
     res.status(200).json({
         status: true,
         message: "Username updated",
-        user:req.user,
+        user: req.user,
     })
 }
 
@@ -136,41 +135,41 @@ module.exports.userDetails = async (req, res, next) => {
 module.exports.sendFollowRequest = async (req, res, next) => {
     // const { userId } = req.body;
     // const user = await User.findById(userId);//reciever
-    
+
     // for testing 
-    const {username}=req.body;
-    if(!username){
-        return next(new ErrorHand("username is required",400))
-    }
-    
-    const user=await User.findOne({username});
-
-    if(!user){
-        return next(new ErrorHand("user not found",404));
+    const { username } = req.body;
+    if (!username) {
+        return next(new ErrorHand("username is required", 400))
     }
 
-    if(user.username===req.user.username){
-        return next(new ErrorHand("can't send friend request to yourself",401))
+    const user = await User.findOne({ username });
+
+    if (!user) {
+        return next(new ErrorHand("user not found", 404));
     }
 
-    const pendingrequest=await FRequest.findOne({
-        senderusername:req.user.username,
-        recieverusername:user.username
+    if (user.username === req.user.username) {
+        return next(new ErrorHand("can't send friend request to yourself", 401))
+    }
+
+    const pendingrequest = await FRequest.findOne({
+        senderusername: req.user.username,
+        recieverusername: user.username
     })
-    if(pendingrequest){
-        return next(new ErrorHand("already sent freind request",400))
+    if (pendingrequest) {
+        return next(new ErrorHand("already sent freind request", 400))
     }
-    if(user.follower.some((el)=> el.toString() === req.user._id.toString())){
-        return next(new ErrorHand("already a follower",400));
+    if (user.follower.some((el) => el.toString() === req.user._id.toString())) {
+        return next(new ErrorHand("already a follower", 400));
     }
-   
+
 
 
 
     const fRequest = new FRequest({
         senderusername: req.user.username,
         sendername: req.user.name,
-        recieverusername:user.username,
+        recieverusername: user.username,
     });
     user.fRequests.push(fRequest);
     await fRequest.save();
@@ -187,8 +186,8 @@ module.exports.acceptFollowRequest = async (req, res, next) => {
     const { reqId } = req.body;
     const frequest = await FRequest.findById(reqId);
 
-    if(req.user.username!==frequest.recieverusername){
-      return   next(new ErrorHand("You have not authorized to do this",401));
+    if (req.user.username !== frequest.recieverusername) {
+        return next(new ErrorHand("You have not authorized to do this", 401));
     }
 
     const user = await User.findOne({ username: frequest.senderusername }); //sender or follower
@@ -210,9 +209,9 @@ module.exports.rejectFollowRequest = async (req, res, next) => {
     const { reqId } = req.body;
 
     const frequest = await FRequest.findById(reqId);
-    if(req.user.username!==frequest.recieverusername){
-        return   next(new ErrorHand("You have not authorized to do this",401));
-      }
+    if (req.user.username !== frequest.recieverusername) {
+        return next(new ErrorHand("You have not authorized to do this", 401));
+    }
 
     await User.findByIdAndUpdate(req.user._id, { $pull: { fRequests: reqId } });
     await FRequest.findByIdAndDelete(reqId);
@@ -224,27 +223,43 @@ module.exports.rejectFollowRequest = async (req, res, next) => {
 }
 
 
-module.exports.updateProfile=async (req,res,next) =>{
-    const user=await User.findByIdAndUpdate(req.user._id,{...req.body},{new:true});
+module.exports.updateProfile = async (req, res, next) => {
+    const user = await User.findByIdAndUpdate(req.user._id, { ...req.body }, { new: true });
 
-    if(req.file){
+    if (req.file) {
         await cloudinary.uploader.destroy(user.avatar.filename);
-        user.avatar={
-            url:req.file.path,
-            filename:req.file.filename
+        user.avatar = {
+            url: req.file.path,
+            filename: req.file.filename
         }
         await user.save()
     }
 
-    if(req.body.password){
-        const password=await bcrypt.hash(req.body.password,12);
-        user.password=password;
+    if (req.body.password) {
+        const password = await bcrypt.hash(req.body.password, 12);
+        user.password = password;
         await user.save();
     }
     res.status(200).json({
-        success:true,
-        message:"user profile updated",
+        success: true,
+        message: "user profile updated",
         user
     })
 
+}
+
+module.exports.profile = async (req, res, next) => {
+    const { username } = req.params;
+
+    const user = await User.findOne({ username: username });
+    if (user) {
+        return res.status(200).json({
+            success: true,
+            user,
+        })
+    }
+    return res.status(404).json({
+        success: true,
+        message: 'User not found',
+    })
 }
