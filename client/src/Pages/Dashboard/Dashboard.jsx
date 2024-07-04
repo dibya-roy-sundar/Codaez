@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-key */
 import './Dashboard.scss';
 import leetcode from "../../assets/leetcode.png";
 import codeforces from "../../assets/codeforces.png";
@@ -29,7 +28,7 @@ const Dashboard = () => {
             <div className="section">
                 <div className="cardWrapper">
                     {["cf", "lc", "cc"].map((platform) => {
-                        return <div className="card">
+                        return <div className="card" key={platform}>
                             <div className="card-img">
                                 <img src={platform === "cf" ? codeforces : platform === "lc" ? leetcode : codechef} alt="" />
                             </div>
