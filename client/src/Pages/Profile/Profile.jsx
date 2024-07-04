@@ -6,11 +6,12 @@ import codechef from "../../assets/codechef.png"
 import Labelinput from './Labelinput';
 import { useRef, useState } from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
-import {faBan, faChevronRight, faEnvelope, faFloppyDisk, faIdCard, faKey, faPenToSquare, faUser} from "@fortawesome/free-solid-svg-icons"
+import {faBan, faCheck, faChevronRight, faEnvelope, faFloppyDisk, faIdCard, faKey, faPenToSquare,  faPlus, faUser} from "@fortawesome/free-solid-svg-icons"
 import ChangePw from './ChangePw';
 
 const Profile = () => {
     const [edit,setEdit]=useState(false)
+    const [isFollowing,setisFollowing]=useState(false);
     const changepwref=useRef();
 
     const openPwModal=()=>{
@@ -33,6 +34,12 @@ const Profile = () => {
                         </div>
                     </div>
                    
+                </div>
+                <div className="followbtn">
+                    <button onClick={()=>{setisFollowing(prev =>!prev)}}>
+                        <FontAwesomeIcon className='icon' icon={isFollowing?faCheck:faPlus} />
+                        <p>{isFollowing?"Following":"Follow"}</p>
+                    </button>
                 </div>
                 <div className="follow">
                     <div className="follower">
