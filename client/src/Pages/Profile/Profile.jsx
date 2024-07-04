@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom';
 const Profile = () => {
     const [edit,setEdit]=useState(false)
     const [isFollowing,setisFollowing]=useState(false);
-    const [ownprofile,setownprofile]=useState(false);
+    const [ownprofile,setownprofile]=useState(true);
     const changepwref=useRef();
 
     const openPwModal=()=>{
@@ -58,13 +58,14 @@ const Profile = () => {
                         <p>followings</p>
                     </div>
                 </div>
-                <div  className="followbtn">
+                {!ownprofile && <div  className="followbtn">
                     <button style={isFollowing?{background:"#473a69",border:"2px solid #703BF7"}:{}} className='btn'  onClick={()=>{setisFollowing(prev =>!prev)}}>
                         <FontAwesomeIcon className='icon' icon={isFollowing?faCheck:faPlus} />
                         <p>{isFollowing?"Following":"Follow"}</p>
                     </button>
-                </div>
-                {isFollowing && <div className="codingdata">
+                </div>}
+                
+                {(isFollowing || ownprofile) && <div className="codingdata">
                     <div className="data">
                         <img width="48" height="48" src="https://img.icons8.com/external-tal-revivo-color-tal-revivo/24/external-level-up-your-coding-skills-and-quickly-land-a-job-logo-color-tal-revivo.png" alt="external-level-up-your-coding-skills-and-quickly-land-a-job-logo-color-tal-revivo"/>
                         <p>1635</p>
@@ -77,7 +78,7 @@ const Profile = () => {
                     </div>
                 </div>}
                 
-                {isFollowing && <div className="social">
+                {(isFollowing || ownprofile) && <div className="social">
                     <Link to={"https://www.linkedin.com"} className='social-icon'>
                              <img width="48" height="48"  src="https://img.icons8.com/color/48/linkedin.png" alt="linkedin"/>
                     </Link>
@@ -119,6 +120,12 @@ const Profile = () => {
                         <Labelinput edit={edit} image={codeforces}  name={"Codeforces username"} value={"inkover_19"} />
 
                         <Labelinput edit={edit} image={codechef}  name={"codechef username"} value={"inkover_19"} />
+
+                        <Labelinput edit={edit} image={"https://img.icons8.com/color/48/linkedin.png"}  name={"Linkedin profile url"} value={"https://www.linkedin.com"} />
+                        <Labelinput edit={edit} image={"https://img.icons8.com/ios-glyphs/30/github.png"}  name={"Github profile url"} value={"https://www.linkedin.com"} />
+                        <Labelinput edit={edit} image={"https://img.icons8.com/color/48/twitter--v1.png"}  name={"Twitter profile url"} value={"https://www.linkedin.com"} />
+                        <Labelinput edit={edit} image={"https://img.icons8.com/color/48/hashnode.png"}  name={"Hashnode profile url"} value={"https://www.linkedin.com"} />
+                        <Labelinput edit={edit} image={"https://img.icons8.com/ios/50/medium-logo.png"}  name={"Medium profile url"} value={"https://www.linkedin.com"} />
 
 
                     </div>
