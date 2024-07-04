@@ -5,13 +5,15 @@ import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom'
 import Landing from './Pages/Landing/Landing';
 import Leaderboard from './Pages/Leaderboard/Leaderboard';
 import Profile from './Pages/Profile/Profile';
+import Navbar from './Pages/Navbar/Navbar'
 
 const Layout = () => {
     return (
         <div className='app'>
             {/* <Navbar /> */}
+            <Navbar />
             {/* <Sidebar /> */}
-            <Outlet />
+            <Outlet  />
             {/* <Footer /> */}
         </div>
     )
