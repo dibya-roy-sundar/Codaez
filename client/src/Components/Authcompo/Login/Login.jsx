@@ -38,9 +38,9 @@ const LoginForm = () => {
                 </div>
                 <button className="login-button">Login</button>
                 <button className="google-login">
-                    <div className="google-icon-circle">
+                    {/* <div className="google-icon-circle">
                         <FontAwesomeIcon icon={faGoogle} />
-                    </div>
+                    </div> */}
 
                 </button>
             </div>
