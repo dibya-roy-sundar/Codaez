@@ -67,6 +67,16 @@ try {
             startTime
           }
         }
+         matchedUser(username: $username) {
+    username
+    submitStats: submitStatsGlobal {
+      acSubmissionNum {
+        difficulty
+        count
+        submissions
+      }
+    }
+  }
       }
     `;
 
@@ -83,13 +93,18 @@ try {
             if (data.errors) {
               return next(new ErrorHand(data.errors?.message,500))
             } else {
+                // console.log(data.data);
                 const result = {
                     username: username,
                     rating: data.data.userContestRanking.rating,
                     rank: data.data.userContestRanking.globalRanking,
                     topPercentage: data.data.userContestRanking.topPercentage,
                     badge: data.data.userContestRanking.badge,
-                    attendedContestsCount: data.data.userContestRanking.attendedContestsCount
+                    attendedContestsCount: data.data.userContestRanking.attendedContestsCount,
+                    totalquestions:data.data.matchedUser.submitStats.acSubmissionNum[0]?.count,
+                    easyquestions:data.data.matchedUser.submitStats.acSubmissionNum[1]?.count,
+                    mediumquestions:data.data.matchedUser.submitStats.acSubmissionNum[2]?.count,
+                    hardquestions:data.data.matchedUser.submitStats.acSubmissionNum[3]?.count,
                 }
                req.user=await User.findByIdAndUpdate(req.user._id,{$set:{lc:result}},{new:true});
                return result

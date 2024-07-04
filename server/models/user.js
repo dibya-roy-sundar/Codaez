@@ -12,6 +12,7 @@ const userSchema = new Schema({
         type: String,
         required: [true, "Username is Required"],
         unique: true,
+        indexing:true,
     },
     email: {
         type: String,
@@ -33,6 +34,10 @@ const userSchema = new Schema({
         topPercentage: Number,
         badge: String,
         attendedContestsCount: Number,
+        totalquestions:Number,
+        easyquestions:Number,
+        mediumquestions:Number,
+        hardquestions:Number,
     },
     cf: {
         username: String,
