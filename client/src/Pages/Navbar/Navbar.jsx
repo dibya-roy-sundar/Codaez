@@ -1,55 +1,41 @@
 import "./Navbar.scss";
 import leetcode from "../../assets/leetcode.png";
-import { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmarkCircle } from "@fortawesome/free-solid-svg-icons";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import useFetch from "../../hooks/useFetch";
+
+
+let searchData=[]
 
 const Navbar = () => {
-    const [value, setValue] = useState(null);
+    const [value, setValue] = useState("");
     const [openOptions, setOpenoptions] = useState(false);
+    const [inputvalue,setinputvalue]=useState("");
+    const inputref=useRef()
 
-    const data = [
-        {
-            avatar: leetcode,
-            username: "dibya roy",
-        },
-        {
-            avatar: leetcode,
-            username: "dibya",
-        },
-        {
-            avatar: leetcode,
-            username: "dibya",
-        },
-        {
-            avatar: leetcode,
-            username: "dibya",
-        },
-        {
-            avatar: leetcode,
-            username: "dibya",
-        },
-        {
-            avatar: leetcode,
-            username: "dibya",
-        },
-        {
-            avatar: leetcode,
-            username: "dibya",
-        },
-        {
-            avatar: leetcode,
-            username: "dibya",
-        },
-    ];
+    const {data,loading,error}=useFetch(`/userdetails?keyword=${inputvalue}`)
+    if(data){
+        searchData=data.users;
+    }
 
+    useEffect(()=>{
+        const timer=setTimeout( ()=>{
+        //    console.log(value);
+           setinputvalue(value);
+        },350)
+
+        return ()=> clearTimeout(timer)
+    },[value])
+
+   
     const handleFocus = () => {
         setOpenoptions(true);
     }
 
     const handleBlur = () => {
         setOpenoptions(false);
+        inputref.current.blur()
+       
     }
 
 
@@ -66,7 +52,8 @@ const Navbar = () => {
                     </Link>
                 </div>
                 <div className="search">
-                    <input onFocus={handleFocus} onBlur={handleBlur}
+
+                    <input ref={inputref} onFocus={handleFocus} onBlur={handleBlur}
                         value={value}
                         onChange={(e) => {
                             setValue(e.target.value);
@@ -75,11 +62,11 @@ const Navbar = () => {
                     />
                     {openOptions && (
                         <div className="options" onMouseDown={handleMouseDown}>
-                            {data.map((el) => {
+                            {searchData?.length>0 &&  searchData.map((el) => {
                                 return (
                                     <Link onClick={handleBlur} className="link" key={el.username} to={"/profile"}>
                                         <div className="individual">
-                                            <img src={el.avatar} alt={`${el.username} avatar`} />
+                                            <img src={el.avatar?.url} alt={`${el.username} avatar`} />
                                             <p>{el.username}</p>
                                         </div>
                                     </Link>
