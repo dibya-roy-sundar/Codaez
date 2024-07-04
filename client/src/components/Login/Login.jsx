@@ -31,12 +31,18 @@ const Login = ({ loginUserCredentials, handleLoginChange, handleLoginSubmit }) =
                     </span>
                 </div>
                 <button className="login-button">Login</button>
-            </form>
-            {/* <button className="google-login">
-                <div className="google-icon-circle">
-                    <FaGoogle />
+                <div className="google-button">
+
+                    <div className='google-btn-image'>
+                        <FaGoogle />
+                    </div>
+                    <div>
+                        <span>Login with Google</span>
+                    </div>
                 </div>
-            </button> */}
+            </form>
+
+
         </div>
     );
 };
