@@ -1,13 +1,19 @@
 import React, { useState } from 'react';
 import './Register.scss';
 import { FaGoogle } from 'react-icons/fa';
+import OTPVerification from './OtpVerification';
 
 const Register = () => {
     const [currentStep, setCurrentStep] = useState(1);
     const [profilePicture, setProfilePicture] = useState(null);
+    const [otpOpen, setOtpOpen] = useState(false);
 
     const handleNextStep = () => {
-        setCurrentStep((prev) => prev + 1);
+        if (currentStep === 1) {
+            setOtpOpen(true);
+        } else {
+            setCurrentStep((prev) => prev + 1);
+        }
     };
 
     const handlePrevStep = () => {
@@ -28,6 +34,10 @@ const Register = () => {
             };
             reader.readAsDataURL(file);
         }
+    };
+    const closeOtpModal = () => {
+        setOtpOpen(false);
+        // setCurrentStep(2);
     };
 
     return (
@@ -132,6 +142,7 @@ const Register = () => {
                     </form>
                 </div>
             </div>
+            <OTPVerification isOpen={otpOpen} onClose={closeOtpModal} />
         </div>
     );
 };
