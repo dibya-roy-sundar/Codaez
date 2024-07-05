@@ -226,7 +226,7 @@ const Profile =() => {
                   src={leetcode}
                   alt="leetcode logo"
                 />
-                <p>{user?.lc?.rating || "- -"}</p>
+                <p>{user?.lc?.rating.toString().substring(0,4) || "- -"}</p>
               </div>
               <div className="data">
                 <img
