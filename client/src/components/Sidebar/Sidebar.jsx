@@ -7,10 +7,11 @@ import './Sidebar.scss';
 import codeforces from '../../assets/codeforces.png';
 import { makeRequest } from "../../hooks/makeRequest";
 import { removeAuth } from "../../redux/authReducer";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const Sidebar = () => {
     const dispatch = useDispatch();
+    const user=useSelector((state) =>state.auth.auth);
     const navigate=useNavigate();
 
     const handleLogout = async () => {
@@ -58,7 +59,7 @@ const Sidebar = () => {
             <div className="middle">
                 <Link to={'/dashboard'} className="linkBlock"><MdDashboard /><span className="linktag">Dashboard</span></Link>
                 <Link to={'/leaderboard'} className="linkBlock"><MdLeaderboard /><span className="linktag">Leaderboard</span></Link>
-                <Link to={'/profile'} className="linkBlock"><CgProfile /><span className="linktag">Profile</span></Link>
+                <Link to={`/profile/${user.username}`} className="linkBlock"><CgProfile /><span className="linktag">Profile</span></Link>
             </div>
             <div className="bottom linkBlock" onClick={handleLogout}>
                 <FiLogOut color="red" /><span className="linktag">Logout</span>

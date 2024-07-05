@@ -18,7 +18,7 @@ router.route('/changepw')
     // .get(changePassword)//changepasswordform
     .post(catchAsync(isLoggedIn), catchAsync(changePassword));
 router.route('/setusername').post(catchAsync(isLoggedIn), catchAsync(setUsername));
-router.route('/userdetails').get(catchAsync(isLoggedIn), catchAsync(userDetails));
+router.route('/userdetails').get( catchAsync(userDetails));//search
 router.route('/sendfrequest').post(catchAsync(isLoggedIn), catchAsync(sendFollowRequest));
 router.route('/acceptfrequest').post(catchAsync(isLoggedIn), catchAsync(acceptFollowRequest));
 router.route('/rejectfrequest').post(catchAsync(isLoggedIn), catchAsync(rejectFollowRequest));

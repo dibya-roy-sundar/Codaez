@@ -18,6 +18,8 @@ const Navbar = () => {
         searchData=data.users;
     }
 
+    
+
     useEffect(()=>{
         const timer=setTimeout( ()=>{
         //    console.log(value);
@@ -38,10 +40,11 @@ const Navbar = () => {
        
     }
 
-
     const handleMouseDown = (e) => {
         e.preventDefault();
     }
+
+   
 
     return (
         <>
@@ -64,7 +67,7 @@ const Navbar = () => {
                         <div className="options" onMouseDown={handleMouseDown}>
                             {searchData?.length>0 &&  searchData.map((el) => {
                                 return (
-                                    <Link onClick={handleBlur} className="link" key={el.username} to={"/profile"}>
+                                    <Link onClick={handleBlur} className="link" key={el.username} to={`/profile/${el.username}`}>
                                         <div className="individual">
                                             <img src={el.avatar?.url} alt={`${el.username} avatar`} />
                                             <p>{el.username}</p>

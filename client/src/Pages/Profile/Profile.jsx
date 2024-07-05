@@ -1,5 +1,4 @@
 import "./Profile.scss";
-import { faker } from "@faker-js/faker";
 import leetcode from "../../assets/leetcode.png";
 import codeforces from "../../assets/codeforces.png";
 import codechef from "../../assets/codechef.png";
@@ -8,13 +7,9 @@ import github from "../../assets/github.png";
 import twitter from "../../assets/twitter.png";
 import hashnode from "../../assets/hashnode.png";
 import medium from "../../assets/medium.png";
-
-
-
-
-
+import blankAvatar from "../../assets/noProfileImage.png"
 import Labelinput from "./Labelinput";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBan,
@@ -31,14 +26,101 @@ import {
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import ChangePw from "./ChangePw";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import useFetch from "../../hooks/useFetch";
+import { useDispatch, useSelector } from "react-redux";
+import usePostFetch from "../../hooks/usePostFetch";
+import { setAuth } from "../../redux/authReducer";
 
-const Profile = () => {
+
+
+const Profile =() => {
+  const {username}=useParams();
+  const dispatch=useDispatch();
+  const current_user=useSelector(state => state.auth.auth.auth)
+  console.log(current_user);
+  const {data,loading,error}= useFetch(`/profile/${username}`,username.length>0);
+
+   const  user=data.user;
+    console.log(user);
+  
+   
+  
+  
+  
+  // console.log(current_user);
+  // const ownprofile=current_user?._id?.toString()===user?._id?.toString() || false;
+  const ownprofile=true;
+
+  const defaultValues={
+    name:'',
+    username:'',
+    email:'',
+    college:'',
+    lc:'',
+    cf:'',
+    cc:'',
+    linkedin:'',
+    github:'',
+    twitter:'',
+    hashnode:'',
+    medium:'',
+
+  }
+  const [formdata,setFormData]=useState(defaultValues);
+
+  useEffect(()=>{
+    if(user){
+      setFormData({
+        name:user?.name  ||'',
+        username:user?.username ,
+        email:user?.email,
+        college:user?.college || '',
+        lc:user?.lc?.username || '',
+        cf:user?.cf?.username || '',
+        cc:user?.cc?.username || '',
+        linkedin:user?.linkedin ||'',
+        github:user?.github ||'',
+        twitter:user?.twitter ||'',
+        hashnode:user?.hashnode ||'',
+        medium:user?.medium || '',    
+      })
+    }
+  },[user])
+  
   const [edit, setEdit] = useState(false);
   const [isFollowing, setisFollowing] = useState(false);
-  const [ownprofile, setownprofile] = useState(true);
   const changepwref = useRef();
   const editavatarref=useRef();
+
+  const changeFormdata=(field,value)=>{
+
+    setFormData((prev) =>
+    {
+     return  {...prev,
+      [field]:value}
+    })
+  }
+  const [fetchPostTrigger,setFetchPostTrigger]=useState(false);
+
+  usePostFetch("/update-profile",formdata,fetchPostTrigger)
+  .then( (res) =>{
+    if(res && res.data && res.data.user){
+
+      dispatch(setAuth({auth:res.data.user}))
+    }
+  })
+  
+
+  const handleProfileEdit=(e)=>{
+    e.preventDefault();
+    console.log(formdata);
+    setEdit(false);
+    setFetchPostTrigger(true);
+    
+  }
+
+ 
 
   const triggerFileInput=()=>{
     editavatarref.current.click();
@@ -50,6 +132,8 @@ const Profile = () => {
   const openPwModal = () => {
     changepwref.current.openModal();
   };
+
+  
 
   return (
     <>
@@ -73,8 +157,10 @@ const Profile = () => {
         >
           <div className="avatar">
             <div className="editable">
-                <img src={faker.image.avatar()} alt="profile avatar" />
-                <div onClick={triggerFileInput} className="editicon">
+              <Link to={user?.avatar?.url}>
+                <img src={user?.avatar?.url?user.avatar.url:blankAvatar} alt="profile avatar" />
+              </Link>
+                <div onClick={triggerFileInput} style={user?.college ? {bottom:"35%"}:{}} className="editicon">
                      <FontAwesomeIcon className="editpencil" icon={faPencil} />
                 </div>
                      <form  encType="multipart/form-data">
@@ -82,25 +168,30 @@ const Profile = () => {
                      </form>
             </div>
             <div className="namecontainer">
-              <div className="name">
-                <p>Dibya Sundar Roy</p>
-                <div className="username">
-                  <a href="/profile">@dibya</a>
+              <div style={!user?.name ? {justifyContent:"center"}:{}} className="name">
+                {formdata?.name && <p>{formdata.name}</p>}                
+                <div  className="username">
+                  <Link className="usernamelink" to={`/profile/${formdata?.username}`}>
+                    @{formdata?.username && formdata.username }
+                  </Link>
                 </div>
               </div>
-              <div className="college">
+
+               {(formdata?.college && <div className="college">
                 <FontAwesomeIcon icon={faGraduationCap} />
-                <p>Jaypee Institute of Information Technology</p>
-              </div>
+                <p>{formdata.college}</p>
+              </div>)}
+
+              
             </div>
           </div>
           <div className="follow">
             <div className="follower">
-              <a href="">10</a>
+              <a href="">{user?.follower?.length }</a>
               <p>followers</p>
             </div>
             <div className="followings">
-              <a href="">10</a>
+              <a href="">{user?.following?.length}</a>
               <p>followings</p>
             </div>
           </div>
@@ -135,7 +226,7 @@ const Profile = () => {
                   src={leetcode}
                   alt="leetcode logo"
                 />
-                <p>1635</p>
+                <p>{user?.lc?.rating || "- -"}</p>
               </div>
               <div className="data">
                 <img
@@ -144,57 +235,57 @@ const Profile = () => {
                   src={codeforces}
                   alt="codeforces logo"
                 />
-                <p>1635</p>
+                <p>{user?.cf?.rating ? `${user.cf.rating} (max: ${user.cf.maxRating})` : "- -"}</p>
               </div>
               <div className="data">
                 <img width="48" height="48" src={codechef} alt="codechef" />
-                <p>1635</p>
+                <p>{user?.cc?.rating ? `${user.cc.rating} (max: ${user.cc.maxRating})` : "- -"}</p>
               </div>
             </div>
           )}
 
           {(isFollowing || ownprofile) && (
             <div className="social">
-              <Link to={"https://www.linkedin.com"} className="social-icon">
+              <a href={formdata.linkedin?.length>0 ? formdata.linkedin :  "https://www.linkedin.com"} className="social-icon">
                 <img
                   width="48"
                   height="48"
                   src={linkedin}
                   alt="linkedin"
                 />
-              </Link>
-              <Link to={"https://www.twitter.com"} className="social-icon">
+              </a>
+              <a href={formdata.twitter?.length>0 ? formdata.twitter : "https://www.twitter.com"} className="social-icon">
                 <img
                   width="48"
                   height="48"
                   src={twitter}
                   alt="twitter--v1"
                 />
-              </Link>
-              <Link to={"https://www.github.com"} className="social-icon">
+              </a>
+              <a href={formdata.github?.length>0 ? formdata.github : "https://www.github.com"} className="social-icon">
                 <img
                   width="48"
                   height="48"
                   src={github}
                   alt="github"
                 />
-              </Link>
-              <Link to={"https://www.hashnode.com"} className="social-icon">
+              </a>
+              <a href={formdata.hashnode?.length>0 ? formdata.hashnode : "https://www.hashnode.com"} className="social-icon">
                 <img
                   width="48"
                   height="48"
                   src={hashnode}
                   alt="hashnode"
                 />
-              </Link>
-              <Link to={"https://www.medium.com"} className="social-icon">
+              </a>
+              <a href={formdata.medium?.length>0 ? formdata.medium : "https://www.medium.com"} className="social-icon">
                 <img
                   width="48"
                   height="48"
                   src={medium}
                   alt="medium-logo"
                 />
-              </Link>
+              </a>
             </div>
           )}
 
@@ -216,125 +307,157 @@ const Profile = () => {
         </div>
         {ownprofile && (
           <div className="formcontainer">
-            <form>
-              <div className="fieldcontainer">
-                <Labelinput
-                  edit={edit}
-                  icon={<FontAwesomeIcon icon={faIdCard} />}
-                  name={"Name"}
-                  value={"Dibya"}
-                />
-                <Labelinput
-                  edit={edit}
-                  icon={<FontAwesomeIcon icon={faUser} />}
-                  name={"Username"}
-                  value={"inkover_19"}
-                />
-                <Labelinput
-                  edit={edit}
-                  icon={<FontAwesomeIcon icon={faEnvelope} />}
-                  name={"Email"}
-                  value={"dibya.roy.12345@gmail.com"}
-                  type="email"
-                />
-                <Labelinput
-                  edit={edit}
-                  image={leetcode}
-                  name={"Leetcode username"}
-                  value={"inkover_19"}
-                />
+              <form onSubmit={handleProfileEdit}>
+                <div className="fieldcontainer">
+                  <Labelinput
+                    edit={edit}
+                    icon={<FontAwesomeIcon icon={faIdCard} />}
+                    name={"name"}
+                    onChange={changeFormdata}
+                    value={ formdata.name}
+                  />
+                  <Labelinput
+                    edit={edit}
+                    icon={<FontAwesomeIcon icon={faUser} />}
+                    name={"username"}
+                    value={formdata.username }
+                    disabled
+                  />
+                  <Labelinput
+                    edit={edit}
+                    icon={<FontAwesomeIcon icon={faEnvelope} />}
+                    style={{paddingRight:"1.5rem"}}
+                    name={"email"}
+                    value={formdata.email }
+                    type="email"
+                    disabled
+                  />
+                  <Labelinput
+                    edit={edit}
+                    icon={<FontAwesomeIcon icon={faGraduationCap} />}
+                    name={"college"}
+                    style={{paddingRight:"1.5rem"}}
+                    onChange={changeFormdata}
+                    label={"university"}
+                    value={formdata.college }
+                  />
+                  <Labelinput
+                    edit={edit}
+                    image={leetcode}
+                    name={"lc"}
+                    onChange={changeFormdata}
+                    label={"leetcode username"}
+                    value={formdata.lc}
+                  />
 
-                <Labelinput
-                  edit={edit}
-                  image={codeforces}
-                  name={"Codeforces username"}
-                  value={"inkover_19"}
-                />
+                  <Labelinput
+                    edit={edit}
+                    image={codeforces}
+                    name={"cf"}
+                    onChange={changeFormdata}
+                    label={"codeforces username"}
+                    value={formdata.cf}
+                  />
 
-                <Labelinput
-                  edit={edit}
-                  image={codechef}
-                  name={"codechef username"}
-                  value={"inkover_19"}
-                />
+                  <Labelinput
+                    edit={edit}
+                    image={codechef}
+                    name={"cc"}
+                    onChange={changeFormdata}
+                    label={"codechef username"}
+                    value={formdata.cc}
+                  />
 
-                <Labelinput
-                  edit={edit}
-                  image={linkedin}
-                  name={"Linkedin profile url"}
-                  value={"https://www.linkedin.com"}
-                />
-                <Labelinput
-                  edit={edit}
-                  image={github}
-                  name={"Github profile url"}
-                  value={"https://www.linkedin.com"}
-                />
-                <Labelinput
-                  edit={edit}
-                  image={twitter}
-                  name={"Twitter profile url"}
-                  value={"https://www.linkedin.com"}
-                />
-                <Labelinput
-                  edit={edit}
-                  image={hashnode}
-                  name={"Hashnode profile url"}
-                  value={"https://www.linkedin.com"}
-                />
-                <Labelinput
-                  edit={edit}
-                  image={medium}
-                  name={"Medium profile url"}
-                  value={"https://www.linkedin.com"}
-                />
-              </div>
-              <div className="submitbutton">
-                {edit ? (
-                  <div className="save">
+                  <Labelinput
+                    edit={edit}
+                    image={linkedin}
+                    name={"linkedin"}
+                    onChange={changeFormdata}
+                    label={"linkedin url"}
+                    style={{paddingRight:"1.5rem"}}
+                    value={ formdata.linkedin}
+                  />
+                  <Labelinput
+                    edit={edit}
+                    image={github}
+                    name={"github"}
+                    onChange={changeFormdata}
+                    label={"github url"}
+                    style={{paddingRight:"1.5rem"}}
+                    value={formdata.github}
+                  />
+                  <Labelinput
+                    edit={edit}
+                    image={twitter}
+                    name={"twitter"}
+                    onChange={changeFormdata}
+                    label={"twitter url"}
+                    style={{paddingRight:"1.5rem"}}
+                    value={formdata.twitter}
+                  />
+                  <Labelinput
+                    edit={edit}
+                    image={hashnode}
+                    label={"hashnode url"}
+                    style={{paddingRight:"1.5rem"}}
+                    value={formdata.hashnode}
+                  />
+                  <Labelinput
+                    edit={edit}
+                    image={medium}
+                    name={"medium"}
+                    onChange={changeFormdata}
+                    label={"medium url"}
+                    style={{paddingRight:"1.5rem"}}
+                    value={formdata.medium}
+                  />
+                </div>
+                <div className="submitbutton">
+                  {edit ? (
+                    <div className="save">
+                      <button
+                        className="cancel"
+                        onClick={() => {
+                          setEdit(false);
+                        }}
+                        type="button"
+                      >
+                        <div className="icon">
+                          <FontAwesomeIcon
+                            style={{ fontSize: "1.2rem" }}
+                            icon={faBan}
+                          />
+                          Cancel
+                        </div>
+                      </button>
+                      <button type="submit">
+                        <div className="icon">
+                          <FontAwesomeIcon
+                            style={{ fontSize: "1.2rem" }}
+                            icon={faFloppyDisk}
+                          />
+                          Save
+                        </div>
+                      </button>
+                    </div>
+                  ) : (
                     <button
-                      className="cancel"
                       onClick={() => {
-                        setEdit(false);
+                        setEdit(true);
                       }}
                       type="button"
                     >
                       <div className="icon">
                         <FontAwesomeIcon
                           style={{ fontSize: "1.2rem" }}
-                          icon={faBan}
+                          icon={faPenToSquare}
                         />
-                        Cancel
+                        Edit
                       </div>
                     </button>
-                    <button type="submit">
-                      <div className="icon">
-                        <FontAwesomeIcon
-                          style={{ fontSize: "1.2rem" }}
-                          icon={faFloppyDisk}
-                        />
-                        Save
-                      </div>
-                    </button>
-                  </div>
-                ) : (
-                  <button
-                    onClick={() => {
-                      setEdit(true);
-                    }}
-                    type="button"
-                  >
-                    <div className="icon">
-                      <FontAwesomeIcon
-                        style={{ fontSize: "1.2rem" }}
-                        icon={faPenToSquare}
-                      />
-                      Edit
-                    </div>
-                  </button>
-                )}
-              </div>
-            </form>
+                  )}
+                </div>
+              </form>
           </div>
         )}
       </div>
