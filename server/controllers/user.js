@@ -52,10 +52,18 @@ module.exports.completeProfile=async (req,res) =>{
             filename: req.file?.filename || ""
         }
     }
+    if(lc){
 
-    user.lc.username=lc;
-    user.cf.username=cf;
-    user.cc.username=cc;
+        user.lc.username=lc;
+    }
+    if(cf){
+
+        user.cf.username=cf;
+    }
+    if(cc){
+        
+        user.cc.username=cc;
+    } 
     await user.save();
     res.status(200).json({
         status:"success",
