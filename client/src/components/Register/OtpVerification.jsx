@@ -110,7 +110,7 @@ const OTPVerification = ({ isOpen, onClose }) => {
                     </button>
                 </form>
                 <div className="resend-text">
-                    Didn't receive code? <a href="#0" onClick={onClose}>Resend</a>
+                    Didn;t receive code? <a href="#0" onClick={onClose}>Resend</a>
                 </div>
             </div>
         </div>
