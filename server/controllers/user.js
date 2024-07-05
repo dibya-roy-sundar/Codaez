@@ -107,11 +107,12 @@ module.exports.setUsername = async (req, res, next) => {
     }
 
 
-    await Promise.all([
-        getCodechefData(req, cc?.username, next),
-        getLeetcodeData(req, lc?.username, next),
-        getCodeforcesData(req, cf?.username, next)
-    ])
+    req.user.lc=await getLeetcodeData(lc?.username);
+    req.user.cf=await getCodeforcesData(cf?.username);
+    req.user.cc=await getCodechefData(cc?.username);
+
+    await req.user.save();
+
 
 
 
@@ -149,7 +150,7 @@ module.exports.sendFollowRequest = async (req, res, next) => {
     }
 
     if (user.username === req.user.username) {
-        return next(new ErrorHand("can't send friend request to yourself", 401))
+        return next(new ErrorHand("can't send follow request to yourself", 401))
     }
 
     const pendingrequest = await FRequest.findOne({
@@ -157,7 +158,7 @@ module.exports.sendFollowRequest = async (req, res, next) => {
         recieverusername: user.username
     })
     if (pendingrequest) {
-        return next(new ErrorHand("already sent freind request", 400))
+        return next(new ErrorHand("already sent Follow request", 400))
     }
     if (user.follower.some((el) => el.toString() === req.user._id.toString())) {
         return next(new ErrorHand("already a follower", 400));
@@ -226,14 +227,7 @@ module.exports.rejectFollowRequest = async (req, res, next) => {
 module.exports.updateProfile = async (req, res, next) => {
     const user = await User.findByIdAndUpdate(req.user._id, { ...req.body }, { new: true });
 
-    if (req.file) {
-        await cloudinary.uploader.destroy(user.avatar.filename);
-        user.avatar = {
-            url: req.file.path,
-            filename: req.file.filename
-        }
-        await user.save()
-    }
+   
 
     if (req.body.password) {
         const password = await bcrypt.hash(req.body.password, 12);
@@ -246,6 +240,22 @@ module.exports.updateProfile = async (req, res, next) => {
         user
     })
 
+}
+
+module.exports.editAvatar=async (req,res)=>{
+    await cloudinary.uploader.destroy(req.user?.avatar.filename);
+    if (req.file) {
+        req.user?.avatar = {
+            url: req.file.path,
+            filename: req.file.filename
+        }
+        await req.user.save();
+    }
+    res.status(200).json({
+        success: true,
+        message: "user avatar updated",
+        user:req.user
+    })
 }
 
 module.exports.profile = async (req, res, next) => {

@@ -28,6 +28,21 @@ $darkpurple: #814fff;
                 width: 10rem;
                 border-radius: 50%;
             }
+            .editicon{
+                position: absolute;
+                background: rgb(28, 27, 27);
+                bottom:36%;
+                right: 34%;
+                border-radius: 50%;
+                padding: 0.7rem;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+                .editpencil{
+                    font-size: 1.2rem;
+                }
+            }
             .namecontainer{
                 display: flex;
                 flex-direction: column;
@@ -155,8 +170,8 @@ $darkpurple: #814fff;
                 align-items: center;
                 margin-top: 2rem;
                 font-size: 1.2rem;
+                cursor: pointer;
                 .icon{
-                    cursor: pointer;
                     font-size: 1.3rem;
 
                 }
