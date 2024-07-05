@@ -107,11 +107,12 @@ module.exports.setUsername = async (req, res, next) => {
     }
 
 
-    await Promise.all([
-        getCodechefData(req, cc?.username, next),
-        getLeetcodeData(req, lc?.username, next),
-        getCodeforcesData(req, cf?.username, next)
-    ])
+    req.user.lc=await getLeetcodeData(lc?.username);
+    req.user.cf=await getCodeforcesData(cf?.username);
+    req.user.cc=await getCodechefData(cc?.username);
+
+    await req.user.save();
+
 
 
 
@@ -149,7 +150,7 @@ module.exports.sendFollowRequest = async (req, res, next) => {
     }
 
     if (user.username === req.user.username) {
-        return next(new ErrorHand("can't send friend request to yourself", 401))
+        return next(new ErrorHand("can't send follow request to yourself", 401))
     }
 
     const pendingrequest = await FRequest.findOne({
@@ -157,7 +158,7 @@ module.exports.sendFollowRequest = async (req, res, next) => {
         recieverusername: user.username
     })
     if (pendingrequest) {
-        return next(new ErrorHand("already sent freind request", 400))
+        return next(new ErrorHand("already sent Follow request", 400))
     }
     if (user.follower.some((el) => el.toString() === req.user._id.toString())) {
         return next(new ErrorHand("already a follower", 400));
