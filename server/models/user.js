@@ -27,6 +27,9 @@ const userSchema = new Schema({
         url: String,
         filename: String,
     },
+    college:{
+        type:String,
+    },
     lc: {
         username: String,
         rating: Number,
@@ -59,6 +62,21 @@ const userSchema = new Schema({
     },
     hr: {
         //hackerrank
+        type: String,
+    },
+    linkedin: {
+        type: String,
+    },
+    github: {
+        type: String,
+    },
+    twitter: {
+        type: String,
+    },
+    hashnode: {
+        type: String,
+    },
+    medium: {
         type: String,
     },
     follower: [

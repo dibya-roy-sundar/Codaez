@@ -8,9 +8,13 @@ const sendjwtToken = require('../utils/sendjwtToken');
 const bcrypt = require('bcrypt');
 
 module.exports.register = async (req, res) => {
-    const { username, name, email, password } = req.body;
+    const { username, email, password } = req.body;
 
-    const foundUser = await User.findOne({ email: email });
+    if (!(username || email || password)) {
+        return next(new ErrorHand("All fields are  required", 400))
+    }
+
+    const foundUser = await User.findOne({ email });
 
     if (foundUser) {
         return res.status(200).json({
@@ -18,25 +22,47 @@ module.exports.register = async (req, res) => {
             error: "Email already in use"
         })
     }
-    const avatar = {
-        url: req.file?.path || "",
-        filename: req.file?.filename || ""
-    };
 
-
+    const availableUser=await User.findOne({username});
+    if(availableUser){
+        return res.status(200).json({
+            success: true,
+            error: "username already taken"
+        })
+    }
+    
 
     const hash = await bcrypt.hash(password, 12);
     const user = new User({
         username,
-        name,
         email,
         password: hash,
-        avatar
     });
     await user.save();
 
     sendjwtToken(user, 201, res);
 };
+
+module.exports.completeProfile=async (req,res) =>{
+    const {name,college='',lc,cf,cc,linkedin='',github='',twitter='',hashnode='',medium=''}=req.body;
+    const user=await User.findByIdAndUpdate(req.user?._id ,{name,college,linkedin,github,twitter,hashnode,medium},{new:true});
+    if(req.file){
+        user.avatar = {
+            url: req.file?.path || "",
+            filename: req.file?.filename || ""
+        }
+    }
+
+    user.lc.username=lc;
+    user.cf.username=cf;
+    user.cc.username=cc;
+    await user.save();
+    res.status(200).json({
+        status:"success",
+        user,
+        message:"profile completed"
+    })
+}
 
 module.exports.login = async (req, res, next) => {
     const { username, email, password } = req.body;

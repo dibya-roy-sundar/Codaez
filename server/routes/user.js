@@ -1,5 +1,5 @@
 const express = require('express');
-const { login, register, logout, changePassword, setUsername, userDetails, sendFollowRequest, acceptFollowRequest, rejectFollowRequest, updateProfile, profile, editAvatar } = require('../controllers/user.js');
+const { login, register, logout, changePassword, setUsername, userDetails, sendFollowRequest, acceptFollowRequest, rejectFollowRequest, updateProfile, profile, editAvatar, completeProfile } = require('../controllers/user.js');
 const { isLoggedIn } = require('../utils/isLoggedIn.js');
 const catchAsync = require('../utils/catchAsync');
 const multer = require('multer');
@@ -12,6 +12,7 @@ const router = express.Router({ mergeParams: true });
 
 router.route('/login').post(catchAsync(login));
 router.route('/register').post(upload.single('avatar'), catchAsync(register));
+router.route('/complete-profile').post(catchAsync(isLoggedIn),upload.single('avatar'), catchAsync(completeProfile));
 router.route('/logout').get(catchAsync(logout));
 router.route('/changepw')
     // .get(changePassword)//changepasswordform
