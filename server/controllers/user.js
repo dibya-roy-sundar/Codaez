@@ -52,15 +52,15 @@ module.exports.completeProfile=async (req,res) =>{
             filename: req.file?.filename || ""
         }
     }
-    if(lc){
+    if(lc && lc.length>0){
 
         user.lc.username=lc;
     }
-    if(cf){
+    if(cf && cf.length>0){
 
         user.cf.username=cf;
     }
-    if(cc){
+    if(cc && cc.length>0 ){
         
         user.cc.username=cc;
     } 
