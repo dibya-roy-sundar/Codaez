@@ -7,9 +7,7 @@ import Leaderboard from './Pages/Leaderboard/Leaderboard';
 import Profile from './Pages/Profile/Profile';
 import Navbar from './Pages/Navbar/Navbar'
 import Sidebar from './components/Sidebar/Sidebar';
-
 import CompleteProfile from './components/Register/CompleteProfile';
-import Register from './components/Register/Register';
 
 const Layout = () => {
     return (
@@ -50,10 +48,7 @@ const router = createBrowserRouter([
             {
                 path: "/completeprofile",
                 element: <CompleteProfile />
-            }, {
-                path: '/register',
-                element: <Register />
-            }
+            },
         ]
     },
 ])
