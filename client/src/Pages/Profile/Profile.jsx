@@ -25,6 +25,7 @@ import {
   faGraduationCap,
   faIdCard,
   faKey,
+  faPencil,
   faPenToSquare,
   faPlus,
   faUser,
@@ -37,6 +38,14 @@ const Profile = () => {
   const [isFollowing, setisFollowing] = useState(false);
   const [ownprofile, setownprofile] = useState(true);
   const changepwref = useRef();
+  const editavatarref=useRef();
+
+  const triggerFileInput=()=>{
+    editavatarref.current.click();
+  }
+  const handleEditAvatar=()=>{
+    console.log("hello");
+  }
 
   const openPwModal = () => {
     changepwref.current.openModal();
@@ -63,7 +72,15 @@ const Profile = () => {
           className="avatarcontainer"
         >
           <div className="avatar">
-            <img src={faker.image.avatar()} alt="profile avatar" />
+            <div className="editable">
+                <img src={faker.image.avatar()} alt="profile avatar" />
+                <div onClick={triggerFileInput} className="editicon">
+                     <FontAwesomeIcon className="editpencil" icon={faPencil} />
+                </div>
+                     <form  encType="multipart/form-data">
+                        <input onChange={handleEditAvatar} ref={editavatarref}  type="file" style={{display:"none"}} />
+                     </form>
+            </div>
             <div className="namecontainer">
               <div className="name">
                 <p>Dibya Sundar Roy</p>

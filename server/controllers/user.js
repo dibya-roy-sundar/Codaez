@@ -227,14 +227,7 @@ module.exports.rejectFollowRequest = async (req, res, next) => {
 module.exports.updateProfile = async (req, res, next) => {
     const user = await User.findByIdAndUpdate(req.user._id, { ...req.body }, { new: true });
 
-    if (req.file) {
-        await cloudinary.uploader.destroy(user.avatar.filename);
-        user.avatar = {
-            url: req.file.path,
-            filename: req.file.filename
-        }
-        await user.save()
-    }
+   
 
     if (req.body.password) {
         const password = await bcrypt.hash(req.body.password, 12);
@@ -247,6 +240,22 @@ module.exports.updateProfile = async (req, res, next) => {
         user
     })
 
+}
+
+module.exports.editAvatar=async (req,res)=>{
+    await cloudinary.uploader.destroy(req.user?.avatar.filename);
+    if (req.file) {
+        req.user?.avatar = {
+            url: req.file.path,
+            filename: req.file.filename
+        }
+        await req.user.save();
+    }
+    res.status(200).json({
+        success: true,
+        message: "user avatar updated",
+        user:req.user
+    })
 }
 
 module.exports.profile = async (req, res, next) => {
