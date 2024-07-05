@@ -7,13 +7,14 @@ import Leaderboard from './Pages/Leaderboard/Leaderboard';
 import Profile from './Pages/Profile/Profile';
 import Navbar from './Pages/Navbar/Navbar'
 import Sidebar from './components/Sidebar/Sidebar';
+import Register from './components/Register/Register';
 
 const Layout = () => {
     return (
         <div className='app'>
             <Navbar />
             <Sidebar />
-            <Outlet  />
+            <Outlet />
             {/* <Footer /> */}
         </div>
     )
@@ -44,6 +45,12 @@ const router = createBrowserRouter([
                 path: "/profile",
                 element: <Profile />
             },
+            {
+                path: "/register",
+                element: <Register />
+            }
+
+
         ]
     },
 ])
