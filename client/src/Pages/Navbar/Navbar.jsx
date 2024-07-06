@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 import { FaUserFriends } from "react-icons/fa";
-import {faker} from "@faker-js/faker"
 import { RxCross2 } from "react-icons/rx";
 import { TiTick } from "react-icons/ti";
 import noprofileimage from "../../assets/noProfileImage.png"
