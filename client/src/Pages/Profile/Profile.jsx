@@ -7,11 +7,11 @@ import github from "../../assets/github.png";
 import twitter from "../../assets/twitter.png";
 import hashnode from "../../assets/hashnode.png";
 import medium from "../../assets/medium.png";
-import blankAvatar from "../../assets/noProfileImage.png"
+import noProfileImage from "../../assets/noProfileImage.png"
 import Labelinput from "./Labelinput";
 import { useEffect, useRef, useState } from "react";
 import { FaBan } from "react-icons/fa";
-import { FaAngleRight, FaCheck, FaEnvelope, FaFloppyDisk, FaGraduationCap, FaIdCard, FaKey, FaPencil, FaPenToSquare, FaPlus, FaUser } from "react-icons/fa6";
+import { FaAngleRight, FaCheck, FaEnvelope, FaFloppyDisk, FaGithub, FaGraduationCap, FaHashnode, FaIdCard, FaKey, FaLinkedin, FaMedium, FaPencil, FaPenToSquare, FaPlus, FaUser, FaXTwitter } from "react-icons/fa6";
 import ChangePw from "./ChangePw";
 import { Link, useParams } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
@@ -24,22 +24,18 @@ import { setAuth } from "../../redux/authReducer";
 const Profile = () => {
     const { username } = useParams();
     const dispatch = useDispatch();
-    const current_user = useSelector(state => state.auth.auth.auth)
-    console.log(current_user);
-    const { data, loading, error } = useFetch(`/profile/${username}`, username.length > 0);
+    const current_user = useSelector(state => state.auth.auth)
+    // console.log(current_user);
+    const { data, loading, error } = useFetch(`/profile/${username}`);
 
     const user = data.user;
-    console.log(user);
-
-
-
-
+    // console.log(user);
 
     // console.log(current_user);
     // const ownprofile=current_user?._id?.toString()===user?._id?.toString() || false;
     const ownprofile = true;
 
-    const defaultValues = {
+    const [formdata, setFormData] = useState({
         name: '',
         username: '',
         email: '',
@@ -52,28 +48,26 @@ const Profile = () => {
         twitter: '',
         hashnode: '',
         medium: '',
-
-    }
-    const [formdata, setFormData] = useState(defaultValues);
+    });
 
     useEffect(() => {
-        if (user) {
+        if (data) {
             setFormData({
-                name: user?.name || '',
-                username: user?.username,
-                email: user?.email,
-                college: user?.college || '',
-                lc: user?.lc?.username || '',
-                cf: user?.cf?.username || '',
-                cc: user?.cc?.username || '',
-                linkedin: user?.linkedin || '',
+                name: current_user?.name || '',
+                username: current_user?.username,
+                email: current_user?.email,
+                college: current_user?.college || '',
+                lc: current_user?.lc?.username || '',
+                cf: current_user?.cf?.username || '',
+                cc: current_user?.cc?.username || '',
+                linkedin: current_user?.linkedin || '',
                 github: user?.github || '',
-                twitter: user?.twitter || '',
-                hashnode: user?.hashnode || '',
-                medium: user?.medium || '',
+                twitter: current_user?.twitter || '',
+                hashnode: current_user?.hashnode || '',
+                medium: current_user?.medium || '',
             })
         }
-    }, [user])
+    }, [current_user])
 
     const [edit, setEdit] = useState(false);
     const [isFollowing, setisFollowing] = useState(false);
@@ -89,23 +83,30 @@ const Profile = () => {
             }
         })
     }
-    const [fetchPostTrigger, setFetchPostTrigger] = useState(false);
 
-    usePostFetch("/update-profile", formdata, fetchPostTrigger)
-        .then((res) => {
-            if (res && res.data && res.data.user) {
-
-                dispatch(setAuth({ auth: res.data.user }))
-            }
-        })
-
-
-    const handleProfileEdit = (e) => {
+    const handleProfileSubmit = async (e) => {
         e.preventDefault();
-        console.log(formdata);
         setEdit(false);
-        setFetchPostTrigger(true);
 
+        const data = await usePostFetch('/update-profile', formdata);
+
+        if (data.data && data.data.user) {
+            // toast.success(`Welcome back, ${data.data.user.name}`, {
+            //     position: toast.POSITION.TOP_LEFT
+            // });
+            dispatch(setAuth(data.data.user));
+        }
+        else if (data.data) {
+            // toast.warn(data.data.error || data.data.message, {
+            //     position: toast.POSITION.TOP_LEFT
+            // });
+        }
+        else {
+            console.log(data);
+            // toast.error(data.error, {
+            //     position: toast.POSITION.TOP_LEFT
+            // });
+        }
     }
 
 
@@ -125,162 +126,130 @@ const Profile = () => {
 
     return (
         <>
-            <div
-                style={
-                    !ownprofile
-                        ? {
-                            display: "flex",
-                            justifyContent: "center",
-                            width: "100%",
-                            paddingTop: "0.5rem",
-                        }
-                        : {}
-                }
-                className="profileContainer"
-            >
+            <div className="profileContainer" >
                 <ChangePw changePwRef={changepwref} />
-                <div
-                    style={!ownprofile ? { maxWidth: "600px" } : {}}
-                    className="avatarcontainer"
-                >
-                    <div className="avatar">
+                <div className="usercard" >
+                    <div className="top">
                         <div className="editable">
                             <Link to={user?.avatar?.url}>
-                                <img src={user?.avatar?.url ? user.avatar.url : blankAvatar} alt="profile avatar" />
+                                <img src={user?.avatar?.url ? user.avatar.url : noProfileImage} alt="profile avatar" />
                             </Link>
-                            <div onClick={triggerFileInput} style={user?.college ? { bottom: "35%" } : {}} className="editicon">
+                            <div onClick={triggerFileInput} className="editicon">
                                 <FaPencil />
                             </div>
                             <form encType="multipart/form-data">
                                 <input onChange={handleEditAvatar} ref={editavatarref} type="file" style={{ display: "none" }} />
                             </form>
                         </div>
+
                         <div className="namecontainer">
-                            <div style={!user?.name ? { justifyContent: "center" } : {}} className="name">
+                            <div className="name">
                                 {formdata?.name && <p>{formdata.name}</p>}
                                 <div className="username">
-                                    <Link className="usernamelink" to={`/profile/${formdata?.username}`}>
-                                        @{formdata?.username && formdata.username}
-                                    </Link>
+                                    @{formdata?.username && formdata.username}
                                 </div>
                             </div>
-
                             {(formdata?.college && <div className="college">
                                 <FaGraduationCap />
-                                <p>{formdata.college}</p>
+                                {formdata.college}
                             </div>)}
-
-
                         </div>
                     </div>
+
                     <div className="follow">
                         <div className="follower">
-                            <a href="">{user?.follower?.length}</a>
-                            <p>followers</p>
+                            <a href="">
+                                <span>{user?.follower?.length}</span>
+                                <p>Followers</p>
+                            </a>
                         </div>
                         <div className="followings">
-                            <a href="">{user?.following?.length}</a>
-                            <p>followings</p>
+                            <a href="">
+                                <span>{user?.following?.length}</span>
+                                <p>Followings</p>
+                            </a>
                         </div>
                     </div>
+
                     {!ownprofile && (
                         <div className="followbtn">
-                            <button
-                                style={
-                                    isFollowing
-                                        ? { background: "#473a69", border: "2px solid #703BF7" }
-                                        : {}
-                                }
-                                className="btn"
-                                onClick={() => {
-                                    setisFollowing((prev) => !prev);
-                                }}
+                            <button className={`${isFollowing ? "isFollowing" : ""} btn`}
+                                onClick={() => { setisFollowing((prev) => !prev); }}
                             >
-                                {isFollowing ? <FaCheck /> : <FaPlus />}
-                                <p>{isFollowing ? "Following" : "Follow"}</p>
+                                {isFollowing ? "Following" : "Follow"}
                             </button>
                         </div>
                     )}
 
                     {(isFollowing || ownprofile) && (
-                        <div className="codingdata">
-                            <div className="data">
-                                <img
-                                    width="48"
-                                    height="48"
-                                    src={leetcode}
-                                    alt="leetcode logo"
-                                />
-                                <p>{user?.lc?.rating.toString().substring(0, 4) || "- -"}</p>
-                            </div>
-                            <div className="data">
-                                <img
-                                    width="48"
-                                    height="48"
-                                    src={codeforces}
-                                    alt="codeforces logo"
-                                />
-                                <p>{user?.cf?.rating ? `${user.cf.rating} (max: ${user.cf.maxRating})` : "- -"}</p>
-                            </div>
-                            <div className="data">
-                                <img width="48" height="48" src={codechef} alt="codechef" />
-                                <p>{user?.cc?.rating ? `${user.cc.rating} (max: ${user.cc.maxRating})` : "- -"}</p>
-                            </div>
+                        <div className="ratingsWrapper">
+                            {user?.cf?.rating &&
+                                <div className="ratings">
+                                    <span>
+                                        <img src={codeforces} alt="codeforces logo" />
+                                        {user.cf.rating} ({user.cf.maxRating})
+                                    </span>
+                                </div>
+                            }
+                            {user?.lc?.rating &&
+                                <div className="ratings">
+                                    <span>
+                                        <img src={leetcode} alt="leetcode logo" />
+                                        {user.lc.rating}
+                                    </span>
+                                </div>
+                            }
+                            {user?.cc?.rating &&
+                                <div className="ratings">
+                                    <span>
+                                        <img src={codechef} alt="codechef" />
+                                        {user.cc.rating} ({user.cc.maxRating})
+                                    </span>
+                                </div>
+                            }
                         </div>
                     )}
 
                     {(isFollowing || ownprofile) && (
                         <div className="social">
-                            <a href={formdata.linkedin?.length > 0 ? formdata.linkedin : "https://www.linkedin.com"} className="social-icon">
-                                <img
-                                    width="48"
-                                    height="48"
-                                    src={linkedin}
-                                    alt="linkedin"
-                                />
-                            </a>
-                            <a href={formdata.twitter?.length > 0 ? formdata.twitter : "https://www.twitter.com"} className="social-icon">
-                                <img
-                                    width="48"
-                                    height="48"
-                                    src={twitter}
-                                    alt="twitter--v1"
-                                />
-                            </a>
-                            <a href={formdata.github?.length > 0 ? formdata.github : "https://www.github.com"} className="social-icon">
-                                <img
-                                    width="48"
-                                    height="48"
-                                    src={github}
-                                    alt="github"
-                                />
-                            </a>
-                            <a href={formdata.hashnode?.length > 0 ? formdata.hashnode : "https://www.hashnode.com"} className="social-icon">
-                                <img
-                                    width="48"
-                                    height="48"
-                                    src={hashnode}
-                                    alt="hashnode"
-                                />
-                            </a>
-                            <a href={formdata.medium?.length > 0 ? formdata.medium : "https://www.medium.com"} className="social-icon">
-                                <img
-                                    width="48"
-                                    height="48"
-                                    src={medium}
-                                    alt="medium-logo"
-                                />
-                            </a>
+                            {formdata.linkedin?.length > 0 &&
+                                <a href={formdata.linkedin} className="social-icon">
+                                    {/* <img src={linkedin} alt="linkedin" /> */}
+                                    <FaLinkedin className="icon" /> {formdata.linkedin}
+                                </a>
+                            }
+                            {formdata.twitter?.length > 0 &&
+                                <a href={formdata.twitter} className="social-icon">
+                                    {/* <img src={twitter} alt="twitter--v1" /> */}
+                                    <FaXTwitter className="icon" />{formdata.twitter}
+                                </a>
+                            }
+                            {formdata.github?.length > 0 &&
+                                <a href={formdata.github} className="social-icon">
+                                    {/* <img src={github} alt="github" /> */}
+                                    <FaGithub className="icon" />{formdata.github}
+                                </a>
+                            }
+                            {formdata.hashnode?.length > 0 &&
+                                <a href={formdata.hashnode} className="social-icon">
+                                    {/* <img src={hashnode} alt="hashnode" /> */}
+                                    <FaHashnode className="icon" />{formdata.hashnode}
+                                </a>
+                            }
+                            {formdata.medium?.length > 0 &&
+                                <a href={formdata.medium} className="social-icon">
+                                    {/* <img src={medium} alt="medium-logo" /> */}
+                                    <FaMedium className="icon" />{formdata.medium}
+                                </a>
+                            }
                         </div>
                     )}
 
                     {ownprofile && (
                         <div className="options">
-                            <hr />
                             <div onClick={openPwModal} className="changepw">
                                 <div>
-                                    <FaKey />
-                                    <p>Change password</p>
+                                    <FaKey /> Change password
                                 </div>
                                 <FaAngleRight />
                             </div>
@@ -289,7 +258,7 @@ const Profile = () => {
                 </div>
                 {ownprofile && (
                     <div className="formcontainer">
-                        <form onSubmit={handleProfileEdit}>
+                        <form onSubmit={handleProfileSubmit}>
                             <div className="fieldcontainer">
                                 <Labelinput
                                     edit={edit}

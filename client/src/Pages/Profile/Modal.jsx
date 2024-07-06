@@ -12,7 +12,7 @@ const Modal = forwardRef(({ children }, ref) => {
                 dialogRef.current.showModal();
             },
             closeModal() {
-                dialogRef.current.close()
+                dialogRef.current.close();
             }
         }
     })

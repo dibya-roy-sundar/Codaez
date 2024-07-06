@@ -1,10 +1,7 @@
 // Variables
 $input-background: rgb(25, 25, 25);
-$input-color: #ffffff;
 $button-background: #555555;
-$button-color: #ffffff;
 $google-button-background: #db4437;
-$google-button-color: #ffffff;
 $label-color: rgb(82, 82, 82);
 $grey: #333333;
 $purple: #703BF7;
@@ -25,7 +22,7 @@ $darkpurple: #814fff;
         width: 500px;
 
         h2 {
-            color: $input-color;
+            color: white;
             margin-bottom: 1rem;
         }
 
@@ -39,7 +36,7 @@ $darkpurple: #814fff;
                 background: $input-background;
                 border: 2px solid transparent;
                 border-radius: 5px;
-                color: $input-color;
+                color: white;
                 font-size: 14px;
                 box-shadow: none;
 
@@ -78,7 +75,7 @@ $darkpurple: #814fff;
                 top: 50%;
                 transform: translateY(-50%);
                 cursor: pointer;
-                color: $input-color;
+                color: white;
                 background: $input-background;
                 padding: 0.5rem;
                 border-radius: 50%;
@@ -95,7 +92,7 @@ $darkpurple: #814fff;
             background: $darkpurple;
             border: none;
             border-radius: 4px;
-            color: $button-color;
+            color: white;
             cursor: pointer;
             margin-bottom: 1rem;
             font-size: 1.2rem;
@@ -123,7 +120,7 @@ $darkpurple: #814fff;
                 margin-bottom: 0.5rem;
 
                 svg {
-                    color: $google-button-color;
+                    color: white;
                     display: block;
                 }
             }
@@ -131,7 +128,7 @@ $darkpurple: #814fff;
             div {
                 span {
                     font-size: 1rem;
-                    color: $input-color;
+                    color: white;
                 }
             }
         }

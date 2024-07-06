@@ -7,8 +7,6 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa6';
 const Labelinput = ({ name, label, value, edit, password, icon, image, type, onChange, ...props }) => {
     const [showpw, setShowpw] = useState(false)
 
-
-
     return (
         <>
             <div className="container">
