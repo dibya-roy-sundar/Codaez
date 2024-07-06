@@ -1,10 +1,5 @@
 // Variables
 $input-background: rgb(25, 25, 25);
-$input-color: #ffffff;
-$button-background: #555555;
-$button-color: #ffffff;
-$google-button-background: #db4437;
-$google-button-color: #ffffff;
 $label-color: rgb(82, 82, 82);
 $grey: #333333;
 $purple: #703BF7;
@@ -14,233 +9,201 @@ $darkpurple: #814fff;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    color: $input-color;
-    // margin-top: 2rem;
-}
+    min-height: 100vh;
+    color: white;
 
-.register-content {
-    display: flex;
-    width: 80%;
-    max-width: 1000px;
-    background: #333333;
-    border-radius: 8px;
-    // padding: 1rem;
 
-    .progress-bar {
-        width: 20%;
+    .register-content {
         display: flex;
-        flex-direction: column;
-        // align-items: center;
-        padding-right: 1rem;
-        border-right: 2px solid white; // Added border for the vertical line
-        padding: 1rem;
+        width: 100%;
+        max-width: 55rem;
+        background: #333333;
+        border-radius: 0.5rem;
 
-        .progress-step {
+        .progress-bar {
+            flex: 1;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 2rem;
-            height: 2rem;
-            background: $grey;
-            border-radius: 50%;
-            color: white;
-            font-weight: bold;
-            z-index: 1;
-            margin: 1rem 0;
-            border: 2px solid white; // Added border for active state
+            flex-direction: column;
+            border-right: 2px solid black; // Added border for the vertical line
+            padding: 1.5rem 1rem;
+            gap: 2rem;
 
-            &.active {
-                border: 2px solid $purple;
-                color: $input-color;
-            }
+            .eachStep {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                cursor: pointer;
 
-            // &:not(:last-child)::after {
-            //     content: '';
-            //     position: absolute;
-            //     // left: 50%;
-            //     // top: 100%;
-            //     width: 2px;
-            //     height: 2rem;
-            //     background: white;
-            //     transform: translateX(-50%);
-            //     z-index: -1;
-            // }
-        }
-    }
+                .progress-step {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 2rem;
+                    height: 2rem;
+                    background: transparent;
+                    border-radius: 50%;
+                    color: white;
+                    font-weight: bold;
+                    border: 2px solid white; // Added border for active state
 
-    .register-form {
-        width: 80%;
-        // padding-left: 2rem;
-        padding: 2rem;
-
-        h2 {
-            margin-bottom: 1rem;
-        }
-
-        .register-step {
-            margin-bottom: 2rem;
-
-            h3 {
-                margin-bottom: 1rem;
-                color: $input-color;
-            }
-
-            .input-wrap {
-                position: relative;
-                margin-bottom: 1.5rem;
-
-                input {
-                    width: 100%;
-                    padding: 1rem;
-                    background: $input-background;
-                    border: 2px solid transparent;
-                    border-radius: 5px;
-                    color: $input-color;
-                    font-size: 14px;
-                    box-shadow: none;
-                    // transition: border 0.3s, background 0.3s;
-
-                    &:focus {
-                        outline: none;
-                        border: 2px solid $darkpurple;
+                    &.completed {
+                        border: 2px solid $purple;
+                        color: white;
+                        background-color: $purple;
                     }
 
-                    &:focus+label,
-                    &:valid+label {
-                        top: 0rem;
-                        left: 0.75rem;
-                        font-size: 0.75rem;
-                        color: $darkpurple;
-                        background: #333333;
+                    &.active {
+                        border: 2px solid $purple;
+                        color: white;
+                    }
+                }
+            }
+        }
+
+        .register-form {
+            flex: 3;
+            padding: 2rem;
+
+            .register-step {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+                margin-bottom: 2rem;
+
+                h3 {
+                    margin-bottom: 1rem;
+                    color: white;
+                }
+
+                .input-wrap {
+                    position: relative;
+
+                    input {
+                        width: 100%;
+                        padding: 1rem;
+                        background: $input-background;
+                        border: 2px solid transparent;
+                        border-radius: 5px;
+                        color: white;
+                        font-size: 0.9rem;
+                        box-shadow: none;
+                        // transition: border 0.3s, background 0.3s;
+
+                        &:focus {
+                            outline: none;
+                            border: 2px solid $darkpurple;
+                        }
+
+                        &:focus+label,
+                        &:valid+label {
+                            top: 0rem;
+                            left: 0.75rem;
+                            font-size: 0.75rem;
+                            color: $darkpurple;
+                            background: $input-background;
+                            border-radius: 0.25rem;
+                        }
+                    }
+
+                    label {
+                        position: absolute;
+                        top: 50%;
+                        left: 1rem;
+                        transform: translateY(-50%);
+                        color: $label-color;
+                        transition: all 0.3s;
+                        pointer-events: none;
+                        background: transparent;
                         padding: 0 0.25rem;
                     }
                 }
 
-                label {
-                    position: absolute;
-                    top: 50%;
-                    left: 1rem;
-                    transform: translateY(-50%);
-                    color: $label-color;
-                    transition: all 0.3s;
-                    pointer-events: none;
-                    background: transparent;
-                    padding: 0 0.25rem;
-                }
-            }
-
-            .profile-input {
-                display: flex;
-                align-items: center;
-                margin-bottom: 1.5rem;
-                justify-content: space-around;
-                gap: 10rem;
-
-                .profile-picture {
-                    width: 150px;
-                    height: 150px;
-                    border-radius: 50%;
-                    background: $input-background;
+                .profile-input {
                     display: flex;
                     align-items: center;
-                    justify-content: center;
-                    overflow: hidden;
-                    position: relative;
+                    justify-content: space-around;
+                    gap: 1.5rem;
 
-                    // margin-right: 1rem;
-
-                    input {
-                        position: absolute;
-                        width: 100%;
-                        height: 100%;
-                        opacity: 0;
-                        cursor: pointer;
-
-                    }
-
-                    img {
-                        width: 100%;
-                        height: 100%;
-                        object-fit: contain;
-                        // background-position: center;
-                        background-size: cover;
-                        background-repeat: no-repeat;
-                    }
-                }
-
-                .name-fields {
-                    display: flex;
-                    flex-direction: column;
-                    flex: 1;
-
-                    .input-wrap {
+                    .profile-picture {
+                        width: 7rem;
+                        height: 7rem;
+                        border-radius: 50%;
+                        background: $input-background;
                         display: flex;
-                        margin-bottom: 0.5rem;
+                        align-items: center;
+                        justify-content: center;
+                        overflow: hidden;
+                        position: relative;
 
-                        &:first-child {
-                            margin-bottom: 1rem;
+                        input {
+                            position: absolute;
+                            width: 100%;
+                            height: 100%;
+                            opacity: 0;
+                            border-radius: 50%;
+                            cursor: pointer;
                         }
 
+                        img {
+                            width: 100%;
+                            height: 100%;
+                            object-fit: contain;
+                            // background-position: center;
+                            background-size: cover;
+                            background-repeat: no-repeat;
+                        }
+                    }
 
+                    .name-fields {
+                        display: flex;
+                        flex-direction: column;
+                        flex: 1;
+                        gap: 1rem;
 
-
-                        input:last-child {
-                            margin-right: 0;
+                        .input-wrap {
+                            display: flex;
+                            // margin-bottom: 1rem;
                         }
                     }
                 }
-            }
 
-            .register-buttons {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                margin-top: 1rem;
-                gap: 5rem;
-
-
-            }
-
-            .register-button {
-                width: 100%;
-                padding: 0.5rem;
-                background: $darkpurple;
-                border: none;
-                border-radius: 4px;
-                color: $button-color;
-                cursor: pointer;
-                font-size: 1.2rem;
-                margin-top: 1rem;
-                // display: flex;
-                text-align: center;
-
-
-                &:hover {
-                    background: $purple;
-                }
-            }
-
-            .google-button {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                flex-direction: column;
-                padding: 0.5rem;
-                cursor: pointer;
-                margin-top: 1rem;
-                font-size: 1.2rem;
-
-                .google-btn-image {
+                .codingLogoContainer{
                     display: flex;
-                    justify-content: center;
                     align-items: center;
-                    width: 3rem;
-                    height: 3rem;
-                    background: $google-button-background;
-                    color: $google-button-color;
-                    border-radius: 50%;
-                    margin-bottom: 0.5rem;
+                    gap: 1rem;
+
+                    img{
+                        height: 2rem;
+                    }
+
+                    .input-wrap{
+                        width: 100%;
+                    }
+                }
+
+                .register-buttons {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    gap: 5rem;
+                }
+
+                .register-button {
+                    width: 100%;
+                    padding: 0.5rem;
+                    background: $purple;
+                    border: none;
+                    border-radius: 0.25rem;
+                    color: white;
+                    cursor: pointer;
+                    font-size: 1.2rem;
+                    margin-top: 1rem;
+                    // display: flex;
+                    text-align: center;
+
+                    &:hover {
+                        background: $darkpurple;
+                    }
                 }
             }
         }

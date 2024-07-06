@@ -11,7 +11,7 @@ const cors = require('cors');
 const userRoutes = require('./routes/user');
 const detailsRoutes = require('./routes/details');
 const error = require('./middlewares/error');
-const { refreshData } = require('./ApiCalls');
+const { refreshData } = require('./RefreshData');
 
 const dbUrl = process.env.ATLAS_URL;
 mongoose.connect(dbUrl)

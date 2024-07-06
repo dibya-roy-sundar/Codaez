@@ -2,12 +2,22 @@ import React, { useState } from 'react';
 import './CompleteProfile.scss';
 // import { FaGoogle } from 'react-icons/fa';
 // import OTPVerification from './OtpVerification';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { FaCheck } from 'react-icons/fa';
+import codeforces from '../../assets/codeforces.png';
+import leetcode from '../../assets/leetcode.png';
+import codechef from '../../assets/codechef.png';
+import { setAuth } from '../../redux/authReducer';
+import { useNavigate } from 'react-router-dom';
+import usePutHook from '../../hooks/usePutHook';
 
 const CompleteProfile = () => {
-    const [currentStep, setCurrentStep] = useState(1);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const [currentStep, setCurrentStep] = useState(2);
     const [profilePicture, setProfilePicture] = useState(null);
+    const [avatar, setAvatar] = useState(null);
     const [formValues, setFormValues] = useState({
         firstName: '',
         lastName: '',
@@ -16,12 +26,10 @@ const CompleteProfile = () => {
         codeforces: '',
         codechef: ''
     });
-    // const [otpOpen, setOtpOpen] = useState(false);
-    const user = useSelector(state => state.auth.auth);
-    console.log('user', user);
-    const handleNextStep = () => {
-        // data saving code
 
+    const user = useSelector(state => state.auth.auth);
+
+    const handleNextStep = () => {
         setCurrentStep((prev) => prev + 1);
     };
 
@@ -29,14 +37,46 @@ const CompleteProfile = () => {
         setCurrentStep((prev) => prev - 1);
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Handle form submission logic here
+
+        const data = await usePutHook('/complete-profile', {
+            name: formValues.firstName + " " + formValues.lastName,
+            college: formValues.college,
+            lc: formValues.leetcode,
+            cf: formValues.codeforces,
+            cc: formValues.codechef,
+            avatar: avatar,
+        }, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            }
+        });
+
+        if (data.data && data.data.user) {
+            // toast.success(`Welcome back, ${data.data.user.name}`, {
+            //     position: toast.POSITION.TOP_LEFT
+            // });
+            dispatch(setAuth(data.data.user));
+            navigate('/dashboard');
+        }
+        else if (data.data) {
+            // toast.warn(data.data.error || data.data.message, {
+            //     position: toast.POSITION.TOP_LEFT
+            // });
+        }
+        else {
+            console.log(data);
+            // toast.error(data.error, {
+            //     position: toast.POSITION.TOP_LEFT
+            // });
+        }
     };
 
     const handleProfilePictureChange = (e) => {
         const file = e.target.files[0];
         if (file) {
+            setAvatar(file);
             const reader = new FileReader();
             reader.onload = () => {
                 setProfilePicture(reader.result);
@@ -44,13 +84,11 @@ const CompleteProfile = () => {
             reader.readAsDataURL(file);
         }
     };
+
     const handleStepChange = (step) => {
         setCurrentStep(step);
     }
-    // const closeOtpModal = () => {
-    //     setOtpOpen(false);
-    //     setCurrentStep(2);
-    // };
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormValues((prev) => ({
@@ -63,20 +101,20 @@ const CompleteProfile = () => {
         <div className="register-container">
             <div className="register-content">
                 <div className="progress-bar">
-                    <div style={{ display: "flex", alignItems: "center", gap: "1rem", cursor: 'pointer' }}>
-                        <div className={`progress-step ${currentStep >= 1 ? 'active' : ''}`} onClick={() => handleStepChange(1)}>
+                    <div className='eachStep' onClick={() => handleStepChange(1)}>
+                        <div className={`progress-step ${currentStep > 1 ? 'completed' : currentStep == 1 ? 'active' : ''}`}>
                             {currentStep > 1 ? <FaCheck /> : '1'}
                         </div>
                         <p>User Credentails</p>
                     </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: "1rem", cursor: 'pointer' }}>
-                        <div className={`progress-step ${currentStep >= 2 ? 'active' : ''}`} onClick={() => handleStepChange(2)}>
+                    <div className='eachStep' onClick={() => handleStepChange(2)}>
+                        <div className={`progress-step ${currentStep > 2 ? 'completed' : currentStep == 2 ? 'active' : ''}`}>
                             {currentStep > 2 ? <FaCheck /> : '2'}
                         </div>
                         <p>User Details</p>
                     </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: "1rem", cursor: 'pointer' }}>
-                        <div className={`progress-step ${currentStep >= 3 ? 'active' : ''}`} onClick={() => handleStepChange(3)}>
+                    <div className='eachStep' onClick={() => handleStepChange(3)}>
+                        <div className={`progress-step ${currentStep > 3 ? 'completed' : currentStep == 3 ? 'active' : ''}`}>
                             {currentStep > 3 ? <FaCheck /> : '3'}
                         </div>
                         <p>Coding Usenames</p>
@@ -88,12 +126,10 @@ const CompleteProfile = () => {
                             <div className="register-step">
                                 <h3>User Credentails</h3>
                                 <div className="input-wrap">
-                                    <input type="text" id="username" name="username" value={user.username} readOnly required />
-
+                                    <input type="text" id="username" name="username" value={user.username} disabled required />
                                 </div>
                                 <div className="input-wrap">
-                                    <input type="email" id="email" name="email" value={user.email} readOnly required />
-
+                                    <input type="email" id="email" name="email" value={user.email} disabled required />
                                 </div>
                                 {/* <div className="input-wrap">
                                     <input type="password" id="password" name="password" required />
@@ -114,7 +150,6 @@ const CompleteProfile = () => {
                                     <button type="button" className="register-button" onClick={handleNextStep}>
                                         Next
                                     </button>
-
                                 </div>
                             </div>
                         )}
@@ -124,24 +159,24 @@ const CompleteProfile = () => {
                                 <div className="profile-input">
                                     <div className="profile-picture">
                                         {profilePicture ? (
-                                            <img src={profilePicture} alt="Profile" />
+                                            <img src={profilePicture} alt="profile image" />
                                         ) : (
                                             <input type="file" id="photo" name="photo" accept="image/*" onChange={handleProfilePictureChange} />
                                         )}
                                     </div>
                                     <div className="name-fields">
                                         <div className="input-wrap">
-                                            <input type="text" id="firstName" name="firstName" value={formValues.firstName} onChange={handleInputChange} required />
+                                            <input type="text" id="firstName" name="firstName" value={formValues.firstName} onChange={handleInputChange} />
                                             <label htmlFor="firstName">First Name</label>
                                         </div>
                                         <div className="input-wrap">
-                                            <input type="text" id="lastName" name="lastName" value={formValues.lastName} onChange={handleInputChange} required />
+                                            <input type="text" id="lastName" name="lastName" value={formValues.lastName} onChange={handleInputChange} />
                                             <label htmlFor="lastName">Last Name</label>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="input-wrap">
-                                    <input type="text" id="college" name="college" value={formValues.college} onChange={handleInputChange} required />
+                                    <input type="text" id="college" name="college" value={formValues.college} onChange={handleInputChange} />
                                     <label htmlFor="college">College Name</label>
                                 </div>
                                 <div className="register-buttons">
@@ -158,17 +193,32 @@ const CompleteProfile = () => {
                         {currentStep === 3 && (
                             <div className="register-step">
                                 <h3>Coding Usernames</h3>
-                                <div className="input-wrap">
-                                    <input type="text" id="leetcode" name="leetcode" value={formValues.leetcode} onChange={handleInputChange} required />
-                                    <label htmlFor="leetcode">LeetCode Username</label>
+                                <div className="codingLogoContainer">
+                                    <div className='logo'>
+                                        <img src={codeforces} alt="" />
+                                    </div>
+                                    <div className="input-wrap">
+                                        <input type="text" id="codeforces" name="codeforces" value={formValues.codeforces} onChange={handleInputChange} />
+                                        <label htmlFor="codeforces">Username</label>
+                                    </div>
                                 </div>
-                                <div className="input-wrap">
-                                    <input type="text" id="codeforces" name="codeforces" value={formValues.codeforces} onChange={handleInputChange} required />
-                                    <label htmlFor="codeforces">Codeforces Username</label>
+                                <div className="codingLogoContainer">
+                                    <div className='logo'>
+                                        <img src={leetcode} alt="" />
+                                    </div>
+                                    <div className="input-wrap">
+                                        <input type="text" id="leetcode" name="leetcode" value={formValues.leetcode} onChange={handleInputChange} />
+                                        <label htmlFor="leetcode">Username</label>
+                                    </div>
                                 </div>
-                                <div className="input-wrap">
-                                    <input type="text" id="codechef" name="codechef" value={formValues.codechef} onChange={handleInputChange} required />
-                                    <label htmlFor="codechef">CodeChef Username</label>
+                                <div className="codingLogoContainer">
+                                    <div className='logo'>
+                                        <img src={codechef} alt="" />
+                                    </div>
+                                    <div className="input-wrap">
+                                        <input type="text" id="codechef" name="codechef" value={formValues.codechef} onChange={handleInputChange} />
+                                        <label htmlFor="codechef">Username</label>
+                                    </div>
                                 </div>
                                 <div className='register-buttons'>
                                     <button type="button" className="register-button" onClick={handlePrevStep}>
@@ -183,7 +233,6 @@ const CompleteProfile = () => {
                     </form>
                 </div>
             </div>
-            {/* <OTPVerification isOpen={otpOpen} onClose={closeOtpModal} /> */}
         </div>
     );
 };
