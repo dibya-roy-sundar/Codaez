@@ -99,7 +99,7 @@ module.exports.login = async (req, res, next) => {
   if (!user) {
     return next(new ErrorHand("Invalid email or password", 404));
   }
-
+  await user.populate('fRequests')
   sendjwtToken(user, 200, res);
 };
 
@@ -213,7 +213,7 @@ module.exports.sendFollowRequest = async (req, res, next) => {
 
   const fRequest = new FRequest({
     senderusername: req.user.username,
-    sendername: req.user.name,
+    senderavatar: req.user.avatar || {url:"",filename:""},
     recieverusername: user.username,
   });
   user.fRequests.push(fRequest);
@@ -229,24 +229,30 @@ module.exports.sendFollowRequest = async (req, res, next) => {
 
 module.exports.acceptFollowRequest = async (req, res, next) => {
   const { reqId } = req.body;
+  
   const frequest = await FRequest.findById(reqId);
 
-  if (req.user.username !== frequest.recieverusername) {
+  if(!frequest){
+    return next(new ErrorHand("invalid request",400))
+  }
+
+  if (req.user.username !== frequest?.recieverusername) {
     return next(new ErrorHand("You have not authorized to do this", 401));
   }
 
-  const user = await User.findOne({ username: frequest.senderusername }); //sender or follower
+  const user = await User.findOne({ username: frequest?.senderusername }); //sender or follower
   req.user.follower.push(user);
   user.following.push(req.user);
   await user.save();
   await req.user.save();
 
-  await User.findByIdAndUpdate(req.user._id, { $pull: { fRequests: reqId } });
+  const curr_user=await User.findByIdAndUpdate(req.user._id, { $pull: { fRequests: reqId } },{new:true}).populate('fRequests');
   await FRequest.findByIdAndDelete(reqId);
 
   res.status(200).json({
     status: true,
-    msg: `${frequest.sendername} was added as a follower`,
+    msg: `${frequest.senderusername} was added as a follower`,
+    curr_user
   });
 };
 
@@ -254,16 +260,17 @@ module.exports.rejectFollowRequest = async (req, res, next) => {
   const { reqId } = req.body;
 
   const frequest = await FRequest.findById(reqId);
-  if (req.user.username !== frequest.recieverusername) {
+  if (req.user.username !== frequest?.recieverusername) {
     return next(new ErrorHand("You have not authorized to do this", 401));
   }
 
-  await User.findByIdAndUpdate(req.user._id, { $pull: { fRequests: reqId } });
+  const curr_user= await User.findByIdAndUpdate(req.user._id, { $pull: { fRequests: reqId } },{new:true}).populate('fRequests');
   await FRequest.findByIdAndDelete(reqId);
 
   res.status(200).json({
     status: true,
     msg: `Request rejected`,
+    curr_user
   });
 };
 

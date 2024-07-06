@@ -3,7 +3,7 @@ import { makeRequest } from "./makeRequest";
 const usePostFetch = async (url, bodyData,makeCall = true) => {
     try {
         if (!makeCall) {
-            return {  };
+            return {};
         }
         const resp = await makeRequest.post(url, { ...bodyData }, {
             withCredentials: true
