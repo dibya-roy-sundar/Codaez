@@ -7,14 +7,17 @@ import { FaCheck } from 'react-icons/fa';
 import codeforces from '../../assets/codeforces.png';
 import leetcode from '../../assets/leetcode.png';
 import codechef from '../../assets/codechef.png';
-import usePostFetch from '../../hooks/usePostFetch';
 import { setAuth } from '../../redux/authReducer';
+import { useNavigate } from 'react-router-dom';
+import usePutHook from '../../hooks/usePutHook';
 
 const CompleteProfile = () => {
-    const dispatch=useDispatch();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const [currentStep, setCurrentStep] = useState(2);
     const [profilePicture, setProfilePicture] = useState(null);
+    const [avatar, setAvatar] = useState(null);
     const [formValues, setFormValues] = useState({
         firstName: '',
         lastName: '',
@@ -36,14 +39,19 @@ const CompleteProfile = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const data = await usePostFetch('/complete-profile', {
+
+        const data = await usePutHook('/complete-profile', {
             name: formValues.firstName + " " + formValues.lastName,
             college: formValues.college,
             lc: formValues.leetcode,
             cf: formValues.codeforces,
             cc: formValues.codechef,
+            avatar: avatar,
+        }, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            }
         });
-
 
         if (data.data && data.data.user) {
             // toast.success(`Welcome back, ${data.data.user.name}`, {
@@ -68,6 +76,7 @@ const CompleteProfile = () => {
     const handleProfilePictureChange = (e) => {
         const file = e.target.files[0];
         if (file) {
+            setAvatar(file);
             const reader = new FileReader();
             reader.onload = () => {
                 setProfilePicture(reader.result);
@@ -157,17 +166,17 @@ const CompleteProfile = () => {
                                     </div>
                                     <div className="name-fields">
                                         <div className="input-wrap">
-                                            <input type="text" id="firstName" name="firstName" value={formValues.firstName} onChange={handleInputChange}  />
+                                            <input type="text" id="firstName" name="firstName" value={formValues.firstName} onChange={handleInputChange} />
                                             <label htmlFor="firstName">First Name</label>
                                         </div>
                                         <div className="input-wrap">
-                                            <input type="text" id="lastName" name="lastName" value={formValues.lastName} onChange={handleInputChange}  />
+                                            <input type="text" id="lastName" name="lastName" value={formValues.lastName} onChange={handleInputChange} />
                                             <label htmlFor="lastName">Last Name</label>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="input-wrap">
-                                    <input type="text" id="college" name="college" value={formValues.college} onChange={handleInputChange}  />
+                                    <input type="text" id="college" name="college" value={formValues.college} onChange={handleInputChange} />
                                     <label htmlFor="college">College Name</label>
                                 </div>
                                 <div className="register-buttons">
@@ -189,7 +198,7 @@ const CompleteProfile = () => {
                                         <img src={codeforces} alt="" />
                                     </div>
                                     <div className="input-wrap">
-                                        <input type="text" id="codeforces" name="codeforces" value={formValues.codeforces} onChange={handleInputChange}  />
+                                        <input type="text" id="codeforces" name="codeforces" value={formValues.codeforces} onChange={handleInputChange} />
                                         <label htmlFor="codeforces">Username</label>
                                     </div>
                                 </div>
@@ -198,7 +207,7 @@ const CompleteProfile = () => {
                                         <img src={leetcode} alt="" />
                                     </div>
                                     <div className="input-wrap">
-                                        <input type="text" id="leetcode" name="leetcode" value={formValues.leetcode} onChange={handleInputChange}  />
+                                        <input type="text" id="leetcode" name="leetcode" value={formValues.leetcode} onChange={handleInputChange} />
                                         <label htmlFor="leetcode">Username</label>
                                     </div>
                                 </div>
@@ -207,7 +216,7 @@ const CompleteProfile = () => {
                                         <img src={codechef} alt="" />
                                     </div>
                                     <div className="input-wrap">
-                                        <input type="text" id="codechef" name="codechef" value={formValues.codechef} onChange={handleInputChange}  />
+                                        <input type="text" id="codechef" name="codechef" value={formValues.codechef} onChange={handleInputChange} />
                                         <label htmlFor="codechef">Username</label>
                                     </div>
                                 </div>
