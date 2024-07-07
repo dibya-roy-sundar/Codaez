@@ -124,7 +124,7 @@ const Profile = () => {
         setEdit(false);
 
         const data = await usePutHook('/update-avatar', {
-            avatar: e.target.files[0] ,
+            avatar: e.target.files[0],
         }, {
             headers: {
                 'Content-Type': 'multipart/form-data',
@@ -168,46 +168,47 @@ const Profile = () => {
                                 </Link>
                                 : <img src={noProfileImage} alt="no profile image" />
                             }
-                            {ownprofile && <>
+                            {ownprofile &&
                                 <div onClick={triggerFileInput} className="editicon">
                                     <FaPencil />
+                                    <form encType="multipart/form-data">
+                                        <input onChange={(e) => handleEditAvatar(e)} ref={editavatarref} type="file" style={{ display: "none" }} />
+                                    </form>
                                 </div>
-                                <form encType="multipart/form-data">
-                                    <input onChange={(e) => handleEditAvatar(e)} ref={editavatarref} type="file" style={{ display: "none" }} />
-                                </form>
-                            </>
                             }
                         </div>
 
                         <div className="namecontainer">
                             <div className="name">
-                                {user?.name && <p>{user.name}</p>}
                                 {user?.username && <div className="username">
                                     @{user.username}
                                 </div>}
                             </div>
-                            {(user?.college && <div className="college">
-                                <FaGraduationCap />
-                                {user.college}
-                            </div>)}
+                            <div className="follow">
+                                <div className="follower">
+                                    <a href="">
+                                        <span>{user?.follower?.length}</span>
+                                        <p>Followers</p>
+                                    </a>
+                                </div>
+                                <div className="followings">
+                                    <a href="">
+                                        <span>{user?.following?.length}</span>
+                                        <p>Followings</p>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div className="follow">
-                        <div className="follower">
-                            <a href="">
-                                <span>{user?.follower?.length}</span>
-                                <p>Followers</p>
-                            </a>
-                        </div>
-                        <div className="followings">
-                            <a href="">
-                                <span>{user?.following?.length}</span>
-                                <p>Followings</p>
-                            </a>
-                        </div>
-                    </div>
+                    {((user?.college || user?.name) && <div className="name-college">
+                        {user?.name && <p>{user.name}</p>}
+                        {user?.name && <p className="college">
+                            <FaGraduationCap />
+                            {user.college}
+                        </p>}
 
+                    </div>)}
                     {!ownprofile && (
                         <div className="followbtn">
                             <button className={`${isFollowing ? "isFollowing" : ""} btn`}
