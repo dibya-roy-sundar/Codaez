@@ -10,12 +10,11 @@ const Labelinput = ({ name, label, value, edit, password, icon, image, type, onC
     return (
         <>
             <div className="container">
-                <div className="icon">
-                    {icon && icon}
+                <label htmlFor={name} className="icon">
+                    {icon}
                     {image && <img src={image} alt=" platform icon" />}
-
-                    <label htmlFor={name}>{label ? label : name}</label>
-                </div>
+                    {label ? label : name}
+                </label>
                 {(edit && !props?.disabled) ? <input {...props} type={password ? (showpw ? "text" : "password") : (type ? type : "text")} name={name} id={name} value={value} onChange={(e) => {
                     onChange(name, e.target.value);
                 }} /> : <p>{value?.length > 0 ? value : "- - -"}</p>}

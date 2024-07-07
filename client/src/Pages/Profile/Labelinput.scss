@@ -1,12 +1,15 @@
 $grey: #333333;
 $purple: #703BF7;
 $darkpurple: #814fff;
+$input-background: rgb(25, 25, 25);
+$label-color: rgb(82, 82, 82);
+
 .container{
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    justify-content: flex-start;
+    gap: 0.25rem;
     position: relative;
+
     .eye{
         position: absolute;
         right: 3%;
@@ -14,46 +17,42 @@ $darkpurple: #814fff;
         color: white;
         cursor: pointer;
     }
+
     .icon{
         display: flex;
         flex-direction: row;
         align-items: center;
         gap: 0.5rem;
+
         img{
             height:1.5rem;
             width:1.5rem;
         }
-        label{
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: whitesmoke;
-        }
     }
-   
-    p{
-        color: #b5b1b1;
-        font-size: 1.25rem;
-        margin: 0.5rem;
-    }
+
     input{
         // width: 100%;
         padding: 0.5rem;
         font-size: 1.25rem;
-        color: #b5b1b1;
-        border-radius: 12px;
-        background: #414141;
-        border: none;
+        color: white;
+        border-radius: 0.35rem;
+        background: $input-background;
+        border: 2px solid transparent;
         padding-right: 3.2rem;
+        outline: none;
+        font-size: 0.9rem;
+        box-shadow: none;
         
-        
-        
+        &:focus {
+            outline: none;
+            border: 2px solid $darkpurple;
+        }
     }
     
-    input:focus{
-        outline-width: 2px;
-        outline-style: solid;
-        outline-color: $darkpurple;
+    p{
+        color: #b5b1b1;
+        font-size: 0.9rem;
+        padding: 0.5rem;
+        border: 2px solid transparent;
     }
-   
-    
 }

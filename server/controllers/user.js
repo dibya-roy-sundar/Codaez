@@ -86,7 +86,7 @@ module.exports.completeProfile = async (req, res) => {
         user.cc = await getCodechefData(cc);
     }
     await user.save();
-    
+
     res.status(200).json({
         status: "success",
         user,
@@ -103,11 +103,11 @@ module.exports.login = async (req, res, next) => {
 
     const user = await User.findAndValidate(email, username, password);
 
-  if (!user) {
-    return next(new ErrorHand("Invalid email or password", 404));
-  }
-  await user.populate('fRequests')
-  sendjwtToken(user, 200, res);
+    if (!user) {
+        return next(new ErrorHand("Invalid email or password", 404));
+    }
+    await user.populate('fRequests')
+    sendjwtToken(user, 200, res);
 };
 
 module.exports.logout = async (req, res, next) => {
@@ -218,14 +218,14 @@ module.exports.sendFollowRequest = async (req, res, next) => {
         return next(new ErrorHand("already a follower", 400));
     }
 
-  const fRequest = new FRequest({
-    senderusername: req.user.username,
-    senderavatar: req.user.avatar || {url:"",filename:""},
-    recieverusername: user.username,
-  });
-  user.fRequests.push(fRequest);
-  await fRequest.save();
-  await user.save();
+    const fRequest = new FRequest({
+        senderusername: req.user.username,
+        senderavatar: req.user.avatar || { url: "", filename: "" },
+        recieverusername: user.username,
+    });
+    user.fRequests.push(fRequest);
+    await fRequest.save();
+    await user.save();
 
     res.status(200).json({
         success: true,
@@ -235,50 +235,50 @@ module.exports.sendFollowRequest = async (req, res, next) => {
 };
 
 module.exports.acceptFollowRequest = async (req, res, next) => {
-  const { reqId } = req.body;
-  
-  const frequest = await FRequest.findById(reqId);
+    const { reqId } = req.body;
 
-  if(!frequest){
-    return next(new ErrorHand("invalid request",400))
-  }
+    const frequest = await FRequest.findById(reqId);
 
-  if (req.user.username !== frequest?.recieverusername) {
-    return next(new ErrorHand("You have not authorized to do this", 401));
-  }
+    if (!frequest) {
+        return next(new ErrorHand("invalid request", 400))
+    }
 
-  const user = await User.findOne({ username: frequest?.senderusername }); //sender or follower
-  req.user.follower.push(user);
-  user.following.push(req.user);
-  await user.save();
-  await req.user.save();
+    if (req.user.username !== frequest?.recieverusername) {
+        return next(new ErrorHand("You have not authorized to do this", 401));
+    }
 
-  const curr_user=await User.findByIdAndUpdate(req.user._id, { $pull: { fRequests: reqId } },{new:true}).populate('fRequests');
-  await FRequest.findByIdAndDelete(reqId);
+    const user = await User.findOne({ username: frequest?.senderusername }); //sender or follower
+    req.user.follower.push(user);
+    user.following.push(req.user);
+    await user.save();
+    await req.user.save();
 
-  res.status(200).json({
-    status: true,
-    msg: `${frequest.senderusername} was added as a follower`,
-    curr_user
-  });
+    const curr_user = await User.findByIdAndUpdate(req.user._id, { $pull: { fRequests: reqId } }, { new: true }).populate('fRequests');
+    await FRequest.findByIdAndDelete(reqId);
+
+    res.status(200).json({
+        status: true,
+        msg: `${frequest.senderusername} was added as a follower`,
+        curr_user
+    });
 };
 
 module.exports.rejectFollowRequest = async (req, res, next) => {
     const { reqId } = req.body;
 
-  const frequest = await FRequest.findById(reqId);
-  if (req.user.username !== frequest?.recieverusername) {
-    return next(new ErrorHand("You have not authorized to do this", 401));
-  }
+    const frequest = await FRequest.findById(reqId);
+    if (req.user.username !== frequest?.recieverusername) {
+        return next(new ErrorHand("You have not authorized to do this", 401));
+    }
 
-  const curr_user= await User.findByIdAndUpdate(req.user._id, { $pull: { fRequests: reqId } },{new:true}).populate('fRequests');
-  await FRequest.findByIdAndDelete(reqId);
+    const curr_user = await User.findByIdAndUpdate(req.user._id, { $pull: { fRequests: reqId } }, { new: true }).populate('fRequests');
+    await FRequest.findByIdAndDelete(reqId);
 
-  res.status(200).json({
-    status: true,
-    msg: `Request rejected`,
-    curr_user
-  });
+    res.status(200).json({
+        status: true,
+        msg: `Request rejected`,
+        curr_user
+    });
 };
 
 module.exports.updateProfile = async (req, res, next) => {
@@ -328,8 +328,10 @@ module.exports.updateProfile = async (req, res, next) => {
     });
 };
 
-module.exports.editAvatar = async (req, res) => {
-    await cloudinary.uploader.destroy(req.user?.avatar.filename);
+module.exports.editAvatar = async (req, res, next) => {
+    if (req.user?.avatar?.filename)
+        await cloudinary.uploader.destroy(req.user?.avatar.filename);
+    
     if (req.file) {
         req.user.avatar = {
             url: req.file.path,

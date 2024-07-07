@@ -16,24 +16,34 @@ import ChangePw from "./ChangePw";
 import { Link, useParams } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 import { useDispatch, useSelector } from "react-redux";
-import usePostFetch from "../../hooks/usePostFetch";
+import usePutHook from "../../hooks/usePutHook";
 import { setAuth } from "../../redux/authReducer";
 
 
 
 const Profile = () => {
-    const { username } = useParams();
     const dispatch = useDispatch();
     const current_user = useSelector(state => state.auth.auth)
-    // console.log(current_user);
-    const { data, loading, error } = useFetch(`/profile/${username}`);
 
-    const user = data.user;
-    // console.log(user);
+    const { username } = useParams();
+    const ownprofile = current_user?.username === username;
 
-    // console.log(current_user);
-    // const ownprofile=current_user?._id?.toString()===user?._id?.toString() || false;
-    const ownprofile = true;
+    const { data, loading, error } = useFetch(`/profile/${username}`, !ownprofile);
+
+    let user;
+    if (ownprofile) {
+        user = current_user
+    }
+    else {
+        user = data.user
+    }
+
+    // const ownprofile = true;
+
+    const [edit, setEdit] = useState(false);
+    const [isFollowing, setisFollowing] = useState(false);
+    const changepwref = useRef();
+    const editavatarref = useRef();
 
     const [formdata, setFormData] = useState({
         name: '',
@@ -51,7 +61,7 @@ const Profile = () => {
     });
 
     useEffect(() => {
-        if (data) {
+        if (ownprofile) {
             setFormData({
                 name: current_user?.name || '',
                 username: current_user?.username,
@@ -61,21 +71,15 @@ const Profile = () => {
                 cf: current_user?.cf?.username || '',
                 cc: current_user?.cc?.username || '',
                 linkedin: current_user?.linkedin || '',
-                github: user?.github || '',
+                github: current_user?.github || '',
                 twitter: current_user?.twitter || '',
                 hashnode: current_user?.hashnode || '',
                 medium: current_user?.medium || '',
             })
         }
-    }, [current_user])
-
-    const [edit, setEdit] = useState(false);
-    const [isFollowing, setisFollowing] = useState(false);
-    const changepwref = useRef();
-    const editavatarref = useRef();
+    }, [current_user, edit])
 
     const changeFormdata = (field, value) => {
-
         setFormData((prev) => {
             return {
                 ...prev,
@@ -88,7 +92,7 @@ const Profile = () => {
         e.preventDefault();
         setEdit(false);
 
-        const data = await usePostFetch('/update-profile', formdata);
+        const data = await usePutHook('/update-profile', formdata);
 
         if (data.data && data.data.user) {
             // toast.success(`Welcome back, ${data.data.user.name}`, {
@@ -114,14 +118,41 @@ const Profile = () => {
     const triggerFileInput = () => {
         editavatarref.current.click();
     }
-    const handleEditAvatar = () => {
-        console.log("hello");
+
+    const handleEditAvatar = async (e) => {
+        e.preventDefault();
+        setEdit(false);
+
+        const data = await usePutHook('/update-avatar', {
+            avatar: e.target.files[0] ,
+        }, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            }
+        });
+
+        if (data.data && data.data.user) {
+            // toast.success(`Welcome back, ${data.data.user.name}`, {
+            //     position: toast.POSITION.TOP_LEFT
+            // });
+            dispatch(setAuth(data.data.user));
+        }
+        else if (data.data) {
+            // toast.warn(data.data.error || data.data.message, {
+            //     position: toast.POSITION.TOP_LEFT
+            // });
+        }
+        else {
+            console.log(data);
+            // toast.error(data.error, {
+            //     position: toast.POSITION.TOP_LEFT
+            // });
+        }
     }
 
     const openPwModal = () => {
         changepwref.current.openModal();
     };
-
 
 
     return (
@@ -131,27 +162,33 @@ const Profile = () => {
                 <div className="usercard" >
                     <div className="top">
                         <div className="editable">
-                            <Link to={user?.avatar?.url}>
-                                <img src={user?.avatar?.url ? user.avatar.url : noProfileImage} alt="profile avatar" />
-                            </Link>
-                            <div onClick={triggerFileInput} className="editicon">
-                                <FaPencil />
-                            </div>
-                            <form encType="multipart/form-data">
-                                <input onChange={handleEditAvatar} ref={editavatarref} type="file" style={{ display: "none" }} />
-                            </form>
+                            {user?.avatar?.url
+                                ? <Link to={user?.avatar?.url} target="_blank">
+                                    <img src={user?.avatar?.url ? user.avatar.url : noProfileImage} alt="profile avatar" />
+                                </Link>
+                                : <img src={noProfileImage} alt="no profile image" />
+                            }
+                            {ownprofile && <>
+                                <div onClick={triggerFileInput} className="editicon">
+                                    <FaPencil />
+                                </div>
+                                <form encType="multipart/form-data">
+                                    <input onChange={(e) => handleEditAvatar(e)} ref={editavatarref} type="file" style={{ display: "none" }} />
+                                </form>
+                            </>
+                            }
                         </div>
 
                         <div className="namecontainer">
                             <div className="name">
-                                {formdata?.name && <p>{formdata.name}</p>}
-                                <div className="username">
-                                    @{formdata?.username && formdata.username}
-                                </div>
+                                {user?.name && <p>{user.name}</p>}
+                                {user?.username && <div className="username">
+                                    @{user.username}
+                                </div>}
                             </div>
-                            {(formdata?.college && <div className="college">
+                            {(user?.college && <div className="college">
                                 <FaGraduationCap />
-                                {formdata.college}
+                                {user.college}
                             </div>)}
                         </div>
                     </div>
@@ -183,63 +220,66 @@ const Profile = () => {
 
                     {(isFollowing || ownprofile) && (
                         <div className="ratingsWrapper">
-                            {user?.cf?.rating &&
+                            {user?.cf?.rating ?
                                 <div className="ratings">
                                     <span>
                                         <img src={codeforces} alt="codeforces logo" />
                                         {user.cf.rating} ({user.cf.maxRating})
                                     </span>
                                 </div>
+                                : ""
                             }
-                            {user?.lc?.rating &&
+                            {user?.lc?.rating ?
                                 <div className="ratings">
                                     <span>
                                         <img src={leetcode} alt="leetcode logo" />
                                         {user.lc.rating}
                                     </span>
                                 </div>
+                                : ""
                             }
-                            {user?.cc?.rating &&
+                            {user?.cc?.rating ?
                                 <div className="ratings">
                                     <span>
                                         <img src={codechef} alt="codechef" />
                                         {user.cc.rating} ({user.cc.maxRating})
                                     </span>
                                 </div>
+                                : ""
                             }
                         </div>
                     )}
 
                     {(isFollowing || ownprofile) && (
                         <div className="social">
-                            {formdata.linkedin?.length > 0 &&
-                                <a href={formdata.linkedin} className="social-icon">
+                            {user?.linkedin?.length > 0 &&
+                                <a href={user.linkedin} target="_blank" className="social-icon">
                                     {/* <img src={linkedin} alt="linkedin" /> */}
-                                    <FaLinkedin className="icon" /> {formdata.linkedin}
+                                    <FaLinkedin className="icon" /> {user.linkedin}
                                 </a>
                             }
-                            {formdata.twitter?.length > 0 &&
-                                <a href={formdata.twitter} className="social-icon">
-                                    {/* <img src={twitter} alt="twitter--v1" /> */}
-                                    <FaXTwitter className="icon" />{formdata.twitter}
-                                </a>
-                            }
-                            {formdata.github?.length > 0 &&
-                                <a href={formdata.github} className="social-icon">
+                            {user?.github?.length > 0 &&
+                                <a href={user.github} target="_blank" className="social-icon">
                                     {/* <img src={github} alt="github" /> */}
-                                    <FaGithub className="icon" />{formdata.github}
+                                    <FaGithub className="icon" />{user.github}
                                 </a>
                             }
-                            {formdata.hashnode?.length > 0 &&
-                                <a href={formdata.hashnode} className="social-icon">
+                            {user?.twitter?.length > 0 &&
+                                <a href={user.twitter} target="_blank" className="social-icon">
+                                    {/* <img src={twitter} alt="twitter--v1" /> */}
+                                    <FaXTwitter className="icon" />{user.twitter}
+                                </a>
+                            }
+                            {user?.hashnode?.length > 0 &&
+                                <a href={user.hashnode} target="_blank" className="social-icon">
                                     {/* <img src={hashnode} alt="hashnode" /> */}
-                                    <FaHashnode className="icon" />{formdata.hashnode}
+                                    <FaHashnode className="icon" />{user.hashnode}
                                 </a>
                             }
-                            {formdata.medium?.length > 0 &&
-                                <a href={formdata.medium} className="social-icon">
+                            {user?.medium?.length > 0 &&
+                                <a href={user.medium} target="_blank" className="social-icon">
                                     {/* <img src={medium} alt="medium-logo" /> */}
-                                    <FaMedium className="icon" />{formdata.medium}
+                                    <FaMedium className="icon" />{user.medium}
                                 </a>
                             }
                         </div>
@@ -259,11 +299,12 @@ const Profile = () => {
                 {ownprofile && (
                     <div className="formcontainer">
                         <form onSubmit={handleProfileSubmit}>
+                            <p className="groupHeading">User Details</p>
                             <div className="fieldcontainer">
-                                <Labelinput
-                                    edit={edit}
+                                <Labelinput edit={edit}
                                     icon={<FaIdCard />}
                                     name={"name"}
+                                    label={"Name"}
                                     onChange={changeFormdata}
                                     value={formdata.name}
                                 />
@@ -271,6 +312,7 @@ const Profile = () => {
                                     edit={edit}
                                     icon={<FaUser />}
                                     name={"username"}
+                                    label={"Username"}
                                     value={formdata.username}
                                     disabled
                                 />
@@ -279,6 +321,7 @@ const Profile = () => {
                                     icon={<FaEnvelope />}
                                     style={{ paddingRight: "1.5rem" }}
                                     name={"email"}
+                                    label={"Email"}
                                     value={formdata.email}
                                     type="email"
                                     disabled
@@ -289,51 +332,55 @@ const Profile = () => {
                                     name={"college"}
                                     style={{ paddingRight: "1.5rem" }}
                                     onChange={changeFormdata}
-                                    label={"university"}
+                                    label={"College"}
                                     value={formdata.college}
+                                />
+                            </div>
+                            <p className="groupHeading">Usernames</p>
+                            <div className="fieldcontainer">
+                                <Labelinput
+                                    edit={edit}
+                                    image={codeforces}
+                                    name={"cf"}
+                                    onChange={changeFormdata}
+                                    label={"CodeForces"}
+                                    value={formdata.cf}
                                 />
                                 <Labelinput
                                     edit={edit}
                                     image={leetcode}
                                     name={"lc"}
                                     onChange={changeFormdata}
-                                    label={"leetcode username"}
+                                    label={"LeetCode"}
                                     value={formdata.lc}
                                 />
-
-                                <Labelinput
-                                    edit={edit}
-                                    image={codeforces}
-                                    name={"cf"}
-                                    onChange={changeFormdata}
-                                    label={"codeforces username"}
-                                    value={formdata.cf}
-                                />
-
                                 <Labelinput
                                     edit={edit}
                                     image={codechef}
                                     name={"cc"}
                                     onChange={changeFormdata}
-                                    label={"codechef username"}
+                                    label={"CodeChef"}
                                     value={formdata.cc}
                                 />
+                            </div>
 
+                            <p className="groupHeading">Links</p>
+                            <div className="fieldcontainer">
                                 <Labelinput
                                     edit={edit}
                                     image={linkedin}
                                     name={"linkedin"}
                                     onChange={changeFormdata}
-                                    label={"linkedin url"}
+                                    label={"LinkedIn"}
                                     style={{ paddingRight: "1.5rem" }}
-                                    value={formdata.linkedin}
+                                    value={formdata?.linkedin}
                                 />
                                 <Labelinput
                                     edit={edit}
                                     image={github}
                                     name={"github"}
                                     onChange={changeFormdata}
-                                    label={"github url"}
+                                    label={"GitHub"}
                                     style={{ paddingRight: "1.5rem" }}
                                     value={formdata.github}
                                 />
@@ -342,14 +389,16 @@ const Profile = () => {
                                     image={twitter}
                                     name={"twitter"}
                                     onChange={changeFormdata}
-                                    label={"twitter url"}
+                                    label={"Twitter"}
                                     style={{ paddingRight: "1.5rem" }}
                                     value={formdata.twitter}
                                 />
                                 <Labelinput
                                     edit={edit}
                                     image={hashnode}
-                                    label={"hashnode url"}
+                                    name={"hashnode"}
+                                    onChange={changeFormdata}
+                                    label={"Hashnode"}
                                     style={{ paddingRight: "1.5rem" }}
                                     value={formdata.hashnode}
                                 />
@@ -358,7 +407,7 @@ const Profile = () => {
                                     image={medium}
                                     name={"medium"}
                                     onChange={changeFormdata}
-                                    label={"medium url"}
+                                    label={"Medium"}
                                     style={{ paddingRight: "1.5rem" }}
                                     value={formdata.medium}
                                 />
@@ -366,13 +415,7 @@ const Profile = () => {
                             <div className="submitbutton">
                                 {edit ? (
                                     <div className="save">
-                                        <button
-                                            className="cancel"
-                                            onClick={() => {
-                                                setEdit(false);
-                                            }}
-                                            type="button"
-                                        >
+                                        <button className="cancel" onClick={() => { setEdit(false) }} type="button" >
                                             <div className="icon">
                                                 <FaBan />
                                                 Cancel
@@ -387,11 +430,7 @@ const Profile = () => {
                                     </div>
                                 ) : (
                                     <button
-                                        onClick={() => {
-                                            setEdit(true);
-                                        }}
-                                        type="button"
-                                    >
+                                        onClick={() => { setEdit(true) }} type="button" >
                                         <div className="icon">
                                             <FaPenToSquare />
                                             Edit

@@ -3,10 +3,10 @@ $purple: #703BF7;
 $darkpurple: #814fff;
 
 .profileContainer {
-    padding: 3rem;
+    padding: 0 1rem 1rem 4rem;
     display: flex;
     justify-content: center;
-    gap: 2rem;
+    gap: 1rem;
     position: relative;
 
     .usercard {
@@ -235,23 +235,28 @@ $darkpurple: #814fff;
 
     .formcontainer {
         flex: 2.5;
-        box-shadow: 1px 1px 9px 0px #7b7a7a;
-        border-radius: 2px 20px 20px 2px;
-        background: $grey;
+        border-radius: 0.5rem;
+        background: #222222;
         padding: 2rem;
 
         form {
             display: flex;
             flex-direction: column;
-            gap: 3rem;
+            gap: 1rem;
+
+            .groupHeading{
+                margin-top: 1rem;
+                font-size: 1.25rem;
+                color: $purple;
+                border-bottom: 1px solid $purple;
+            }
 
             .fieldcontainer {
                 display: grid;
                 grid-auto-flow: row;
-                row-gap: 1.5rem;
-                grid-template-columns: auto auto;
+                row-gap: 1rem;
+                grid-template-columns:repeat(2,1fr);
                 column-gap: 1.5rem;
-
             }
 
             .submitbutton {
@@ -260,14 +265,19 @@ $darkpurple: #814fff;
                 justify-content: flex-end;
 
                 button {
-                    padding: 0.3rem 1rem;
-                    border-radius: 8px;
-                    font-size: 1.5rem;
+                    padding: 0.25rem 0.75rem;
+                    border-radius: 0.25rem;
+                    font-size: 1.25rem;
                     background: $purple;
                     color: white;
-                    font-weight: 400;
+                    font-weight: 500;
                     cursor: pointer;
                     border: none;
+                    transition: all 0.2s ease-in-out;
+
+                    &:hover{
+                        background-color: $darkpurple;
+                    }
                 }
 
                 .save {
@@ -277,22 +287,21 @@ $darkpurple: #814fff;
                     gap: 2rem;
 
                     .cancel {
-                        background: #494747;
+                        background-color: #494747;
+
+                        &:hover{
+                            background-color: #515151;
+                        }
                     }
                 }
 
                 .icon {
                     display: flex;
                     flex-direction: row;
-                    gap: 0.5rem;
-                    padding: 0;
-                    margin: 0;
                     align-items: center;
+                    gap: 0.5rem;
                 }
-
-
             }
-
         }
     }
 }
