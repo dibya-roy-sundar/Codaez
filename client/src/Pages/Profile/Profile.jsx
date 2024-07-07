@@ -17,7 +17,7 @@ import { Link, useParams } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 import { useDispatch, useSelector } from "react-redux";
 import usePutHook from "../../hooks/usePutHook";
-import { setAuth } from "../../redux/authReducer";
+import { setAuth, updateProfile } from "../../redux/authReducer";
 import usePostFetch from "../../hooks/usePostFetch";
 
 
@@ -31,8 +31,17 @@ const Profile = () => {
 
     const { data, loading, error } = useFetch(`/profile/${username}`, !ownprofile);
 
+    useEffect(()=>{
+        if(ownprofile){
+            dispatch(updateProfile(current_user?.username));//only for showing updates on following 
+            // othwerwise follow updated when user accept follow request
+        }
+
+    },[ownprofile])
+
     let user,isFollowing,isRequested;
     if (ownprofile) {
+        
         user = current_user
     }
     else {
@@ -40,7 +49,7 @@ const Profile = () => {
         isFollowing=data.isfollowing
         isRequested=data.isrequested
     }
-        console.log(isRequested);
+        // console.log(isRequested);
 
     // const ownprofile = true;
 

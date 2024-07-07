@@ -1,5 +1,7 @@
 const express = require('express');
-const { login, register, logout, changePassword, setUsername, userDetails, sendFollowRequest, acceptFollowRequest, rejectFollowRequest, updateProfile, profile, editAvatar, completeProfile, getReqeusts } = require('../controllers/user.js');
+const { login, register, logout, changePassword, setUsername, userDetails,
+    sendFollowRequest, acceptFollowRequest, rejectFollowRequest, updateProfile, profile,
+    editAvatar, completeProfile, getReqeusts, withdrawRequest, unFollow } = require('../controllers/user.js');
 const { isLoggedIn } = require('../utils/isLoggedIn.js');
 const catchAsync = require('../utils/catchAsync');
 const multer = require('multer');
@@ -26,5 +28,7 @@ router.route('/update-profile').put(catchAsync(isLoggedIn), catchAsync(updatePro
 router.route('/update-avatar').put(catchAsync(isLoggedIn), upload.single('avatar'), catchAsync(editAvatar))
 router.route('/profile/:username').get(catchAsync(isLoggedIn),catchAsync(profile));
 router.route('/get-requests').post(catchAsync(getReqeusts));//catchAsync(isLoggedIn),
+router.route('/withdraw-request').post(catchAsync(isLoggedIn),catchAsync(withdrawRequest));
+router.route('/unfollow').post(catchAsync(isLoggedIn),catchAsync(unFollow));
 
 module.exports = router;

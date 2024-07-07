@@ -1,6 +1,7 @@
 import {createSlice} from "@reduxjs/toolkit"
 import useFetch from "../hooks/useFetch"
 import usePostFetch from "../hooks/usePostFetch"
+import { setAuth } from "./authReducer"
 const initialState={
     fr:[],
     loading:false,
@@ -49,6 +50,7 @@ export const acceptFRequestThunk=(reqId) =>{
         if(data && data.status){
             console.log("hi");
             dispatch(fRequestActions.removefRequest(reqId));
+            dispatch(setAuth(data.curr_user));
         }
     }
 }
