@@ -4,12 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 import { FaUserFriends } from "react-icons/fa";
-import { RxCross2 } from "react-icons/rx";
-import { TiTick } from "react-icons/ti";
-import noprofileimage from "../../assets/noProfileImage.png"
-import { useDispatch, useSelector } from "react-redux";
-import usePostFetch from "../../hooks/usePostFetch";
-import { setAuth } from "../../redux/authReducer";
+import RequestBox from "./RequestBox";
 
 let searchData=[]
 
@@ -20,31 +15,13 @@ const Navbar = () => {
     const [inputvalue,setinputvalue]=useState("");
     const inputref=useRef();
     const friendref=useRef();
-    const user=useSelector(state => state.auth.auth);
-    const dispatch=useDispatch()
+   
 
-    const {data,loading,error}=useFetch(`/userdetails?keyword=${inputvalue}`, inputvalue.length>0)
+    const {data,error}=useFetch(`/userdetails?keyword=${inputvalue}`, inputvalue.length>0)
     if(data){
         searchData=data.users;
     }
 
-   const handleacceptFrequest=async (reqId)=>{
-   const res=await usePostFetch('/acceptfrequest',{reqId})
-
-   if(res && res.data && res.data.curr_user) {
-    console.log("hello");
-    dispatch(setAuth({...res.data.curr_user}))
-}
-}
-
-const handlerejectFrequest=async (reqId)=>{
-    const res=await usePostFetch('/rejectfrequest',{reqId})
-
-    if(res && res.data && res.data.curr_user) {
-        console.log("hello");
-        dispatch(setAuth(res.data.curr_user))
-    }
-}
 
 
   
@@ -102,27 +79,30 @@ const handlerejectFrequest=async (reqId)=>{
                 <div className="searchcontainer">
                     <div ref={friendref} className="request">
                         <FaUserFriends   onClick={handleFr}  className="icon" />
-                        {openFr &&  <div className="frequest">
-                            {user?.fRequests?.map((fr)=> {
+                        {/* {openFr &&  <div className="frequest">
+                            {loading && <p>Loading...</p>}
+                            {fr.length===0 && <p>No pending requests</p>}
+                            {fr?.map((f)=> {
                                 return (
-                                    <div key={fr.senderusername} className="individual">
+                                    <div key={f.senderusername} className="individual">
                                             <div className="username">
-                                                    <img src={fr.senderavatar?.url || noprofileimage} alt="user avatar" />
-                                                <p>{fr.senderusername}</p>
+                                                    <img src={f.senderavatar?.url || noprofileimage} alt="user avatar" />
+                                                <p>{f.senderusername}</p>
                                             </div>
                                             <div className="options">
 
-                                                <div onClick={() => {handleacceptFrequest(fr._id)}} className="accept">
+                                                <div onClick={() => {handleacceptFrequest(f._id)}} className="accept">
                                                     <TiTick  className="icon" />
                                                 </div>
-                                                <div onClick={() => {handlerejectFrequest(fr._id)}} className="reject">
+                                                <div onClick={() => {handlerejectFrequest(f._id)}} className="reject">
                                                     <RxCross2 className="icon" />
                                                 </div>
                                             </div>
                                     </div>
                                 )
                             })}
-                        </div>}
+                        </div>} */}
+                     { openFr &&    <RequestBox  />}
                        
                     </div>
 

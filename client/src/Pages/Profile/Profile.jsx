@@ -18,6 +18,7 @@ import useFetch from "../../hooks/useFetch";
 import { useDispatch, useSelector } from "react-redux";
 import usePutHook from "../../hooks/usePutHook";
 import { setAuth } from "../../redux/authReducer";
+import usePostFetch from "../../hooks/usePostFetch";
 
 
 
@@ -30,18 +31,21 @@ const Profile = () => {
 
     const { data, loading, error } = useFetch(`/profile/${username}`, !ownprofile);
 
-    let user;
+    let user,isFollowing,isRequested;
     if (ownprofile) {
         user = current_user
     }
     else {
         user = data.user
+        isFollowing=data.isfollowing
+        isRequested=data.isrequested
     }
+        console.log(isRequested);
 
     // const ownprofile = true;
 
     const [edit, setEdit] = useState(false);
-    const [isFollowing, setisFollowing] = useState(false);
+    const [sendfrequest, setsendfrequest] = useState(false);
     const changepwref = useRef();
     const editavatarref = useRef();
 
@@ -77,6 +81,7 @@ const Profile = () => {
                 medium: current_user?.medium || '',
             })
         }
+        
     }, [current_user, edit])
 
     const changeFormdata = (field, value) => {
@@ -150,6 +155,18 @@ const Profile = () => {
         }
     }
 
+    const handleSendFollowRequest=async ()=>{
+        const {data}=await usePostFetch('/sendfrequest',{username});
+
+        if(data && data.success){
+            // console.log(data);
+            setsendfrequest(true);
+        }else{
+            console.log("error");
+        }
+
+    }
+
     const openPwModal = () => {
         changepwref.current.openModal();
     };
@@ -211,10 +228,10 @@ const Profile = () => {
                     </div>)}
                     {!ownprofile && (
                         <div className="followbtn">
-                            <button className={`${isFollowing ? "isFollowing" : ""} btn`}
-                                onClick={() => { setisFollowing((prev) => !prev); }}
+                            <button disabled={isFollowing || (isRequested || sendfrequest)} className={`${(isFollowing || isRequested || sendfrequest) ? "isFollowing" : ""} btn`}
+                                onClick={ handleSendFollowRequest}
                             >
-                                {isFollowing ? "Following" : "Follow"}
+                                {isFollowing ? "Following" :( (isRequested || sendfrequest) ? "Requested" :"Follow")}
                             </button>
                         </div>
                     )}

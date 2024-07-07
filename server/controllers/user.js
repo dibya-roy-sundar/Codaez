@@ -106,7 +106,6 @@ module.exports.login = async (req, res, next) => {
     if (!user) {
         return next(new ErrorHand("Invalid email or password", 404));
     }
-    await user.populate('fRequests')
     sendjwtToken(user, 200, res);
 };
 
@@ -223,14 +222,11 @@ module.exports.sendFollowRequest = async (req, res, next) => {
         senderavatar: req.user.avatar || { url: "", filename: "" },
         recieverusername: user.username,
     });
-    user.fRequests.push(fRequest);
     await fRequest.save();
-    await user.save();
 
     res.status(200).json({
         success: true,
         fRequest,
-        user,
     });
 };
 
@@ -253,13 +249,13 @@ module.exports.acceptFollowRequest = async (req, res, next) => {
     await user.save();
     await req.user.save();
 
-    const curr_user = await User.findByIdAndUpdate(req.user._id, { $pull: { fRequests: reqId } }, { new: true }).populate('fRequests');
+    // const curr_user = await User.findByIdAndUpdate(req.user._id, { $pull: { fRequests: reqId } }, { new: true }).populate('fRequests');
     await FRequest.findByIdAndDelete(reqId);
 
     res.status(200).json({
         status: true,
         msg: `${frequest.senderusername} was added as a follower`,
-        curr_user
+        curr_user:req.user
     });
 };
 
@@ -271,15 +267,24 @@ module.exports.rejectFollowRequest = async (req, res, next) => {
         return next(new ErrorHand("You have not authorized to do this", 401));
     }
 
-    const curr_user = await User.findByIdAndUpdate(req.user._id, { $pull: { fRequests: reqId } }, { new: true }).populate('fRequests');
+    // const curr_user = await User.findByIdAndUpdate(req.user._id, { $pull: { fRequests: reqId } }, { new: true }).populate('fRequests');
     await FRequest.findByIdAndDelete(reqId);
 
     res.status(200).json({
         status: true,
         msg: `Request rejected`,
-        curr_user
     });
 };
+
+module.exports.getReqeusts=async (req,res,next)=>{
+    
+    const {username}=req.body;
+    const frequests=await FRequest.find({recieverusername:username});
+    res.status(200).json({
+        status:true,
+        frequests
+    })
+}
 
 module.exports.updateProfile = async (req, res, next) => {
     const {
@@ -350,10 +355,14 @@ module.exports.profile = async (req, res, next) => {
     const { username } = req.params;
 
     const user = await User.findOne({ username: username }).select("-passsword");
+    const isfollowing=user.follower.includes(req.user?._id);
+    const isrequested=await FRequest.findOne({senderusername:req.user?.username,recieverusername:username});
     if (user) {
         return res.status(200).json({
             success: true,
             user,
+            isfollowing,
+            isrequested:isrequested?true:false
         });
     }
     return res.status(404).json({
