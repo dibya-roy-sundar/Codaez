@@ -10,7 +10,7 @@ import usePostFetch from '../../hooks/usePostFetch';
 
 
 const RequestBox = () => {
-    const [reload,setReload]=useState(false);
+    const [reload,setReload]=useState(0);
     const dispatch=useDispatch()
 
     const {data}=useFetch('/get-requests',true,reload);
@@ -27,7 +27,7 @@ const RequestBox = () => {
 
         if(data && data.status){
             dispatch(setAuth(data.curr_user));
-            setReload((prev) => !prev);
+            setReload((prev) => prev+1);
         }
 
     }   
@@ -36,7 +36,7 @@ const RequestBox = () => {
         const {data}=await usePostFetch('/rejectfrequest',{reqId})
         if(data && data.status){
             dispatch(setAuth(data.curr_user));
-            setReload((prev) => !prev);
+            setReload((prev) => prev+1);
        }
     }
 

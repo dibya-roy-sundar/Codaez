@@ -125,17 +125,17 @@ module.exports.changePassword = async (req, res, next) => {
     //current logged in userdetails
     // console.log(req.user);
 
-    const result = await bcrypt.compare(oldpw, req.user.password);
+    const result = await bcrypt.compare(oldpw, req.user?.password);
     if (!result) {
         return next(new ErrorHand("Password incorrect", 401));
     } else {
         const hash = await bcrypt.hash(newpw, 12);
         await User.findOneAndUpdate(
-            { username: req.user.username },
+            { username: req.user?.username },
             { password: hash }
         );
         res.status(200).json({
-            status: true,
+            success: true,
             message: "Password successfully changed",
         });
     }

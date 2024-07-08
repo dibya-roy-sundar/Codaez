@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import "./Profile.scss";
 import leetcode from "../../assets/leetcode.png";
 import codeforces from "../../assets/codeforces.png";
@@ -11,7 +12,7 @@ import noProfileImage from "../../assets/noProfileImage.png"
 import Labelinput from "./Labelinput";
 import { useEffect, useRef, useState } from "react";
 import { FaBan } from "react-icons/fa";
-import { FaAngleRight, FaCheck, FaEnvelope, FaFloppyDisk, FaGithub, FaGraduationCap, FaHashnode, FaIdCard, FaKey, FaLinkedin, FaMedium, FaPencil, FaPenToSquare, FaPlus, FaUser, FaXTwitter } from "react-icons/fa6";
+import { FaAngleRight, FaEnvelope, FaFloppyDisk, FaGithub, FaGraduationCap, FaHashnode, FaIdCard, FaKey, FaLinkedin, FaMedium, FaPencil, FaPenToSquare, FaUser, FaXTwitter } from "react-icons/fa6";
 import ChangePw from "./ChangePw";
 import { Link, useParams } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
@@ -25,7 +26,7 @@ import usePostFetch from "../../hooks/usePostFetch";
 const Profile = () => {
     const dispatch = useDispatch();
     const current_user = useSelector(state => state.auth.auth)
-    const [reload,setReload]=useState(false);
+    const [reload,setReload]=useState(0);
 
     const { username } = useParams();
     const ownprofile = current_user?.username === username;
@@ -173,7 +174,7 @@ const Profile = () => {
 
         if(data && data.success){
             // console.log(data);
-            setReload(prev => !prev);
+            setReload(prev => prev+1);
         }else{
             console.log("error");
         }
@@ -184,14 +185,14 @@ const Profile = () => {
         const  {data}= await usePostFetch('/withdraw-request',{username});
         if(data && data.success){
             // console.log(data.msg); toastify
-            setReload(prev => !prev);
+            setReload(prev => prev+1);
         }
     }
     const handleUnfollow=async () =>{
         const  {data}= await usePostFetch('/unfollow',{username});
 
         if(data && data.success){
-            setReload(prev => !prev);
+            setReload(prev => prev+1);
             dispatch(setAuth(data.curr_user));
         }
 
@@ -199,14 +200,19 @@ const Profile = () => {
 
     const openPwModal = () => {
         changepwref.current.openModal();
+
     };
+    const closepwModal= () => {
+        changepwref.current.closeModal();
+    }
 
 
     return (
         <>
             {/*  Loading component */}
+            {reload===0 && loading ? <p style={{fontSize:"5rem",position:"absolute",top:"45%",left:"45%",zIndex:5}}>Loading...</p>:
                 <div className="profileContainer" >
-                <ChangePw changePwRef={changepwref} />
+                <ChangePw handleClose={closepwModal} changePwRef={changepwref} />
                 <div className="usercard" >
                     <div className="top">
                         <div className="editable">
@@ -491,6 +497,8 @@ const Profile = () => {
                     </div>
                 )}
                 </div>
+            }
+                
            
         </>
     );
