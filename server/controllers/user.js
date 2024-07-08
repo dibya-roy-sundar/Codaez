@@ -237,8 +237,10 @@ module.exports.withdrawRequest=async (req,res,next) =>{
     if (!username) {
         return next(new ErrorHand("username is required", 400));
     }
-  
-    await FRequest.findOneAndDelete({senderusername:req.user?.username,recieverusername:username});
+
+    const frequest=await FRequest.findOneAndDelete({senderusername:req.user?.username,recieverusername:username});
+    await User.findOneAndUpdate({username},{$pull: { fRequests: frequest?._id }});
+
 
     res.status(200).json({
         success:true,

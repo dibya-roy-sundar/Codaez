@@ -25,11 +25,14 @@ import usePostFetch from "../../hooks/usePostFetch";
 const Profile = () => {
     const dispatch = useDispatch();
     const current_user = useSelector(state => state.auth.auth)
+    const [reload,setReload]=useState(false);
 
     const { username } = useParams();
     const ownprofile = current_user?.username === username;
 
-    const { data, loading, error } = useFetch(`/profile/${username}`, !ownprofile);
+    const { data, loading, error } = useFetch(`/profile/${username}`, !ownprofile,reload);
+    
+  
 
     useEffect(()=>{
         if(ownprofile){
@@ -39,22 +42,23 @@ const Profile = () => {
 
     },[ownprofile])
 
+
     let user,isFollowing,isRequested;
     if (ownprofile) {
         
         user = current_user
     }
     else {
-        user = data.user
-        isFollowing=data.isfollowing
-        isRequested=data.isrequested
+        user = data.user;
+        isFollowing=data.isfollowing;
+        isRequested=data.isrequested;
+
     }
-        // console.log(isRequested);
+    
 
     // const ownprofile = true;
 
     const [edit, setEdit] = useState(false);
-    const [sendfrequest, setsendfrequest] = useState(false);
     const changepwref = useRef();
     const editavatarref = useRef();
 
@@ -169,9 +173,26 @@ const Profile = () => {
 
         if(data && data.success){
             // console.log(data);
-            setsendfrequest(true);
+            setReload(prev => !prev);
         }else{
             console.log("error");
+        }
+
+    }
+
+    const handleWithdrawFollowRequest=async () =>{
+        const  {data}= await usePostFetch('/withdraw-request',{username});
+        if(data && data.success){
+            // console.log(data.msg); toastify
+            setReload(prev => !prev);
+        }
+    }
+    const handleUnfollow=async () =>{
+        const  {data}= await usePostFetch('/unfollow',{username});
+
+        if(data && data.success){
+            setReload(prev => !prev);
+            dispatch(setAuth(data.curr_user));
         }
 
     }
@@ -183,7 +204,8 @@ const Profile = () => {
 
     return (
         <>
-            <div className="profileContainer" >
+            {/*  Loading component */}
+                <div className="profileContainer" >
                 <ChangePw changePwRef={changepwref} />
                 <div className="usercard" >
                     <div className="top">
@@ -237,10 +259,10 @@ const Profile = () => {
                     </div>)}
                     {!ownprofile && (
                         <div className="followbtn">
-                            <button disabled={isFollowing || (isRequested || sendfrequest)} className={`${(isFollowing || isRequested || sendfrequest) ? "isFollowing" : ""} btn`}
-                                onClick={ handleSendFollowRequest}
+                            <button  className={`${(isFollowing || isRequested ) ? "isFollowing" : ""} btn`}
+                                onClick={isRequested ?  handleWithdrawFollowRequest : (isFollowing ? handleUnfollow  : handleSendFollowRequest) }
                             >
-                                {isFollowing ? "Following" :( (isRequested || sendfrequest) ? "Requested" :"Follow")}
+                                {isRequested ? "Requested" :( isFollowing  ? "Following" :"Follow")}
                             </button>
                         </div>
                     )}
@@ -468,7 +490,8 @@ const Profile = () => {
                         </form>
                     </div>
                 )}
-            </div>
+                </div>
+           
         </>
     );
 };
