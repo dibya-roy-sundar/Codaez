@@ -27,7 +27,7 @@ router.route('/rejectfrequest').post(catchAsync(isLoggedIn), catchAsync(rejectFo
 router.route('/update-profile').put(catchAsync(isLoggedIn), catchAsync(updateProfile))
 router.route('/update-avatar').put(catchAsync(isLoggedIn), upload.single('avatar'), catchAsync(editAvatar))
 router.route('/profile/:username').get(catchAsync(isLoggedIn),catchAsync(profile));
-router.route('/get-requests').post(catchAsync(getReqeusts));//catchAsync(isLoggedIn),
+router.route('/get-requests').get(catchAsync(isLoggedIn),catchAsync(getReqeusts));//
 router.route('/withdraw-request').post(catchAsync(isLoggedIn),catchAsync(withdrawRequest));
 router.route('/unfollow').post(catchAsync(isLoggedIn),catchAsync(unFollow));
 

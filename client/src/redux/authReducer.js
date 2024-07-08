@@ -27,7 +27,7 @@ export default authSlice.reducer;
 export const updateProfile=(username) =>{
     return async (dispatch)=>{
         try {
-            console.log("hello");
+            // console.log("hello");
             const { data } =await makeRequest.get(`/profile/${username}?ownprofile=${true}`,{withCredentials:true});
             if(data && data.success){
                 dispatch(setAuth(data.user));

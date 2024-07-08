@@ -2,35 +2,42 @@ import './RequestBox.scss'
 import { TiTick } from "react-icons/ti";
 import noprofileimage from "../../assets/noProfileImage.png"
 import { RxCross2 } from "react-icons/rx";
-import { useDispatch, useSelector } from 'react-redux';
-import { acceptFRequestThunk, getFRequests, rejectFRequestThunk } from '../../redux/fRequests';
-import { useEffect } from 'react';
+import { useDispatch,  } from 'react-redux';
+import {  useState } from 'react';
+import { setAuth } from '../../redux/authReducer';
+import useFetch from '../../hooks/useFetch';
+import usePostFetch from '../../hooks/usePostFetch';
 
 
 const RequestBox = () => {
-    const {fr,loading}=useSelector(state =>state.requests);
-    const user=useSelector(state => state.auth.auth);
+    const [reload,setReload]=useState(false);
     const dispatch=useDispatch()
 
-    useEffect(()=>{
-        if(user){
-
-            dispatch(getFRequests(user.username))
-        }
-
-        
-    },[])
+    const {data}=useFetch('/get-requests',true,reload);
+    let fr=[];
+    if(data && data.status){
+        fr=data.frequests;
+    }
     
 
    
 
-    const handleacceptFrequest= (reqId)=>{
-        dispatch(acceptFRequestThunk(reqId));
+    const handleacceptFrequest=async  (reqId)=>{
+        const {data}=await usePostFetch('/acceptfrequest',{reqId})
+
+        if(data && data.status){
+            dispatch(setAuth(data.curr_user));
+            setReload((prev) => !prev);
+        }
 
     }   
 
-    const handlerejectFrequest= (reqId)=>{
-        dispatch(rejectFRequestThunk(reqId));
+    const handlerejectFrequest=async  (reqId)=>{
+        const {data}=await usePostFetch('/rejectfrequest',{reqId})
+        if(data && data.status){
+            dispatch(setAuth(data.curr_user));
+            setReload((prev) => !prev);
+       }
     }
 
 

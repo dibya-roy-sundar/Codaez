@@ -11,7 +11,6 @@ import {
 } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import authReducer from './authReducer';
-import requestsReducer from './fRequests'
 
 const authPersistConfig = {
     key: 'auth',
@@ -19,19 +18,12 @@ const authPersistConfig = {
     storage,
 }
 
-const requestsPersistConfig ={
-    key: 'requests',
-    version: 1,
-    storage,
-}
 
 const authPersistedReducer = persistReducer(authPersistConfig, authReducer);
-const requestsPersistReducer = persistReducer(requestsPersistConfig,requestsReducer);
 
 export const store = configureStore({
     reducer: {
         auth: authPersistedReducer,
-        requests: requestsPersistReducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({

@@ -222,7 +222,9 @@ module.exports.sendFollowRequest = async (req, res, next) => {
         senderavatar: req.user.avatar || { url: "", filename: "" },
         recieverusername: user.username,
     });
+    user.fRequests.push(fRequest);
     await fRequest.save();
+    await user.save();
 
     res.status(200).json({
         success: true,
@@ -264,13 +266,13 @@ module.exports.acceptFollowRequest = async (req, res, next) => {
     await req.user.save();
     await user.save();
 
-    // const curr_user = await User.findByIdAndUpdate(req.user._id, { $pull: { fRequests: reqId } }, { new: true }).populate('fRequests');
+    const curr_user = await User.findByIdAndUpdate(req.user._id, { $pull: { fRequests: reqId } }, { new: true });
     await FRequest.findByIdAndDelete(reqId);
 
     res.status(200).json({
         status: true,
         msg: `${frequest.senderusername} was added as a follower`,
-        curr_user:req.user
+        curr_user
     });
 };
 
@@ -282,12 +284,13 @@ module.exports.rejectFollowRequest = async (req, res, next) => {
         return next(new ErrorHand("You have not authorized to do this", 401));
     }
 
-    // const curr_user = await User.findByIdAndUpdate(req.user._id, { $pull: { fRequests: reqId } }, { new: true }).populate('fRequests');
+    const curr_user = await User.findByIdAndUpdate(req.user._id, { $pull: { fRequests: reqId } }, { new: true });
     await FRequest.findByIdAndDelete(reqId);
 
     res.status(200).json({
         status: true,
         msg: `Request rejected`,
+        curr_user
     });
 };
 
@@ -312,13 +315,13 @@ module.exports.unFollow=async (req,res) =>{
 }
 
 module.exports.getReqeusts=async (req,res,next)=>{
-    
-    const {username}=req.body;
-    const frequests=await FRequest.find({recieverusername:username});
-    res.status(200).json({
+   const user=await User.findById(req.user?._id).populate('fRequests');
+
+   res.status(200).json({
         status:true,
-        frequests
-    })
+        frequests:user.fRequests
+   })
+
 }
 
 module.exports.updateProfile = async (req, res, next) => {

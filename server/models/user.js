@@ -90,6 +90,12 @@ const userSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: "User",
         },
+    ],
+    fRequests: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "FRequest",
+        },
     ]
 });
 
