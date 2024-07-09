@@ -11,6 +11,8 @@ const Auth = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    const [isLoginMode, setIsLoginMode] = useState(true); // State to toggle between Login and Register
+
     const [loginUserCredentials, setLoginUserCredentials] = useState({
         username: "",
         email: "",
@@ -18,12 +20,10 @@ const Auth = () => {
     });
 
     const handleLoginChange = (e) => {
-        setLoginUserCredentials(prev => {
-            return {
-                ...prev,
-                [e.target.name]: e.target.value,
-            }
-        })
+        setLoginUserCredentials(prev => ({
+            ...prev,
+            [e.target.name]: e.target.value,
+        }));
     }
 
     const handleLoginSubmit = async (e) => {
@@ -36,13 +36,11 @@ const Auth = () => {
             // });
             dispatch(setAuth(data.data.user));
             navigate('/dashboard');
-        }
-        else if (data.data) {
+        } else if (data.data) {
             // toast.warn(data.data.error || data.data.message, {
             //     position: toast.POSITION.TOP_LEFT
             // });
-        }
-        else {
+        } else {
             console.log(data);
             // toast.error(data.error, {
             //     position: toast.POSITION.TOP_LEFT
@@ -57,18 +55,15 @@ const Auth = () => {
     });
 
     const handleRegisterChange = (e) => {
-        setRegisterUserCredentials(prev => (
-            {
-                ...prev,
-                [e.target.name]: e.target.value
-            }
-        ));
+        setRegisterUserCredentials(prev => ({
+            ...prev,
+            [e.target.name]: e.target.value,
+        }));
     }
 
     const handleRegisterSubmit = async (e) => {
         e.preventDefault();
-        const data = await usePostFetch('/register',registerUserCredentials);
-        // console.log(data.data);
+        const data = await usePostFetch('/register', registerUserCredentials);
 
         if (data.data && data.data.user) {
             // toast.success(`Hello ${data.data.user.name}`, {
@@ -76,23 +71,41 @@ const Auth = () => {
             // });
             dispatch(setAuth(data.data.user));
             navigate('/completeprofile');
-        }
-        else if (data.data) {
+        } else if (data.data) {
             // toast.warn(data.data.error || data.data.message, {
             //     position: toast.POSITION.TOP_LEFT
             // });
-        }
-        else {
+        } else {
             // toast.error(data.error, {
             //     position: toast.POSITION.TOP_LEFT
             // });
         }
     }
 
+    const toggleMode = () => {
+        setIsLoginMode(prevMode => !prevMode);
+    }
+
     return (
         <div className="auth">
-            <Login loginUserCredentials={loginUserCredentials} handleLoginChange={handleLoginChange} handleLoginSubmit={handleLoginSubmit} />
-            <Register registerUserCredentials={registerUserCredentials} handleRegisterChange={handleRegisterChange} handleRegisterSubmit={handleRegisterSubmit} />
+            {/* Toggle Button */}
+            <input type="checkbox" id="reg-log" name="reg-log" className="checkbox" onChange={toggleMode} />
+            <label htmlFor="reg-log"></label>
+
+            {/* Login or Register Component based on toggle state */}
+            {isLoginMode ? (
+                <Login
+                    loginUserCredentials={loginUserCredentials}
+                    handleLoginChange={handleLoginChange}
+                    handleLoginSubmit={handleLoginSubmit}
+                />
+            ) : (
+                <Register
+                    registerUserCredentials={registerUserCredentials}
+                    handleRegisterChange={handleRegisterChange}
+                    handleRegisterSubmit={handleRegisterSubmit}
+                />
+            )}
         </div>
     )
 }

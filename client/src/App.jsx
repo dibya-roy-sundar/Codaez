@@ -12,8 +12,8 @@ import CompleteProfile from './components/Register/CompleteProfile';
 const Layout = () => {
     return (
         <div className='app'>
-            <Navbar />
-            <Sidebar />
+            {/* <Navbar />
+            <Sidebar /> */}
             <Outlet />
             {/* <Footer /> */}
         </div>
@@ -26,7 +26,7 @@ const router = createBrowserRouter([
         element: <Layout />,
         children: [
             {
-                path: "/",
+                path: "/home",
                 element: <Landing />
             },
             {
