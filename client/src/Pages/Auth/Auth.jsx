@@ -11,8 +11,7 @@ const Auth = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const [isLoginMode, setIsLoginMode] = useState(true); // State to toggle between Login and Register
-
+    const [isLoginMode, setIsLoginMode] = useState(true);
     const [loginUserCredentials, setLoginUserCredentials] = useState({
         username: "",
         email: "",
