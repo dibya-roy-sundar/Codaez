@@ -6,71 +6,76 @@ module.exports.getUserDetails = async (req, res, next) => {
 
 
     if (platform === 'codeforces') {
-            const username = req.user.cf?.username;
-            if(!username){
-                return next(new ErrorHand("pls add your codeforces username",400))
-            }
-            res.status(200).json({
-                status:true,
-                result:req.user.cf
-            })   
+        const username = req.user.cf?.username;
+        if (!username) {
+            return next(new ErrorHand("pls add your codeforces username", 400))
+        }
+        res.status(200).json({
+            status: true,
+            result: req.user.cf
+        })
 
     }
     else if (platform === 'leetcode') {
-                        
-            const username = req.user.lc?.username;
-            if(!username){
-                return next(new ErrorHand("pls add your leetcode username",400))
-            }
-            res.status(200).json({
-                status:true,
-                result:req.user.lc
-            })
-           
-       
+
+        const username = req.user.lc?.username;
+        if (!username) {
+            return next(new ErrorHand("pls add your leetcode username", 400))
+        }
+        res.status(200).json({
+            status: true,
+            result: req.user.lc
+        })
+
+
     }
     else if (platform === 'codechef') {
         const username = req.user.cc.username;
-        if(!username){
-            return next(new ErrorHand("pls add your codechef username",400))
+        if (!username) {
+            return next(new ErrorHand("pls add your codechef username", 400))
         }
         res.status(200).json({
-            status:true,
-            result:req.user.cc
-        })  
+            status: true,
+            result: req.user.cc
+        })
     }
     else {
         res.status(500).json({
             status: false,
-            message:"platform is not available"
+            message: "platform is not available"
         })
     }
-    
+
 }
 
-module.exports.getLeaderboardDetails=async (req,res) =>{
-    const user=await User.findById(req.user._id).populate('following')
+module.exports.getLeaderboardDetails = async (req, res) => {
+    const user = await User.findById(req.user._id).populate('following')
 
-     const followingUserRatings=user.following.map((item) =>{
+    const followingDetails = user.following.map((item) => {
         return {
-            username:item.username,
-            lc:item.lc,
-            cf:item.cf,
-            cc:item.cc,
+            username: item.username,
+            name: item.name,
+            imgUrl: item.avatar.url,
+            lc: item.lc,
+            cf: item.cf,
+            cc: item.cc,
         }
-     })
-     const currentUserRating={
-        lc:user.lc,
-        cf:user.cf,
-        cc:user.cc
-     }
+    })
+    const currUserDetails = {
+        username: user.username,
+        name: user.name,
+        imgUrl: user.avatar.url,
+        lc: user.lc,
+        cf: user.cf,
+        cc: user.cc,
+    }
 
-     res.status(200).json({
-        status:true,
-        result:{
-            currentUserRating,
-            followingUserRatings
+    res.status(200).json({
+        status: true,
+        result: {
+            followingDetails,
+            currUserDetails
         }
-     })
+    })
 
 }
