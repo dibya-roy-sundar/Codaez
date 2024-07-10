@@ -219,9 +219,10 @@ module.exports.sendFollowRequest = async (req, res, next) => {
     }
 
     const fRequest = new FRequest({
-        senderusername: req.user.username,
-        sendername :req.user.name,
-        senderavatar: req.user.avatar || { url: "", filename: "" },
+        senderusername: req.user?.username,
+        sendername :req.user?.name,
+        senderavatar: req.user?.avatar || { url: "", filename: "" },
+        senderuserId:req.user?._id,
         recieverusername: user.username,
     });
     user.fRequests.push(fRequest);
@@ -325,9 +326,17 @@ module.exports.unFollow=async (req,res) =>{
 module.exports.getReqeusts=async (req,res,next)=>{
    await req.user.populate('fRequests');
 
+
+   const frequests=req.user.fRequests.map((item) => {
+    return {
+        ...item._doc,
+        isfollowing:req.user.following.some((el) =>el.toString()===item.senderuserId)
+    }
+   })
+
    res.status(200).json({
         status:true,
-        frequests:req.user.fRequests
+        frequests
    })
 
 }

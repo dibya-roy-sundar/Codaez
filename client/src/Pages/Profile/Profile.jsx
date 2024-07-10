@@ -30,7 +30,6 @@ const Profile = () => {
 
     const { username } = useParams();
     const ownprofile = current_user?.username === username;
-    console.log("bun",ownprofile);
 
     const { data, loading, error } = useFetch(`/profile/${username}`, true,reload);
     

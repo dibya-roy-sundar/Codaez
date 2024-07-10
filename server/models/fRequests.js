@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const fRequestSchema = new Schema({
     senderusername: String,
     sendername :String,
+    senderuserId:String,
     senderavatar:{
         url: String,
         filename: String,
