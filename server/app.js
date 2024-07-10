@@ -36,9 +36,9 @@ app.use('/api/v1/details', detailsRoutes);
 
 app.use(error);
 
-// setInterval(() => {
-//     refreshData();
-// }, 100000000);
+setInterval(() => {
+}, 100000000);
+refreshData();
 
 const port = process.env.PORT;
 app.listen(port, () => {

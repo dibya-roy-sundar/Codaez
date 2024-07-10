@@ -4,21 +4,25 @@ const calcAggregateRating = (user) => {
     min_ratings = { lc: 1200, cf: 800, cc: 800 }
     max_ratings = { lc: 3000, cf: 2700, cc: 2700 }
 
-    if (user?.lc?.rating > 0) {
+    if (user?.lc?.rating && user.lc.rating>0) {
         sum += (user.lc.rating - min_ratings.lc) / (max_ratings.lc - min_ratings.lc)
         n++;
+        console.log('lc')
     }
-    if (user?.cf?.rating > 0) {
+    if (user?.cf?.rating && user.cf.rating>0) {
         sum += (user.cf.rating - min_ratings.cf) / (max_ratings.cf - min_ratings.cf)
         n++;
+        console.log('cf')
     }
-    if (user?.cc?.rating > 0) {
+    if (user?.cc?.rating && user.cc.rating>0) {
         sum += (user.cc.rating - min_ratings.cc) / (max_ratings.cc - min_ratings.cc)
         n++;
+        console.log('cc')
     }
     if (n > 0) {
         aggregateRating = Math.round(sum / n * 10000);
     }
+    console.log("ag",sum,n,aggregateRating)
 
     return aggregateRating
 }

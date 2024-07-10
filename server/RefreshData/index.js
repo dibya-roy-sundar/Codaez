@@ -148,12 +148,16 @@ module.exports.getCodechefData = async (username) => {
 
 module.exports.refreshData = async () => {
     const allUsers = await User.find({}, 'cf.username lc.username cc.username');
+    const updates=[];
+    const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-    const updates = allUsers.map(async (user) => {
+
+    for (const user of allUsers) {
         const updateObj = {};
         let flag = false;
         if (user.cf && user.cf.username) {
             const data = await module.exports.getCodeforcesData(user.cf.username);
+            await delay(1000 / 3);  // Delay to ensure 3 API calls per second
             if (data) {
                 flag = true;
                 updateObj.cf = data;
@@ -161,6 +165,7 @@ module.exports.refreshData = async () => {
         }
         if (user.lc && user.lc.username) {
             const data = await module.exports.getLeetcodeData(user.lc.username);
+            await delay(1000 / 3);  // Delay to ensure 3 API calls per second
             // console.log(data)
             if (data) {
                 flag = true;
@@ -169,6 +174,7 @@ module.exports.refreshData = async () => {
         }
         if (user.cc && user.cc.username) {
             const data = await module.exports.getCodechefData(user.cc.username);
+            await delay(1000 / 3);  // Delay to ensure 3 API calls per second
             // console.log(data)
             if (data) {
                 flag = true;
@@ -177,17 +183,16 @@ module.exports.refreshData = async () => {
         }
         if (flag) {
             updateObj.aggregateRating=calcAggregateRating(updateObj)
-            return { _id: user._id, update: { ...updateObj } }
+            updates.push({ _id: user._id, update: { ...updateObj } });
         }
-        return null;
-    });
+    }
 
-    const results = await Promise.all(updates);
-    const filteredResults = results.filter(result => result !== null);
+    // const results = await Promise.all(updates);
+    // const filteredResults = results.filter(result => result !== null);
     // console.log(filteredResults);
 
     try {
-        const bulkOps = filteredResults.map(update => ({
+        const bulkOps = updates.map(update => ({
             updateOne: {
                 filter: { _id: new mongoose.Types.ObjectId(update._id) },
                 update: { $set: update.update }
