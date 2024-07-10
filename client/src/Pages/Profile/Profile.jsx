@@ -18,7 +18,7 @@ import { Link, useParams } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 import { useDispatch, useSelector } from "react-redux";
 import usePutHook from "../../hooks/usePutHook";
-import { setAuth, updateProfile } from "../../redux/authReducer";
+import { setAuth } from "../../redux/authReducer";
 import usePostFetch from "../../hooks/usePostFetch";
 
 
@@ -30,18 +30,21 @@ const Profile = () => {
 
     const { username } = useParams();
     const ownprofile = current_user?.username === username;
+    console.log("bun",ownprofile);
 
-    const { data, loading, error } = useFetch(`/profile/${username}`, !ownprofile,reload);
+    const { data, loading, error } = useFetch(`/profile/${username}`, true,reload);
     
   
 
     useEffect(()=>{
-        if(ownprofile){
-            dispatch(updateProfile(current_user?.username));//only for showing updates on following 
+        if(ownprofile && data && data.user ){
+            //only for showing updates on following 
             // othwerwise follow updated when user accept follow request
+            dispatch(setAuth(data.user));
         }
 
-    },[ownprofile])
+
+    },[data])
 
 
     let user,isFollowing,isRequested;
@@ -57,9 +60,9 @@ const Profile = () => {
     }
     
 
-    // const ownprofile = true;
 
     const [edit, setEdit] = useState(false);
+    const [sendfr,setSendfr]=useState(false);
     const changepwref = useRef();
     const editavatarref = useRef();
 
@@ -170,28 +173,28 @@ const Profile = () => {
     }
 
     const handleSendFollowRequest=async ()=>{
-        const {data}=await usePostFetch('/sendfrequest',{username});
+        const {data}=await usePostFetch('/sendfrequest',{userId:user?._id});
 
         if(data && data.success){
-            // console.log(data);
-            setReload(prev => prev+1);
+            setSendfr(true);
         }else{
-            console.log("error");
+            console.log("error while sending frequest");
         }
 
     }
 
     const handleWithdrawFollowRequest=async () =>{
-        const  {data}= await usePostFetch('/withdraw-request',{username});
+        const  {data}= await usePostFetch('/withdraw-request',{username,userId:user?._id});
         if(data && data.success){
             // console.log(data.msg); toastify
-            setReload(prev => prev+1);
+            setSendfr(false);
         }
     }
     const handleUnfollow=async () =>{
-        const  {data}= await usePostFetch('/unfollow',{username});
+        const  {data}= await usePostFetch('/unfollow',{userId:user?._id});
 
         if(data && data.success){
+            // console.log(data.msg); toastify
             setReload(prev => prev+1);
             dispatch(setAuth(data.curr_user));
         }
@@ -265,10 +268,10 @@ const Profile = () => {
                     </div>)}
                     {!ownprofile && (
                         <div className="followbtn">
-                            <button  className={`${(isFollowing || isRequested ) ? "isFollowing" : ""} btn`}
-                                onClick={isRequested ?  handleWithdrawFollowRequest : (isFollowing ? handleUnfollow  : handleSendFollowRequest) }
+                            <button  className={`${(isFollowing || isRequested || sendfr) ? "isFollowing" : ""} btn`}
+                                onClick={(isRequested || sendfr ) ?  handleWithdrawFollowRequest : (isFollowing ? handleUnfollow  : handleSendFollowRequest) }
                             >
-                                {isRequested ? "Requested" :( isFollowing  ? "Following" :"Follow")}
+                                {(isRequested || sendfr ) ? "Requested" :( isFollowing  ? "Following" :"Follow")}
                             </button>
                         </div>
                     )}

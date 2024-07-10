@@ -187,16 +187,10 @@ module.exports.userDetails = async (req, res, next) => {
 };
 
 module.exports.sendFollowRequest = async (req, res, next) => {
-    // const { userId } = req.body;
-    // const user = await User.findById(userId);//reciever
+    const { userId } = req.body;
+    const user = await User.findById(userId).populate('fRequests','senderusername');//reciever
 
-    // for testing
-    const { username } = req.body;
-    if (!username) {
-        return next(new ErrorHand("username is required", 400));
-    }
 
-    const user = await User.findOne({ username });
 
     if (!user) {
         return next(new ErrorHand("user not found", 404));
@@ -206,10 +200,7 @@ module.exports.sendFollowRequest = async (req, res, next) => {
         return next(new ErrorHand("can't send follow request to yourself", 401));
     }
 
-    const pendingrequest = await FRequest.findOne({
-        senderusername: req.user.username,
-        recieverusername: user.username,
-    });
+    const pendingrequest = user.fRequests.some(fr => fr.senderusername===req.user?.username);
     if (pendingrequest) {
         return next(new ErrorHand("already sent Follow request", 400));
     }
@@ -233,18 +224,15 @@ module.exports.sendFollowRequest = async (req, res, next) => {
 };
 
 module.exports.withdrawRequest=async (req,res,next) =>{
-    const { username } = req.body;
-    if (!username) {
-        return next(new ErrorHand("username is required", 400));
-    }
-
+    const { userId,username } = req.body;
+   
     const frequest=await FRequest.findOneAndDelete({senderusername:req.user?.username,recieverusername:username});
-    await User.findOneAndUpdate({username},{$pull: { fRequests: frequest?._id }});
+    await User.findByIdAndUpdate(userId,{$pull: { fRequests: frequest?._id }});
 
 
     res.status(200).json({
         success:true,
-        msg:"Request withdrawn"
+        msg:"Request removed"
     })
 
 }
@@ -265,16 +253,19 @@ module.exports.acceptFollowRequest = async (req, res, next) => {
     const user = await User.findOne({ username: frequest?.senderusername }); //sender or follower
     user.following.push(req.user);
     req.user.follower.push(user);
-    await req.user.save();
     await user.save();
+    // await req.user.save();
 
-    const curr_user = await User.findByIdAndUpdate(req.user._id, { $pull: { fRequests: reqId } }, { new: true });
+    req.user.fRequests=req.user?.fRequests.filter((el) => el.toString() !== reqId.toString());
+    await req.user.save();
+    
+    
     await FRequest.findByIdAndDelete(reqId);
 
     res.status(200).json({
         status: true,
         msg: `${frequest.senderusername} was added as a follower`,
-        curr_user
+        curr_user:req.user
     });
 };
 
@@ -286,19 +277,23 @@ module.exports.rejectFollowRequest = async (req, res, next) => {
         return next(new ErrorHand("You have not authorized to do this", 401));
     }
 
-    const curr_user = await User.findByIdAndUpdate(req.user._id, { $pull: { fRequests: reqId } }, { new: true });
+    // const curr_user = await User.findByIdAndUpdate(req.user._id, { $pull: { fRequests: reqId } }, { new: true });
+
+    req.user.fRequests=req.user?.fRequests.filter(fr => fr.toString()!==reqId.toString());
+    await req.user.save();
+
     await FRequest.findByIdAndDelete(reqId);
 
     res.status(200).json({
         status: true,
         msg: `Request rejected`,
-        curr_user
+        curr_user:req.user
     });
 };
 
 module.exports.unFollow=async (req,res) =>{
-    const {username}=req.body;
-    const user=await User.findOneAndUpdate({username},{$pull:{follower:req.user?._id}},{new:true});
+    const {userId}=req.body;
+    const user=await User.findByIdAndUpdate(userId,{$pull:{follower:req.user?._id}},{new:true});
 
     const curr_user=await User.findByIdAndUpdate(
         req.user?._id,
@@ -393,24 +388,23 @@ module.exports.editAvatar = async (req, res, next) => {
 
 module.exports.profile = async (req, res, next) => {
     const { username } = req.params;
-    const {ownprofile}= req.query;
 
-    const user = await User.findOne({ username: username }).select("-passsword");
-    let isfollowing,isrequested;
-    if(!ownprofile){
-        isfollowing=user.follower.includes(req.user?._id);
-        isrequested=await FRequest.findOne({senderusername:req.user?.username,recieverusername:username});
+    const user = await User.findOne({ username: username }).select("-passsword").populate('fRequests','senderusername');
+
+    if(!user){
+       return  res.status(404).json({
+            status:false,
+            msg:"user not found"
+        })
     }
-    if (user) {
-        return res.status(200).json({
-            success: true,
-            user,
-            isfollowing,
-            isrequested:isrequested?true:false
-        });
-    }
-    return res.status(404).json({
-        success: true,
-        message: "User not found",
-    });
+  
+    const isrequested=user?.fRequests?.some((fr) => fr.senderusername===req.user?.username);
+    const isfollowing=user?.follower.some((el) => el.toString()===req.user._id.toString());
+
+    res.status(200).json({
+        status:true,
+        user,
+        isrequested,
+        isfollowing
+    })
 };
