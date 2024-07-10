@@ -68,29 +68,6 @@ const Navbar = () => {
                 <div className="searchcontainer">
                     <div ref={friendref} className="request">
                         <RiUserFollowFill onClick={handleFr} className="icon" />
-                        {/* {openFr &&  <div className="frequest">
-                            {loading && <p>Loading...</p>}
-                            {fr.length===0 && <p>No pending requests</p>}
-                            {fr?.map((f)=> {
-                                return (
-                                    <div key={f.senderusername} className="individual">
-                                            <div className="username">
-                                                    <img src={f.senderavatar?.url || noprofileimage} alt="user avatar" />
-                                                <p>{f.senderusername}</p>
-                                            </div>
-                                            <div className="options">
-
-                                                <div onClick={() => {handleacceptFrequest(f._id)}} className="accept">
-                                                    <TiTick  className="icon" />
-                                                </div>
-                                                <div onClick={() => {handlerejectFrequest(f._id)}} className="reject">
-                                                    <RxCross2 className="icon" />
-                                                </div>
-                                            </div>
-                                    </div>
-                                )
-                            })}
-                        </div>} */}
                         {openFr && <RequestBox />}
                     </div>
 
@@ -114,7 +91,7 @@ const Navbar = () => {
                                                 </div>
                                                 <div className='userdetails'>
                                                     <span className='username'>@{el.username}</span>
-                                                    <span>Vanshul</span>
+                                                    <span>{el.name}</span>
                                                 </div>
                                             </Link>
                                         );

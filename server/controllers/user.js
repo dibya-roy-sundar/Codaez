@@ -11,6 +11,10 @@ const ErrorHand = require("../utils/errorHand.js");
 const sendjwtToken = require("../utils/sendjwtToken");
 const bcrypt = require("bcrypt");
 
+
+
+/////////////////// Auth ////////////////////////
+
 module.exports.register = async (req, res) => {
     const { username, email, password } = req.body;
 
@@ -177,6 +181,9 @@ module.exports.setUsername = async (req, res, next) => {
     });
 };
 
+
+///////////////////////  Search  ////////////////////////////
+
 module.exports.userDetails = async (req, res, next) => {
     const apiFeatures = new ApiFeatures(User.find(), req.query).search();
     const users = await apiFeatures.query;
@@ -185,6 +192,9 @@ module.exports.userDetails = async (req, res, next) => {
         users,
     });
 };
+
+
+///////////////////// Follow ////////////////////////////////
 
 module.exports.sendFollowRequest = async (req, res, next) => {
     const { userId } = req.body;
@@ -210,6 +220,7 @@ module.exports.sendFollowRequest = async (req, res, next) => {
 
     const fRequest = new FRequest({
         senderusername: req.user.username,
+        sendername :req.user.name,
         senderavatar: req.user.avatar || { url: "", filename: "" },
         recieverusername: user.username,
     });
@@ -312,14 +323,41 @@ module.exports.unFollow=async (req,res) =>{
 }
 
 module.exports.getReqeusts=async (req,res,next)=>{
-   const user=await User.findById(req.user?._id).populate('fRequests');
+   await req.user.populate('fRequests');
 
    res.status(200).json({
         status:true,
-        frequests:user.fRequests
+        frequests:req.user.fRequests
    })
 
 }
+
+
+////////////////////// Profile   //////////////////////
+
+module.exports.profile = async (req, res, next) => {
+    const { username } = req.params;
+
+    const user = await User.findOne({ username: username }).select("-passsword").populate('fRequests','senderusername');
+
+    if(!user){
+       return  res.status(404).json({
+            status:false,
+            msg:"user not found"
+        })
+    }
+  
+    const isrequested=user?.fRequests?.some((fr) => fr.senderusername===req.user?.username);
+    const isfollowing=user?.follower.some((el) => el.toString()===req.user._id.toString());
+
+    res.status(200).json({
+        status:true,
+        user,
+        isrequested,
+        isfollowing
+    })
+};
+
 
 module.exports.updateProfile = async (req, res, next) => {
     const {
@@ -386,25 +424,3 @@ module.exports.editAvatar = async (req, res, next) => {
     });
 };
 
-module.exports.profile = async (req, res, next) => {
-    const { username } = req.params;
-
-    const user = await User.findOne({ username: username }).select("-passsword").populate('fRequests','senderusername');
-
-    if(!user){
-       return  res.status(404).json({
-            status:false,
-            msg:"user not found"
-        })
-    }
-  
-    const isrequested=user?.fRequests?.some((fr) => fr.senderusername===req.user?.username);
-    const isfollowing=user?.follower.some((el) => el.toString()===req.user._id.toString());
-
-    res.status(200).json({
-        status:true,
-        user,
-        isrequested,
-        isfollowing
-    })
-};
