@@ -20,6 +20,7 @@ const Register = ({ registerUserCredentials, handleRegisterChange, handleRegiste
         e.preventDefault();
         setOtpOpen(true);
     }
+    
 
     return (
         <div className="login-container">

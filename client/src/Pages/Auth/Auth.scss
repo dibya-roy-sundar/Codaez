@@ -1,3 +1,42 @@
-.auth{
-    
+.checkbox:checked+label,
+.checkbox:not(:checked)+label {
+    position: relative;
+    display: block;
+    text-align: center;
+    width: 70px;
+    height: 16px;
+    border-radius: 8px;
+    padding: 0;
+    margin: 10px auto;
+    cursor: pointer;
+    background-color: #ffeba7;
+}
+
+.checkbox {
+    display: none;
+
+}
+
+.checkbox:checked+label:before,
+.checkbox:not(:checked)+label:before {
+    position: absolute;
+    display: block;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    color: #ffeba7;
+    background-color: #102770;
+    // font-family: 'unicons';
+    content: '\2196';
+    z-index: 20;
+    top: -10px;
+    left: -10px;
+    line-height: 36px;
+    text-align: center;
+    font-size: 27px;
+    transition: all 0.5s ease;
+}
+
+.checkbox:checked+label:before {
+    transform: translateX(44px) rotate(-270deg);
 }

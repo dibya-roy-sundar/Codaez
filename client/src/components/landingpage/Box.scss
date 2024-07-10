@@ -1,0 +1,196 @@
+$box-width: 100px;
+$translate: $box-width / 2;
+$animation-time: 3s;
+$animation-delay: 0s;
+$glow: #fff;
+$box-outer-color: #DDD;
+$box-inner-color: #888;
+
+@mixin filter-gradient($color1, $color2, $direction) {
+    background-image: linear-gradient(to #{$direction}, $color1, $color2);
+}
+
+@mixin get-flap-transform($i, $y-rotation) {
+    $translateY: translateY(-$translate);
+    $secondary-translate-amount: if(floor(($i - 1) / 2)==0, $translate, -$translate);
+    $secodary-translate: if($i % 2==0, translateZ($secondary-translate-amount), translateX($secondary-translate-amount));
+    $rotateX: rotateX(90deg);
+    $rotateZ: rotateZ(($i - 1) * 90deg);
+    $rotateY: rotateY($y-rotation);
+    transform: $translateY $secodary-translate $rotateX $rotateZ $rotateY;
+}
+
+
+.profile-icon {
+    width: 100%;
+    height: 100%;
+    font-size: 3rem; // Adjust icon size as needed
+    color: #fff; // Set icon color
+}
+
+.flex-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    // height: 100vh;
+    // background-color: #090909;
+}
+
+.glowing-box {
+    width: 200px;
+    /* Adjust as needed */
+    height: 200px;
+    /* Adjust as needed */
+    position: relative;
+    margin: auto;
+    transform: rotateX(-45deg) rotateY(-45deg) rotateZ(0deg);
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    perspective-origin: 50% 50%;
+    text-align: center;
+    font-size: 0;
+    /* Prevents gap issues */
+
+
+    .box-face {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #888;
+        transition: transform 0.5s ease;
+    }
+
+    .image-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transform: scale(0);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .profile-icon {
+        font-size: 3rem;
+        /* Adjust icon size */
+        color: #fff;
+        /* Icon color */
+    }
+
+    .right-side .image-container {
+        transform-origin: right top;
+        transform: scale(0);
+    }
+
+    .front .image-container {
+        transform-origin: center top;
+        transform: scale(0);
+    }
+
+    .left-side .image-container {
+        transform-origin: left top;
+        transform: scale(0);
+    }
+
+    .back .image-container {
+        transform-origin: center bottom;
+        transform: scale(0);
+    }
+
+    .glowing-box:hover .image-container {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+
+
+    .box-face,
+    .top-flap {
+        width: $box-width;
+        height: $box-width;
+        position: absolute;
+        background: lighten($box-inner-color, 30);
+    }
+
+    .top-flap {
+        width: 50px;
+        /* Adjust as needed */
+        transform-origin: 100% 50%;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        animation-duration: $animation-time;
+        animation-delay: $animation-delay;
+        animation-iteration-count: 1;
+        background: lighten($box-inner-color, 30);
+    }
+
+    .right-side {
+        border: 2px solid #CCC;
+        transform: translateX($translate) rotateY(90deg);
+        background: lighten($box-inner-color, 30);
+
+    }
+
+    .front {
+        border: 2px solid #CCC;
+        transform: rotateY(0deg) translateZ($translate);
+        background: lighten($box-inner-color, 30);
+
+    }
+
+    .left-side {
+        background: lighten($box-inner-color, 30);
+        @include filter-gradient($box-inner-color, darken($box-inner-color, 40), horizontal);
+        border: 0;
+        box-shadow: -15px 10px 60px -15px $glow;
+        transform: translateX(-$translate) rotateY(90deg);
+    }
+
+    .back {
+        background: lighten($box-inner-color, 30);
+        @include filter-gradient(lighten($box-inner-color, 30), $box-inner-color, horizontal);
+        border: 0;
+        box-shadow: 15px 10px 60px -15px $glow;
+        transform: translateZ(-$translate) rotateY(0deg);
+    }
+
+    .bottom {
+        background: $box-inner-color;
+        @include filter-gradient($box-inner-color, darken($box-inner-color, 40), horizontal);
+        border: 0;
+        box-shadow: 0 0 60px $glow;
+        transform: translateY($translate) rotateX(90deg);
+    }
+
+    $sides: right, front, left, back;
+
+    @for $i from 1 through 4 {
+        .top-#{nth($sides, $i)} {
+            animation-name: open-#{nth($sides, $i)}-flap;
+            @include get-flap-transform($i, 225deg);
+        }
+
+        @keyframes open-#{nth($sides, $i)}-flap {
+            0% {
+                @include get-flap-transform($i, 0deg);
+            }
+
+            @if $i % 2==0 {
+                50% {
+                    @include get-flap-transform($i, 0deg);
+                }
+            }
+
+            100% {
+                @include get-flap-transform($i, 225deg);
+            }
+        }
+    }
+}
