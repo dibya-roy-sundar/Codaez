@@ -52,7 +52,7 @@ const RequestBox = () => {
                                             </div>
                                             <div className='userdetails'>
                                                 <span className='username'>@{f.senderusername}</span>
-                                                <span>Vanshul</span>
+                                                <span>{f.sendername}</span>
                                             </div>
                                         </Link>
                                         <div className="options">

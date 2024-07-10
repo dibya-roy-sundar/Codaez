@@ -6,10 +6,10 @@ class ApiFeatures{
     search(){
         const keyword=this.querystr.keyword
         ? {
-            username:{
-                $regex:this.querystr.keyword,
-                $options:"i",
-            },
+            $or: [
+                { username: { $regex: this.querystr.keyword, $options: "i" } },
+                { name: { $regex: this.querystr.keyword, $options: "i" } }
+            ]
         } 
         : {};
 
