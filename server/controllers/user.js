@@ -7,6 +7,7 @@ const { cloudinary } = require("../cloudinary/index.js");
 const FRequest = require("../models/frequests.js");
 const User = require("../models/user.js");
 const ApiFeatures = require("../utils/apiFeatures.js");
+const calcAggregateRating = require("../utils/calcAggregateRating.js");
 const ErrorHand = require("../utils/errorHand.js");
 const sendjwtToken = require("../utils/sendjwtToken");
 const bcrypt = require("bcrypt");
@@ -89,6 +90,7 @@ module.exports.completeProfile = async (req, res) => {
         user.cc.username = cc;
         user.cc = await getCodechefData(cc);
     }
+    user.aggregateRating = calcAggregateRating(user);
     await user.save();
 
     res.status(200).json({
@@ -172,6 +174,8 @@ module.exports.setUsername = async (req, res, next) => {
     req.user.cf = await getCodeforcesData(cf?.username);
     req.user.cc = await getCodechefData(cc?.username);
 
+    req.user.aggregateRating = calcAggregateRating(req.user);
+
     await req.user.save();
 
     res.status(200).json({
@@ -198,7 +202,7 @@ module.exports.userDetails = async (req, res, next) => {
 
 module.exports.sendFollowRequest = async (req, res, next) => {
     const { userId } = req.body;
-    const user = await User.findById(userId).populate('fRequests','senderusername');//reciever
+    const user = await User.findById(userId).populate('fRequests', 'senderusername');//reciever
 
 
 
@@ -210,7 +214,7 @@ module.exports.sendFollowRequest = async (req, res, next) => {
         return next(new ErrorHand("can't send follow request to yourself", 401));
     }
 
-    const pendingrequest = user.fRequests.some(fr => fr.senderusername===req.user?.username);
+    const pendingrequest = user.fRequests.some(fr => fr.senderusername === req.user?.username);
     if (pendingrequest) {
         return next(new ErrorHand("already sent Follow request", 400));
     }
@@ -235,16 +239,16 @@ module.exports.sendFollowRequest = async (req, res, next) => {
     });
 };
 
-module.exports.withdrawRequest=async (req,res,next) =>{
-    const { userId,username } = req.body;
-   
-    const frequest=await FRequest.findOneAndDelete({senderusername:req.user?.username,recieverusername:username});
-    await User.findByIdAndUpdate(userId,{$pull: { fRequests: frequest?._id }});
+module.exports.withdrawRequest = async (req, res, next) => {
+    const { userId, username } = req.body;
+
+    const frequest = await FRequest.findOneAndDelete({ senderusername: req.user?.username, recieverusername: username });
+    await User.findByIdAndUpdate(userId, { $pull: { fRequests: frequest?._id } });
 
 
     res.status(200).json({
-        success:true,
-        msg:"Request removed"
+        success: true,
+        msg: "Request removed"
     })
 
 }
@@ -268,16 +272,16 @@ module.exports.acceptFollowRequest = async (req, res, next) => {
     await user.save();
     // await req.user.save();
 
-    req.user.fRequests=req.user?.fRequests.filter((el) => el.toString() !== reqId.toString());
+    req.user.fRequests = req.user?.fRequests.filter((el) => el.toString() !== reqId.toString());
     await req.user.save();
-    
-    
+
+
     await FRequest.findByIdAndDelete(reqId);
 
     res.status(200).json({
         status: true,
         msg: `${frequest.senderusername} was added as a follower`,
-        curr_user:req.user
+        curr_user: req.user
     });
 };
 
@@ -291,7 +295,7 @@ module.exports.rejectFollowRequest = async (req, res, next) => {
 
     // const curr_user = await User.findByIdAndUpdate(req.user._id, { $pull: { fRequests: reqId } }, { new: true });
 
-    req.user.fRequests=req.user?.fRequests.filter(fr => fr.toString()!==reqId.toString());
+    req.user.fRequests = req.user?.fRequests.filter(fr => fr.toString() !== reqId.toString());
     await req.user.save();
 
     await FRequest.findByIdAndDelete(reqId);
@@ -299,32 +303,32 @@ module.exports.rejectFollowRequest = async (req, res, next) => {
     res.status(200).json({
         status: true,
         msg: `Request rejected`,
-        curr_user:req.user
+        curr_user: req.user
     });
 };
 
-module.exports.unFollow=async (req,res) =>{
-    const {userId}=req.body;
-    const user=await User.findByIdAndUpdate(userId,{$pull:{follower:req.user?._id}},{new:true});
+module.exports.unFollow = async (req, res) => {
+    const { userId } = req.body;
+    const user = await User.findByIdAndUpdate(userId, { $pull: { follower: req.user?._id } }, { new: true });
 
-    const curr_user=await User.findByIdAndUpdate(
+    const curr_user = await User.findByIdAndUpdate(
         req.user?._id,
         { $pull: { following: user?._id } },
         { new: true }
-      );
+    );
 
     res.status(200).json({
-        success:true,
-        msg:`you unfollow ${user.username}`,
+        success: true,
+        msg: `you unfollow ${user.username}`,
         curr_user
     })
 
-    
-    
+
+
 }
 
-module.exports.getReqeusts=async (req,res,next)=>{
-   await req.user.populate('fRequests');
+module.exports.getReqeusts = async (req, res, next) => {
+    await req.user.populate('fRequests');
 
 
    const frequests=req.user.fRequests.map((item) => {
@@ -347,20 +351,20 @@ module.exports.getReqeusts=async (req,res,next)=>{
 module.exports.profile = async (req, res, next) => {
     const { username } = req.params;
 
-    const user = await User.findOne({ username: username }).select("-passsword").populate('fRequests','senderusername');
+    const user = await User.findOne({ username: username }).select("-passsword").populate('fRequests', 'senderusername');
 
-    if(!user){
-       return  res.status(404).json({
-            status:false,
-            msg:"user not found"
+    if (!user) {
+        return res.status(404).json({
+            status: false,
+            msg: "user not found"
         })
     }
-  
-    const isrequested=user?.fRequests?.some((fr) => fr.senderusername===req.user?.username);
-    const isfollowing=user?.follower.some((el) => el.toString()===req.user._id.toString());
+
+    const isrequested = user?.fRequests?.some((fr) => fr.senderusername === req.user?.username);
+    const isfollowing = user?.follower.some((el) => el.toString() === req.user._id.toString());
 
     res.status(200).json({
-        status:true,
+        status: true,
         user,
         isrequested,
         isfollowing
@@ -407,7 +411,15 @@ module.exports.updateProfile = async (req, res, next) => {
     if (cc.length > 0) {
         user.cc.username = cc
     }
+
+    user.lc = await getLeetcodeData(user?.lc?.username);
+    user.cf = await getCodeforcesData(user?.cf?.username);
+    user.cc = await getCodechefData(user?.cc?.username);
+
+    user.aggregateRating = calcAggregateRating(user);
+
     await user.save();
+
     res.status(200).json({
         success: true,
         message: "user profile updated",
@@ -418,7 +430,7 @@ module.exports.updateProfile = async (req, res, next) => {
 module.exports.editAvatar = async (req, res, next) => {
     if (req.user?.avatar?.filename)
         await cloudinary.uploader.destroy(req.user?.avatar.filename);
-    
+
     if (req.file) {
         req.user.avatar = {
             url: req.file.path,
