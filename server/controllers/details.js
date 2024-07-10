@@ -59,6 +59,7 @@ module.exports.getLeaderboardDetails = async (req, res) => {
             lc: item.lc,
             cf: item.cf,
             cc: item.cc,
+            aggregateRating: item.aggregateRating
         }
     })
     const currUserDetails = {
@@ -68,12 +69,13 @@ module.exports.getLeaderboardDetails = async (req, res) => {
         lc: user.lc,
         cf: user.cf,
         cc: user.cc,
+        aggregateRating: item.aggregateRating
     }
 
     res.status(200).json({
         status: true,
         result: {
-            followingDetails,
+            leaderboard: [...followingDetails, currUserDetails],
             currUserDetails
         }
     })

@@ -5,6 +5,7 @@ const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 const axios = require('axios');
 const mongoose = require('mongoose');
+const calcAggregateRating = require("../utils/calcAggregateRating");
 
 module.exports.getCodeforcesData = async (username) => {
     try {
@@ -97,7 +98,7 @@ module.exports.getLeetcodeData = async (username) => {
             // console.log(data.data);
             const result = {
                 username: username,
-                rating: data.data.userContestRanking.rating,
+                rating: data.data.userContestRanking.rating && Math.round(data.data.userContestRanking.rating),
                 rank: data.data.userContestRanking.globalRanking,
                 topPercentage: data.data.userContestRanking.topPercentage,
                 badge: data.data.userContestRanking.badge,
@@ -175,6 +176,7 @@ module.exports.refreshData = async () => {
             }
         }
         if (flag) {
+            updateObj.aggregateRating=calcAggregateRating(updateObj)
             return { _id: user._id, update: { ...updateObj } }
         }
         return null;

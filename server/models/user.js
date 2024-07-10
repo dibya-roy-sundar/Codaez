@@ -12,7 +12,7 @@ const userSchema = new Schema({
         type: String,
         required: [true, "Username is Required"],
         unique: true,
-        indexing:true,
+        indexing: true,
     },
     email: {
         type: String,
@@ -23,12 +23,12 @@ const userSchema = new Schema({
         type: String,
         required: [true, "Password is required"],
     },
-    avatar:{
+    avatar: {
         url: String,
         filename: String,
     },
-    college:{
-        type:String,
+    college: {
+        type: String,
     },
     lc: {
         username: String,
@@ -37,10 +37,10 @@ const userSchema = new Schema({
         topPercentage: Number,
         badge: String,
         attendedContestsCount: Number,
-        totalquestions:Number,
-        easyquestions:Number,
-        mediumquestions:Number,
-        hardquestions:Number,
+        totalquestions: Number,
+        easyquestions: Number,
+        mediumquestions: Number,
+        hardquestions: Number,
     },
     cf: {
         username: String,
@@ -56,6 +56,9 @@ const userSchema = new Schema({
         maxRating: Number,
         countryRank: Number,
         stars: String,
+    },
+    aggregateRating: {
+        type:Number
     },
     gfg: {
         type: String,
@@ -105,10 +108,10 @@ userSchema.methods.getJWTToken = function () {
     });
 }
 
-userSchema.statics.findAndValidate = async function (email,username, password) {
+userSchema.statics.findAndValidate = async function (email, username, password) {
     const foundUser = await this.findOne(
         {
-            $or:[{username},{email}]
+            $or: [{ username }, { email }]
         }
     ).select("+password");
     //if a user is found, this means that the username is already in use
