@@ -69,7 +69,7 @@ module.exports.getLeaderboardDetails = async (req, res) => {
         lc: user.lc,
         cf: user.cf,
         cc: user.cc,
-        aggregateRating: item.aggregateRating
+        aggregateRating: user.aggregateRating
     }
 
     res.status(200).json({
