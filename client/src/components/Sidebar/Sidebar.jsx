@@ -11,8 +11,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 const Sidebar = () => {
     const dispatch = useDispatch();
-    const user=useSelector((state) =>state.auth.auth);
-    const navigate=useNavigate();
+    const user = useSelector((state) => state.auth.auth);
+    const navigate = useNavigate();
 
     const handleLogout = async () => {
 
@@ -61,8 +61,8 @@ const Sidebar = () => {
                 <Link to={'/leaderboard'} className="linkBlock"><MdLeaderboard /><span className="linktag">Leaderboard</span></Link>
                 <Link to={`/profile/${user.username}`} className="linkBlock"><CgProfile /><span className="linktag">Profile</span></Link>
             </div>
-            <div className="bottom linkBlock" onClick={handleLogout}>
-                <FiLogOut color="red" /><span className="linktag">Logout</span>
+            <div className="bottom" onClick={handleLogout}>
+                <div className="linkBlock"><FiLogOut color="red" /><span className="linktag">Logout</span></div>
             </div>
         </div>
     )
