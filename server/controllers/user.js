@@ -210,11 +210,11 @@ module.exports.sendFollowRequest = async (req, res, next) => {
         return next(new ErrorHand("user not found", 404));
     }
 
-    if (user.username === req.user.username) {
+    if (user._id.toString() === req.user._id.toString()) {
         return next(new ErrorHand("can't send follow request to yourself", 401));
     }
 
-    const pendingrequest = user.fRequests.some(fr => fr.senderusername === req.user?.username);
+    const pendingrequest = user.fRequests.some(fr => fr.senderuserId.toString() === req.user?.senderuserId.toString());
     if (pendingrequest) {
         return next(new ErrorHand("already sent Follow request", 400));
     }
@@ -227,7 +227,7 @@ module.exports.sendFollowRequest = async (req, res, next) => {
         sendername :req.user?.name,
         senderavatar: req.user?.avatar || { url: "", filename: "" },
         senderuserId:req.user?._id,
-        recieverusername: user.username,
+        recieverUserId: user._id,
     });
     user.fRequests.push(fRequest);
     await fRequest.save();
@@ -240,9 +240,9 @@ module.exports.sendFollowRequest = async (req, res, next) => {
 };
 
 module.exports.withdrawRequest = async (req, res, next) => {
-    const { userId, username } = req.body;
+    const { userId } = req.body;
 
-    const frequest = await FRequest.findOneAndDelete({ senderusername: req.user?.username, recieverusername: username });
+    const frequest = await FRequest.findOneAndDelete({ senderuserId: req.user?._id, recieverUserId: userId });
     await User.findByIdAndUpdate(userId, { $pull: { fRequests: frequest?._id } });
 
 
@@ -262,15 +262,12 @@ module.exports.acceptFollowRequest = async (req, res, next) => {
         return next(new ErrorHand("invalid request", 400))
     }
 
-    if (req.user.username !== frequest?.recieverusername) {
+    if (req.user._id.toString() !== frequest?.recieverUserId.toString()) {
         return next(new ErrorHand("You have not authorized to do this", 401));
     }
 
-    const user = await User.findOne({ username: frequest?.senderusername }); //sender or follower
-    user.following.push(req.user);
+    const user = await User.findByIdAndUpdate(frequest?.senderuserId,{$push:{following:req.user}},{new:true}); //sender or follower
     req.user.follower.push(user);
-    await user.save();
-    // await req.user.save();
 
     req.user.fRequests = req.user?.fRequests.filter((el) => el.toString() !== reqId.toString());
     await req.user.save();
@@ -289,7 +286,11 @@ module.exports.rejectFollowRequest = async (req, res, next) => {
     const { reqId } = req.body;
 
     const frequest = await FRequest.findById(reqId);
-    if (req.user.username !== frequest?.recieverusername) {
+    if (!frequest) {
+        return next(new ErrorHand("invalid request", 400))
+    }
+
+    if (req.user._id.toString() !== frequest?.recieverUserId.toString()) {
         return next(new ErrorHand("You have not authorized to do this", 401));
     }
 
@@ -444,4 +445,50 @@ module.exports.editAvatar = async (req, res, next) => {
         user: req.user,
     });
 };
+
+module.exports.changeUsername=async (req,res,next) =>{
+    const {username,save}=req.body;
+
+    if(!username){
+        return re.status(400).json({
+            success:false,
+            msg:"username is required"
+        })
+    }
+
+    const user=await User.findOne({username});
+
+    if(user){
+        return res.status(200).json({
+            success:false,
+            msg:"username is already taken"
+        })
+    }else{
+        if(save){
+            if(req.user?.usernameChanged){
+                return res.status(400).json({
+                    success:false,
+                    msg:"change username limit crossed"
+                })
+            }else{
+                req.user.username=username;
+                req.user.usernameChanged=true;
+                await req.user.save();
+    
+                return res.status(200).json({
+                            success:true,
+                            msg:"username updated successfully" ,
+                            user:req.user
+                        })
+            }
+        }else{
+            res.status(200).json({
+                success:true,
+                msg:"unique username"
+            })
+        }
+    }
+
+      
+}
 

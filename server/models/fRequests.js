@@ -9,7 +9,7 @@ const fRequestSchema = new Schema({
         url: String,
         filename: String,
     },
-    recieverusername:String ,
+    recieverUserId:String ,
 });
 
 const FRequest = mongoose.model("FRequest", fRequestSchema);

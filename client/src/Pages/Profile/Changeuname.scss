@@ -1,0 +1,114 @@
+$grey: #333333;
+$purple: #703BF7;
+$darkpurple: #814fff;
+$input-background: rgb(25, 25, 25);
+$label-color: rgb(82, 82, 82);
+
+.chnageunamecontainer{
+    padding: 1rem;
+
+    p {
+        font-size: 1.6rem;
+        color: white;
+        padding-bottom: 1.2rem;
+    }
+    .disclaimer{
+        p{
+            font-size: 0.85rem;
+        }
+    }
+
+
+    
+    form{
+        display: flex;
+        flex-direction: column;
+        gap: 1.75rem;
+
+    
+    
+        .input-wrap {
+            position: relative;
+            .spinner{
+                position: absolute;
+                right: 5%;
+                top: 33%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                
+            }
+
+            input {
+                width: 100%;
+                padding: 1rem;
+                padding-right: 2.4rem;
+                background: $input-background;
+                border: 2px solid transparent;
+                border-radius: 5px;
+                color: white;
+                font-size: 0.9rem;
+                box-shadow: none;
+
+                &:focus {
+                    outline: none;
+                    border: 2px solid $darkpurple;
+                }
+
+                &:focus+label,
+                &:valid+label {
+                    top: 0rem;
+                    left: 0.75rem;
+                    font-size: 0.75rem;
+                    color: $darkpurple;
+                    background: $input-background;
+                    border-radius: 0.25rem;
+                }
+            }
+
+            label {
+                position: absolute;
+                top: 50%;
+                left: 1rem;
+                transform: translateY(-50%);
+                color: $label-color;
+                transition: all 0.3s;
+                pointer-events: none;
+                background: transparent;
+                padding: 0 0.25rem;
+            }
+
+            
+        }
+
+        .btn {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+
+            .closeform {
+                button {
+                    background-color: #494747;
+                }
+            }
+
+            .btn{
+                padding: 0.25rem 0.75rem;
+                border-radius: 0.25rem;
+                font-size: 1.25rem;
+                color: white;
+                font-weight: 500;
+                border: none;
+                background: $purple;
+                cursor: pointer;
+            }
+            
+            .disable{
+                background-color: #494747;
+                cursor: not-allowed;
+
+            }
+        }
+    }
+}

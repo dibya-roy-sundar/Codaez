@@ -206,7 +206,7 @@ $darkpurple: #814fff;
         .options {
             border-top: 2px solid #515151;
 
-            .changepw {
+            .changepw,.changeusername {
                 display: flex;
                 flex-direction: row;
                 justify-content: space-between;
@@ -222,6 +222,7 @@ $darkpurple: #814fff;
                     gap: 1rem;
                 }
             }
+            
         }
     }
 

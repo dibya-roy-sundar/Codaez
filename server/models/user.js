@@ -99,7 +99,11 @@ const userSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: "FRequest",
         },
-    ]
+    ],
+    usernameChanged:{
+        type:Boolean,
+        default:false,
+    }
 });
 
 userSchema.methods.getJWTToken = function () {

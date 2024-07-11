@@ -20,6 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import usePutHook from "../../hooks/usePutHook";
 import { setAuth } from "../../redux/authReducer";
 import usePostFetch from "../../hooks/usePostFetch";
+import Changeuname from "./Changeuname.jsx";
 
 
 
@@ -63,6 +64,7 @@ const Profile = () => {
     const [edit, setEdit] = useState(false);
     const [sendfr,setSendfr]=useState(false);
     const changepwref = useRef();
+    const changeusernameref=useRef();
     const editavatarref = useRef();
 
     const [formdata, setFormData] = useState({
@@ -183,7 +185,7 @@ const Profile = () => {
     }
 
     const handleWithdrawFollowRequest=async () =>{
-        const  {data}= await usePostFetch('/withdraw-request',{username,userId:user?._id});
+        const  {data}= await usePostFetch('/withdraw-request',{userId:user?._id});
         if(data && data.success){
             // console.log(data.msg); toastify
             setSendfr(false);
@@ -208,6 +210,14 @@ const Profile = () => {
         changepwref.current.closeModal();
     }
 
+    const openChangeUsernameModal=() =>{
+        changeusernameref.current.openModal();
+    }
+
+    const closeChangeUsernameModal=() =>{
+        changeusernameref.current.closeModal();
+    }
+
 
     return (
         <>
@@ -215,6 +225,7 @@ const Profile = () => {
             {reload===0 && loading ? <p style={{fontSize:"5rem",position:"absolute",top:"45%",left:"45%",zIndex:5}}>Loading...</p>:
                 <div className="profileContainer" >
                 <ChangePw handleClose={closepwModal} changePwRef={changepwref} />
+                <Changeuname  handleClose={closeChangeUsernameModal} changeUnameRef={changeusernameref} />
                 <div className="usercard" >
                     <div className="top">
                         <div className="editable">
@@ -347,6 +358,12 @@ const Profile = () => {
                             <div onClick={openPwModal} className="changepw">
                                 <div>
                                     <FaKey /> Change password
+                                </div>
+                                <FaAngleRight />
+                            </div>
+                            <div  onClick={openChangeUsernameModal} className="changeusername">
+                                <div>
+                                   <FaUser /> Change username 
                                 </div>
                                 <FaAngleRight />
                             </div>
