@@ -8,14 +8,16 @@ import Profile from './Pages/Profile/Profile';
 import Navbar from './Pages/Navbar/Navbar'
 import Sidebar from './components/Sidebar/Sidebar';
 import CompleteProfile from './components/Register/CompleteProfile';
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from 'react-toastify'
 
 const Layout = () => {
     return (
         <div className='app'>
-            <Navbar />
-            <Sidebar />
+            <ToastContainer autoClose={3000} draggablePercent={50} limit={3} theme='dark' stacked />
+            {/* <Navbar /> */}
+            {/* <Sidebar /> */}
             <Outlet />
-            {/* <Footer /> */}
         </div>
     )
 }
@@ -26,16 +28,16 @@ const router = createBrowserRouter([
         element: <Layout />,
         children: [
             {
-                path: "/home",
+                path: "/",
                 element: <Landing />
             },
             {
                 path: "/dashboard",
-                element: <Dashboard />
+                element: <><Navbar /><Sidebar /><Dashboard /></>
             },
             {
                 path: "/leaderboard",
-                element: <Leaderboard />
+                element: <><Navbar /><Sidebar /><Leaderboard /></>
             },
             {
                 path: "/auth",
@@ -43,7 +45,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "/profile/:username",
-                element: <Profile />
+                element: <><Navbar /><Sidebar /><Profile /></>
             },
             {
                 path: "/completeprofile",
