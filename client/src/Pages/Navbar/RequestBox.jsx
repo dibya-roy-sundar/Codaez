@@ -7,60 +7,105 @@ import { setAuth } from "../../redux/authReducer";
 import useFetch from "../../hooks/useFetch";
 import usePostFetch from "../../hooks/usePostFetch";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const RequestBox = () => {
   const [reload, setReload] = useState(0);
   const [acceptfr, setAcceptFr] = useState(false);
   const [sendfr, setSendfr] = useState(false);
-  const [follow , setFollow]=useState(true);
+  const [follow, setFollow] = useState(true);
   const dispatch = useDispatch();
 
   const { data, loading, error } = useFetch("/get-requests", true, reload);
 
   const handleacceptFrequest = async (reqId) => {
-    const { data } = await usePostFetch("/acceptfrequest", { reqId });
+    const data = await usePostFetch("/acceptfrequest", { reqId });
 
-    if (data && data.curr_user) {
-      dispatch(setAuth(data.curr_user));
+    if (data.data && data.data.curr_user) {
+      dispatch(setAuth(data.data.curr_user));
       // setReload((prev) => prev + 1);
       setAcceptFr(true);
+    } else if (data.data) {
+      toast.warn(data.data.error || data.data.message, {
+        position: "top-right"
+      });
+    } else {
+      console.log(data);
+      toast.error(data.error, {
+        position: "top-right"
+      });
     }
   };
 
   const handlerejectFrequest = async (reqId) => {
-    const { data } = await usePostFetch("/rejectfrequest", { reqId });
-    if (data && data.curr_user) {
-      dispatch(setAuth(data.curr_user));
+    const data = await usePostFetch("/rejectfrequest", { reqId });
+    if (data.data && data.data.curr_user) {
+      dispatch(setAuth(data.data.curr_user));
       setReload((prev) => prev + 1);
+    } else if (data.data) {
+      toast.warn(data.data.error || data.data.message, {
+        position: "top-right"
+      });
+    } else {
+      console.log(data);
+      toast.error(data.error, {
+        position: "top-right"
+      });
     }
   };
 
   const handleSendFollowRequest = async (userId) => {
-    const { data } = await usePostFetch("/sendfrequest", { userId });
+    const data = await usePostFetch("/sendfrequest", { userId });
 
-    if (data && data.success) {
+    if (data.data && data.data.success) {
       setSendfr(true);
+    } else if (data.data) {
+      toast.warn(data.data.error || data.data.message, {
+        position: "top-right"
+      });
     } else {
-      console.log("error while sending frequest");
+      console.log(data);
+      toast.error(data.error, {
+        position: "top-right"
+      });
     }
   };
 
   const handleWithdrawFollowRequest = async (userId) => {
-    const { data } = await usePostFetch("/withdraw-request", {
+    const data = await usePostFetch("/withdraw-request", {
       userId,
     });
-    if (data && data.success) {
+    if (data.data && data.data.success) {
       // console.log(data.msg); toastify
       setSendfr(false);
+    } else if (data.data) {
+      toast.warn(data.data.error || data.data.message, {
+        position: "top-right"
+      });
+    } else {
+      console.log(data);
+      toast.error(data.error, {
+        position: "top-right"
+      });
     }
   };
-  const handleUnfollow = async (userId) => {
-    const { data } = await usePostFetch("/unfollow", { userId });
 
-    if (data && data.success) {
+  const handleUnfollow = async (userId) => {
+    const data = await usePostFetch("/unfollow", { userId });
+
+    if (data.data && data.data.success) {
       // console.log(data.msg); toastify
       setFollow(false);
-      dispatch(setAuth(data.curr_user));
+      dispatch(setAuth(data.data.curr_user));
+    } else if (data.data) {
+      toast.warn(data.data.error || data.data.message, {
+        position: "top-right"
+      });
+    } else {
+      console.log(data);
+      toast.error(data.error, {
+        position: "top-right"
+      });
     }
   };
 
@@ -91,33 +136,33 @@ const RequestBox = () => {
                   <div
                     onClick={
                       acceptfr
-                        ? (follow &&   f.isfollowing  )
-                            ? () => {
-                                
-                                handleUnfollow(f.senderuserId);
-                                }
-                            :   sendfr
-                                ? () => {
-                                    handleWithdrawFollowRequest(
-                                        f.senderuserId
-                                    );
-                                    }
-                                : () => {
-                                    handleSendFollowRequest(f.senderuserId);
-                                    }
-                        : () => {
-                            handleacceptFrequest(f._id);
+                        ? (follow && f.isfollowing)
+                          ? () => {
+
+                            handleUnfollow(f.senderuserId);
                           }
+                          : sendfr
+                            ? () => {
+                              handleWithdrawFollowRequest(
+                                f.senderuserId
+                              );
+                            }
+                            : () => {
+                              handleSendFollowRequest(f.senderuserId);
+                            }
+                        : () => {
+                          handleacceptFrequest(f._id);
+                        }
                     }
                     className="accept"
                   >
                     {acceptfr
-                        ?  (follow &&   f.isfollowing  )
-                            ? "Following"
-                            : sendfr
-                                ? "Requested"
-                                : "Follow back"
-                        : "Accept"}
+                      ? (follow && f.isfollowing)
+                        ? "Following"
+                        : sendfr
+                          ? "Requested"
+                          : "Follow back"
+                      : "Accept"}
                   </div>
                   {!acceptfr && (
                     <div
