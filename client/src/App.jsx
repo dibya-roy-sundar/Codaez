@@ -8,10 +8,13 @@ import Profile from './Pages/Profile/Profile';
 import Navbar from './Pages/Navbar/Navbar'
 import Sidebar from './components/Sidebar/Sidebar';
 import CompleteProfile from './components/Register/CompleteProfile';
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from 'react-toastify'
 
 const Layout = () => {
     return (
         <div className='app'>
+            <ToastContainer autoClose={3000} draggablePercent={50} limit={3} theme='dark' stacked />
             <Navbar />
             <Sidebar />
             <Outlet />
