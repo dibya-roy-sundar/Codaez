@@ -18,8 +18,8 @@ const Changeuname = forwardRef(({ handleClose, changeUnameRef }) => {
   const [loading, setLoading] = useState(null);
   const [unique, setUnique] = useState(null);
   const dispatch = useDispatch();
-  const navigate=useNavigate();
-  const user=useSelector(state =>state.auth.auth);
+  const navigate = useNavigate();
+  const user = useSelector(state => state.auth.auth);
 
   useEffect(() => {
     const changeuname = async () => {
@@ -83,8 +83,8 @@ const Changeuname = forwardRef(({ handleClose, changeUnameRef }) => {
         // Toastify data.msg
         handleClose();
         removeData();
-        dispatch(setAuth(data.user))        
-        
+        dispatch(setAuth(data.user))
+        navigate(`/profile/${data.user.username}`)
       }
     } else {
       // toastify -change username limit exceeded
@@ -94,7 +94,7 @@ const Changeuname = forwardRef(({ handleClose, changeUnameRef }) => {
   return (
     <Modal ref={changeUnameRef}>
       <div className="chnageunamecontainer">
-        <p>Change username</p>
+        <p>Change Username</p>
         <div className="disclaimer">
           <p>
             {user?.usernameChanged
@@ -112,20 +112,20 @@ const Changeuname = forwardRef(({ handleClose, changeUnameRef }) => {
               required
             />
             <label htmlFor="username">Username</label>
-            {(username.length > 0 ) && (
+            {(username.length > 0) && (
               <div className="spinner">
                 {loading ? (
                   <ClipLoader
                     loading={loading}
                     color="#814fff"
                     className="icon"
-                    size={17}
+                    size={16}
                     speedMultiplier={1}
                   />
                 ) : unique ? (
-                  <SiTicktick size={17} color="#814fff" />
+                  <SiTicktick size={16} color="#814fff" />
                 ) : (
-                  <RiErrorWarningLine size={20} color="#e9bc28" />
+                  <RiErrorWarningLine size={16} color="#e9bc28" />
                 )}
               </div>
             )}
@@ -139,8 +139,8 @@ const Changeuname = forwardRef(({ handleClose, changeUnameRef }) => {
               </form>
             </div>
             <button
-              className={(!unique || user?.usernameChanged)? "disable btn" : "btn"}
-              disabled={!unique || user?.usernameChanged }
+              className={(!unique || user?.usernameChanged) ? "disable btn" : "btn"}
+              disabled={!unique || user?.usernameChanged}
               type="submit"
             >
               Save
