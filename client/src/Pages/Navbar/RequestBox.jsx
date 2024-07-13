@@ -119,17 +119,17 @@ const RequestBox = () => {
         ) : data?.frequests?.length > 0 ? (
           data?.frequests?.map((f) => {
             return (
-              <div key={f.senderusername} className="individual">
-                <Link to={`/profile/${f.senderusername}`} className="user">
+              <div key={f.sender.name} className="individual">
+                <Link to={`/profile/${f.sender.username}`} className="user">
                   <div>
                     <img
-                      src={f.senderavatar?.url || noprofileimage}
+                      src={f.sender.avatar?.url || noprofileimage}
                       alt="user avatar"
                     />
                   </div>
                   <div className="userdetails">
-                    <span className="username">@{f.senderusername}</span>
-                    <span>{f.sendername}</span>
+                    <span className="username">@{f.sender.username}</span>
+                    <span>{f.sender.name}</span>
                   </div>
                 </Link>
                 <div className="options">
@@ -139,16 +139,16 @@ const RequestBox = () => {
                         ? (follow && f.isfollowing)
                           ? () => {
 
-                            handleUnfollow(f.senderuserId);
+                            handleUnfollow(f.sender._id);
                           }
                           : sendfr
                             ? () => {
                               handleWithdrawFollowRequest(
-                                f.senderuserId
+                                f.sender._id
                               );
                             }
                             : () => {
-                              handleSendFollowRequest(f.senderuserId);
+                              handleSendFollowRequest(f.sender._id);
                             }
                         : () => {
                           handleacceptFrequest(f._id);

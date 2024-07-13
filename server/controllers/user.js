@@ -101,13 +101,13 @@ module.exports.completeProfile = async (req, res) => {
 };
 
 module.exports.login = async (req, res, next) => {
-    const { username, email, password } = req.body;
+    const { userDetails, password } = req.body;
 
-    if (!(username || email)) {
+    if (!userDetails) {
         return next(new ErrorHand("Email or Username is required", 400));
     }
 
-    const user = await User.findAndValidate(email, username, password);
+    const user = await User.findAndValidate(userDetails, password);
 
     if (!user) {
         return next(new ErrorHand("Invalid email or password", 404));
@@ -202,7 +202,7 @@ module.exports.userDetails = async (req, res, next) => {
 
 module.exports.sendFollowRequest = async (req, res, next) => {
     const { userId } = req.body;
-    const user = await User.findById(userId).populate('fRequests', 'senderusername');//reciever
+    const user = await User.findById(userId).populate('fRequests', 'sender');//reciever
 
 
 
@@ -210,11 +210,11 @@ module.exports.sendFollowRequest = async (req, res, next) => {
         return next(new ErrorHand("user not found", 404));
     }
 
-    if (user._id.toString() === req.user._id.toString()) {
+    if (userId === req.user._id) {
         return next(new ErrorHand("can't send follow request to yourself", 401));
     }
 
-    const pendingrequest = user.fRequests.some(fr => fr.senderuserId.toString() === req.user?.senderuserId.toString());
+    const pendingrequest = user.fRequests.some(fr => fr.sender.toString() === req.user?._id.toString());
     if (pendingrequest) {
         return next(new ErrorHand("already sent Follow request", 400));
     }
@@ -223,11 +223,8 @@ module.exports.sendFollowRequest = async (req, res, next) => {
     }
 
     const fRequest = new FRequest({
-        senderusername: req.user?.username,
-        sendername :req.user?.name,
-        senderavatar: req.user?.avatar || { url: "", filename: "" },
-        senderuserId:req.user?._id,
-        recieverUserId: user._id,
+       sender:req.user._id,
+       reciever:userId,
     });
     user.fRequests.push(fRequest);
     await fRequest.save();
@@ -242,7 +239,7 @@ module.exports.sendFollowRequest = async (req, res, next) => {
 module.exports.withdrawRequest = async (req, res, next) => {
     const { userId } = req.body;
 
-    const frequest = await FRequest.findOneAndDelete({ senderuserId: req.user?._id, recieverUserId: userId });
+    const frequest = await FRequest.findOneAndDelete({ sender:req.user._id, reciever: userId });
     await User.findByIdAndUpdate(userId, { $pull: { fRequests: frequest?._id } });
 
 
@@ -262,11 +259,11 @@ module.exports.acceptFollowRequest = async (req, res, next) => {
         return next(new ErrorHand("invalid request", 400))
     }
 
-    if (req.user._id.toString() !== frequest?.recieverUserId.toString()) {
+    if (req.user._id.toString() !== frequest?.reciever.toString()) {
         return next(new ErrorHand("You have not authorized to do this", 401));
     }
 
-    const user = await User.findByIdAndUpdate(frequest?.senderuserId,{$push:{following:req.user}},{new:true}); //sender or follower
+    const user = await User.findByIdAndUpdate(frequest?.sender,{$push:{following:req.user}},{new:true}); //sender or follower
     req.user.follower.push(user);
 
     req.user.fRequests = req.user?.fRequests.filter((el) => el.toString() !== reqId.toString());
@@ -290,7 +287,7 @@ module.exports.rejectFollowRequest = async (req, res, next) => {
         return next(new ErrorHand("invalid request", 400))
     }
 
-    if (req.user._id.toString() !== frequest?.recieverUserId.toString()) {
+    if (req.user._id.toString() !== frequest?.reciever.toString()) {
         return next(new ErrorHand("You have not authorized to do this", 401));
     }
 
@@ -329,13 +326,22 @@ module.exports.unFollow = async (req, res) => {
 }
 
 module.exports.getReqeusts = async (req, res, next) => {
-    await req.user.populate('fRequests');
+    await req.user.populate({
+        path:'fRequests',
+        populate:{
+            path:'sender',
+            select :'name username avatar'
+        }
+    });
+
+    console.log("hello");
 
 
    const frequests=req.user.fRequests.map((item) => {
     return {
-        ...item._doc,
-        isfollowing:req.user.following.some((el) =>el.toString()===item.senderuserId)
+        _id:item._id,//reqId
+        sender:item.sender,
+        isfollowing:req.user.following.some((el) =>el.toString()===item.sender._id.toString())
     }
    })
 
@@ -450,7 +456,7 @@ module.exports.changeUsername=async (req,res,next) =>{
     const {username,save}=req.body;
 
     if(!username){
-        return re.status(400).json({
+        return res.status(400).json({
             success:false,
             msg:"username is required"
         })

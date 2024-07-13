@@ -43,11 +43,13 @@ const userSchema = new Schema({
         hardquestions: Number,
         contestParticipation:[
             {
+                title:String,
+                time:Number,
                 trendDirection:String,
                 problemsSolved:Number,
                 totalProblems:Number,
                 rating:Number,
-                ranking:Number,
+                rank:Number,
             }
         ]
     },
@@ -58,7 +60,9 @@ const userSchema = new Schema({
         maxRating: Number,
         maxRank: String,
         contestParticipation:[
-            {
+            {   
+                title:String,
+                time:Number,
                 rank:Number,
                 // oldRating:Number,
                 // newRating:Number,
@@ -73,6 +77,16 @@ const userSchema = new Schema({
         maxRating: Number,
         countryRank: Number,
         stars: String,
+        contestParticipation:[
+            {
+                title:String,
+                year:Number,
+                month:Number,
+                date:Number,
+                rating:Number,
+                rank:Number,
+            }
+        ]
     },
     aggregateRating: {
         type:Number
@@ -129,10 +143,10 @@ userSchema.methods.getJWTToken = function () {
     });
 }
 
-userSchema.statics.findAndValidate = async function (email, username, password) {
+userSchema.statics.findAndValidate = async function (userDetails, password) {
     const foundUser = await this.findOne(
         {
-            $or: [{ username }, { email }]
+            $or: [{ username:userDetails }, { email:userDetails }]
         }
     ).select("+password");
     //if a user is found, this means that the username is already in use

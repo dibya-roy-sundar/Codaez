@@ -14,8 +14,7 @@ const Auth = () => {
 
     const [isLoginMode, setIsLoginMode] = useState(true);
     const [loginUserCredentials, setLoginUserCredentials] = useState({
-        username: "",
-        email: "",
+        userDetails:"",
         password: "",
     });
 

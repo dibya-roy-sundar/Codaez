@@ -18,6 +18,8 @@ module.exports.getCodeforcesData = async (username) => {
         const ratingdata=await axios.get(`https://codeforces.com/api/user.rating?handle=${username}`);
         const contestParticipation=ratingdata?.data.result.map((item) =>{
             return {
+                title:item.contestName,
+                time:item.ratingUpdateTimeSeconds,
                 rank:item.rank,
                 // oldRating: item.oldRating,
                 // newRating: item.newRating,
@@ -33,6 +35,7 @@ module.exports.getCodeforcesData = async (username) => {
                 maxRank: data.result[0].maxRank,
                 contestParticipation
             }
+            // console.log("cf result",result);
             // req.user = await User.findByIdAndUpdate(req.user._id, { $set: { cf: result } }, { new: true });
             return result;
         }
@@ -109,13 +112,16 @@ module.exports.getLeetcodeData = async (username) => {
             const contestParticipation= data.data.userContestRankingHistory.filter(
                 (obj) => obj.attended === true
               )
+            //   console.log(contestParticipation);
             const   newContestParticipation=contestParticipation.map((item) =>{
                 return {
+                    title:item.contest.title,
+                    time:item.contest.startTime,
                     trendDirection:item.trendDirection,
                     problemsSolved:item.problemsSolved,
                     totalProblems:item.totalProblems,
                     rating:item.rating,
-                    ranking:item.ranking,
+                    rank:item.ranking,
                 }
               })
             const result = {
@@ -131,7 +137,7 @@ module.exports.getLeetcodeData = async (username) => {
                 hardquestions: data.data.matchedUser.submitStats.acSubmissionNum[3]?.count,
                 contestParticipation:newContestParticipation
             }
-            // console.log(result);
+            // console.log("lc result",result);
             // req.user = await User.findByIdAndUpdate(req.user._id, { $set: { lc: result } }, { new: true });
             return result
         }
@@ -147,6 +153,21 @@ module.exports.getLeetcodeData = async (username) => {
 module.exports.getCodechefData = async (username) => {
     try {
         let data = await axios.get(`https://www.codechef.com/users/${username}`);
+        let allRating = data.data.search("var all_rating = ") + "var all_rating = ".length;
+        let allRating2 = data.data.search("var current_user_rating =") - 6;
+        let ratingData = JSON.parse(data.data.substring(allRating, allRating2))
+        const contestParticipation=ratingData?.map((item)=>{
+
+            return {
+                title:item.name,
+                year:Number(item.getyear),
+                month:Number(item.getmonth),
+                date:Number(item.getday),
+                rating:Number(item.rating),
+                rank:Number(item.rank),
+            }
+        })
+        // console.log("cc result",contestParticipation);
         let dom = new JSDOM(data.data);
         let document = dom.window.document;
         const result = {
@@ -156,6 +177,7 @@ module.exports.getCodechefData = async (username) => {
             rank: parseInt(document.querySelector('.rating-ranks')?.children[0]?.children[0]?.children[0]?.children[0]?.innerHTML)|| false,
             countryRank: parseInt(document.querySelector('.rating-ranks')?.children[0]?.children[1]?.children[0]?.children[0]?.innerHTML)|| false,
             stars: document.querySelector('.rating')?.textContent || "unrated",
+            contestParticipation
         }
         // req.user = await User.findByIdAndUpdate(req.user._id, { $set: { cc: result } }, { new: true });
         return result;
