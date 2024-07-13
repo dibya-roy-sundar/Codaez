@@ -8,6 +8,7 @@ import codeforces from '../../assets/codeforces.png';
 import { makeRequest } from "../../hooks/makeRequest";
 import { removeAuth } from "../../redux/authReducer";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const Sidebar = () => {
     const dispatch = useDispatch();
@@ -23,24 +24,23 @@ const Sidebar = () => {
 
             if (data.data) {
                 console.log({ data: data.data });
-                // dispatch(setAuth(data.data));
-                // toast.success("Logged Out!", {
-                //     position: toast.POSITION.TOP_LEFT
-                // });
+                toast.success("Logged Out!", {
+                    position: "top-right"
+                });
                 dispatch(removeAuth());
                 navigate('/');
             }
             else {
                 console.log({ error: data.error })
-                // toast.error(data.error, {
-                //     position: toast.POSITION.TOP_LEFT
-                // });
+                toast.error(data.error, {
+                    position: "top-right"
+                });
             }
         } catch (err) {
             console.log(err);
-            // toast.error(err.response.data.error, {
-            //     position: toast.POSITION.TOP_LEFT
-            // });
+            toast.error(err.response.data.error, {
+                position: "top-right"
+            });
             console.log({
                 success: false,
                 status: err.response.status,
