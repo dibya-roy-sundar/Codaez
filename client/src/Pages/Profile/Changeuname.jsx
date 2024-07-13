@@ -48,6 +48,9 @@ const Changeuname = forwardRef(({ handleClose, changeUnameRef }) => {
   const handleChange = (e) => {
     setUsername(e.target.value);
     setLoading(true);
+    if(username.trim()===e.target.value.trim()){
+      setLoading(false);
+    }
   };
 
   const removeData = () => {
@@ -57,7 +60,7 @@ const Changeuname = forwardRef(({ handleClose, changeUnameRef }) => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setInputValue(username);
+      setInputValue(username.trim());
     }, 500);
 
     return () => {
@@ -137,7 +140,7 @@ const Changeuname = forwardRef(({ handleClose, changeUnameRef }) => {
             </div>
             <button
               className={(!unique || user?.usernameChanged)? "disable btn" : "btn"}
-              disabled={!unique || user?.usernameChanged}
+              disabled={!unique || user?.usernameChanged }
               type="submit"
             >
               Save

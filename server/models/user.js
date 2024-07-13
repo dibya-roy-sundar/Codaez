@@ -143,10 +143,10 @@ userSchema.methods.getJWTToken = function () {
     });
 }
 
-userSchema.statics.findAndValidate = async function (email, username, password) {
+userSchema.statics.findAndValidate = async function (userDetails, password) {
     const foundUser = await this.findOne(
         {
-            $or: [{ username }, { email }]
+            $or: [{ username:userDetails }, { email:userDetails }]
         }
     ).select("+password");
     //if a user is found, this means that the username is already in use

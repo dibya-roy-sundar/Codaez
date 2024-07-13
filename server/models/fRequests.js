@@ -2,14 +2,14 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const fRequestSchema = new Schema({
-    senderusername: String,
-    sendername :String,
-    senderuserId:String,
-    senderavatar:{
-        url: String,
-        filename: String,
+    sender:{
+        type: Schema.Types.ObjectId,
+        ref: "User",
     },
-    recieverUserId:String ,
+    reciever:{
+        type: Schema.Types.ObjectId,
+        ref: "User",
+    }
 });
 
 const FRequest = mongoose.model("FRequest", fRequestSchema);

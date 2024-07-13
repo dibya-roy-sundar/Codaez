@@ -38,7 +38,7 @@ app.use(error);
 
 setInterval(() => {
 }, 100000000);
-refreshData();
+// refreshData();
 
 const port = process.env.PORT;
 app.listen(port, () => {

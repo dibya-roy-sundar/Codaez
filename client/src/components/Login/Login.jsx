@@ -15,13 +15,13 @@ const Login = ({ loginUserCredentials, handleLoginChange, handleLoginSubmit }) =
         <div className="login-container">
             <form className="login-form" onSubmit={(e) => handleLoginSubmit(e)}>
                 <h2>Login</h2>
-                <div className="input-wrap">
+                {/* <div className="input-wrap">
                     <input type="text" id='username' name='username' value={loginUserCredentials.username} onChange={(e) => handleLoginChange(e)} required />
                     <label htmlFor="username">Username</label>
-                </div>
+                </div> */}
                 <div className="input-wrap">
-                    <input type="email" id="email" name='email' value={loginUserCredentials.email} onChange={(e) => handleLoginChange(e)} required />
-                    <label htmlFor="email">Email</label>
+                    <input type="text" id="userDetails" name='userDetails' value={loginUserCredentials.userDetails} onChange={(e) => handleLoginChange(e)} required />
+                    <label htmlFor="userDetails">Email or Username </label>
                 </div>
                 <div className="input-wrap">
                     <input type={passwordVisible ? "text" : "password"} id="password" name='password' value={loginUserCredentials.password} onChange={(e) => handleLoginChange(e)} required />
