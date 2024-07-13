@@ -13,7 +13,7 @@ $darkpurple: #814fff;
         flex: 1.5;
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        gap: 2.5rem;
         padding: 2rem;
         // box-shadow: 0 0 9px 0px #222222;
         border-radius: 0.5rem;
@@ -22,108 +22,113 @@ $darkpurple: #814fff;
 
         .top {
             display: flex;
-            // flex-direction: column;
-            gap: 1rem;
-            align-items: center;
+            flex-direction: column;
 
-            .editable {
-                position: relative;
-
-                img {
-                    height: 6.5rem;
-                    width: 6.5rem;
-                    border-radius: 50%;
-                    object-fit: fill;
-                }
-
-                .editicon {
-                    position: absolute;
-                    background: rgb(28, 27, 27);
-                    bottom: 0;
-                    right: 0;
-                    border-radius: 50%;
-                    padding: 0.5rem;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    cursor: pointer;
-
-                    .editpencil {
-                        font-size: 1.2rem;
-                    }
-                }
-            }
-
-            .namecontainer {
+            .user-Img-Name {
                 display: flex;
-                flex-direction: column;
-                // align-items: center;
-                justify-content: space-between;
-                gap: 0.75rem;
-                width: 100%;
+                // flex-direction: column;
+                gap: 1rem;
+                align-items: center;
 
-                .name {
-                    // width: 100%;
-                    // display: flex;
-                    // flex-direction: column;
-                    // // align-items: center;
-                    // justify-content: space-between;
-                    // gap: 0.5rem;
-                    // font-size: 1.2rem;
-                    // font-weight: 600;
+                .editable {
+                    position: relative;
 
-                    .username {
-                        border-radius: 10px;
-                        padding: 0.25rem 0.75rem;
-                        background: #3c3944;
-                        cursor: pointer;
-                        font-size: 1rem;
-                        color: $darkpurple;
-                        font-weight: 700;
-                        width: fit-content;
+                    img {
+                        height: 6.5rem;
+                        width: 6.5rem;
+                        border-radius: 50%;
+                        object-fit: fill;
                     }
-                }
 
-                .follow {
-                    display: flex;
-                    justify-content: space-around;
-                    align-items: center;
-                    // gap: 2rem;
-
-                    .follower,
-                    .followings {
+                    .editicon {
+                        position: absolute;
+                        background: rgb(28, 27, 27);
+                        bottom: 0;
+                        right: 0;
+                        border-radius: 50%;
+                        padding: 0.5rem;
                         display: flex;
-                        flex-direction: column;
+                        justify-content: center;
                         align-items: center;
+                        cursor: pointer;
 
-                        a {
-                            font-weight: 600;
-                            display: flex;
-                            flex-direction: column;
-                            align-items: center;
-                            font-size: 0.8rem;
-
-                            span {
-                                color: $darkpurple;
-                                font-size: 1.2rem;
-                            }
+                        .editpencil {
+                            font-size: 1.2rem;
                         }
                     }
                 }
 
+                .namecontainer {
+                    display: flex;
+                    flex-direction: column;
+                    // align-items: center;
+                    justify-content: space-between;
+                    gap: 0.75rem;
+                    width: 100%;
+
+                    .name {
+                        // width: 100%;
+                        // display: flex;
+                        // flex-direction: column;
+                        // // align-items: center;
+                        // justify-content: space-between;
+                        // gap: 0.5rem;
+                        // font-size: 1.2rem;
+                        // font-weight: 600;
+
+                        .username {
+                            border-radius: 10px;
+                            padding: 0.25rem 0.75rem;
+                            background: #3c3944;
+                            cursor: pointer;
+                            font-size: 1rem;
+                            color: $darkpurple;
+                            font-weight: 700;
+                            width: fit-content;
+                        }
+                    }
+
+                    .follow {
+                        display: flex;
+                        justify-content: space-around;
+                        align-items: center;
+                        // gap: 2rem;
+
+                        .follower,
+                        .followings {
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+
+                            a {
+                                font-weight: 600;
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                                font-size: 0.8rem;
+
+                                span {
+                                    color: $darkpurple;
+                                    font-size: 1.2rem;
+                                }
+                            }
+                        }
+                    }
+
+                }
             }
-        }
 
-        .name-college {
-            display: flex;
-            flex-direction: column;
-            font-size: 1.25rem;
-
-            .college{
-                font-size: 1rem;
+            .name-college {
                 display: flex;
-                align-items: center;
-                gap: 0.25rem;
+                flex-direction: column;
+                font-size: 1.25rem;
+
+                .college {
+                    font-size: 1rem;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.25rem;
+                }
             }
         }
 
@@ -162,9 +167,12 @@ $darkpurple: #814fff;
                 background-color: rgba(255, 255, 255, 0.1);
                 border-radius: 0.5rem;
                 padding: 0.1rem 0.35rem;
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
 
                 span {
-                    height: 100%;
                     display: flex;
                     align-items: center;
                     gap: 0.5rem;
@@ -206,12 +214,13 @@ $darkpurple: #814fff;
         .options {
             border-top: 2px solid #515151;
 
-            .changepw,.changeusername {
+            .changepw,
+            .changeusername {
                 display: flex;
                 flex-direction: row;
                 justify-content: space-between;
                 align-items: center;
-                padding: 1rem 0;
+                padding: 0.75rem 0;
                 font-size: 1.1rem;
                 cursor: pointer;
 
@@ -222,7 +231,7 @@ $darkpurple: #814fff;
                     gap: 1rem;
                 }
             }
-            
+
         }
     }
 
@@ -230,7 +239,7 @@ $darkpurple: #814fff;
         flex: 2.5;
         border-radius: 0.5rem;
         background: #222222;
-        padding: 2rem;
+        padding: 0.5rem 2rem 2rem 2rem ;
 
         form {
             display: flex;
@@ -260,7 +269,7 @@ $darkpurple: #814fff;
                 button {
                     padding: 0.25rem 0.75rem;
                     border-radius: 0.25rem;
-                    font-size: 1.25rem;
+                    font-size: 1rem;
                     background: $purple;
                     color: white;
                     font-weight: 500;
@@ -277,7 +286,7 @@ $darkpurple: #814fff;
                     display: flex;
                     flex-direction: row;
                     justify-content: flex-end;
-                    gap: 2rem;
+                    gap: 1rem;
 
                     .cancel {
                         background-color: #494747;
