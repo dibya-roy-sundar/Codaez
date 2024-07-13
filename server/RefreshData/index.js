@@ -15,6 +15,15 @@ module.exports.getCodeforcesData = async (username) => {
         }
 
         const data = await postData(`https://codeforces.com/api/user.info?handles=${username}`)
+        const ratingdata=await axios.get(`https://codeforces.com/api/user.rating?handle=${username}`);
+        const contestParticipation=ratingdata?.data.result.map((item) =>{
+            return {
+                rank:item.rank,
+                // oldRating: item.oldRating,
+                // newRating: item.newRating,
+                rating:item.newRating,
+            }
+        })
         if (data.result) {
             const result = {
                 username: data.result[0].handle,
@@ -22,6 +31,7 @@ module.exports.getCodeforcesData = async (username) => {
                 rank: data.result[0].rank,
                 maxRating: data.result[0].maxRating,
                 maxRank: data.result[0].maxRank,
+                contestParticipation
             }
             // req.user = await User.findByIdAndUpdate(req.user._id, { $set: { cf: result } }, { new: true });
             return result;
@@ -45,7 +55,7 @@ module.exports.getCodeforcesData = async (username) => {
 
 module.exports.getLeetcodeData = async (username) => {
     try {
-        const query = `
+        const query = `#graphql
             query userContestRankingInfo($username: String!) {
                 userContestRanking(username: $username) {
                     attendedContestsCount
@@ -96,6 +106,18 @@ module.exports.getLeetcodeData = async (username) => {
             // return next(new ErrorHand(data.errors?.message, 500))
         } else {
             // console.log(data.data);
+            const contestParticipation= data.data.userContestRankingHistory.filter(
+                (obj) => obj.attended === true
+              )
+            const   newContestParticipation=contestParticipation.map((item) =>{
+                return {
+                    trendDirection:item.trendDirection,
+                    problemsSolved:item.problemsSolved,
+                    totalProblems:item.totalProblems,
+                    rating:item.rating,
+                    ranking:item.ranking,
+                }
+              })
             const result = {
                 username: username,
                 rating: data.data.userContestRanking.rating && Math.round(data.data.userContestRanking.rating),
@@ -107,7 +129,9 @@ module.exports.getLeetcodeData = async (username) => {
                 easyquestions: data.data.matchedUser.submitStats.acSubmissionNum[1]?.count,
                 mediumquestions: data.data.matchedUser.submitStats.acSubmissionNum[2]?.count,
                 hardquestions: data.data.matchedUser.submitStats.acSubmissionNum[3]?.count,
+                contestParticipation:newContestParticipation
             }
+            // console.log(result);
             // req.user = await User.findByIdAndUpdate(req.user._id, { $set: { lc: result } }, { new: true });
             return result
         }

@@ -41,6 +41,15 @@ const userSchema = new Schema({
         easyquestions: Number,
         mediumquestions: Number,
         hardquestions: Number,
+        contestParticipation:[
+            {
+                trendDirection:String,
+                problemsSolved:Number,
+                totalProblems:Number,
+                rating:Number,
+                ranking:Number,
+            }
+        ]
     },
     cf: {
         username: String,
@@ -48,6 +57,14 @@ const userSchema = new Schema({
         rank: String,
         maxRating: Number,
         maxRank: String,
+        contestParticipation:[
+            {
+                rank:Number,
+                // oldRating:Number,
+                // newRating:Number,
+                rating:Number
+            }
+        ]
     },
     cc: {
         username: String,
