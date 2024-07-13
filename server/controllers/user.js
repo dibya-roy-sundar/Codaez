@@ -334,7 +334,6 @@ module.exports.getReqeusts = async (req, res, next) => {
         }
     });
 
-    console.log("hello");
 
 
    const frequests=req.user.fRequests.map((item) => {
@@ -419,9 +418,9 @@ module.exports.updateProfile = async (req, res, next) => {
         user.cc.username = cc
     }
 
-    user.lc = await getLeetcodeData(user?.lc?.username);
-    user.cf = await getCodeforcesData(user?.cf?.username);
-    user.cc = await getCodechefData(user?.cc?.username);
+    user.lc = await getLeetcodeData(res,user?.lc?.username);
+    user.cf = await getCodeforcesData(res,user?.cf?.username);
+    user.cc = await getCodechefData(res,user?.cc?.username);
 
     user.aggregateRating = calcAggregateRating(user);
 
@@ -429,7 +428,7 @@ module.exports.updateProfile = async (req, res, next) => {
 
     res.status(200).json({
         success: true,
-        message: "user profile updated",
+        message: "profile updated",
         user,
     });
 };
@@ -496,5 +495,16 @@ module.exports.changeUsername=async (req,res,next) =>{
     }
 
       
+}
+
+module.exports.getFollowDetails=async (req,res,next) =>{
+    await req.user.populate('follower','_id name username avatar');
+    await req.user.populate('following','_id name username avatar');
+
+    return res.status(200).json({
+        success:true,
+        follower:req.user.follower,
+        following:req.user.following
+    })
 }
 

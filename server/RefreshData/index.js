@@ -7,7 +7,7 @@ const axios = require('axios');
 const mongoose = require('mongoose');
 const calcAggregateRating = require("../utils/calcAggregateRating");
 
-module.exports.getCodeforcesData = async (username) => {
+module.exports.getCodeforcesData = async (res,username) => {
     try {
         async function postData(url = "", data = {}) {
             const response = await fetch(url);
@@ -15,6 +15,12 @@ module.exports.getCodeforcesData = async (username) => {
         }
 
         const data = await postData(`https://codeforces.com/api/user.info?handles=${username}`)
+        if(data.status==="FAILED"){
+            return res.status(400).json({
+                success:false,
+                message:data.comment,
+            })
+        }
         const ratingdata=await axios.get(`https://codeforces.com/api/user.rating?handle=${username}`);
         const contestParticipation=ratingdata?.data.result.map((item) =>{
             return {
@@ -56,7 +62,7 @@ module.exports.getCodeforcesData = async (username) => {
     }
 }
 
-module.exports.getLeetcodeData = async (username) => {
+module.exports.getLeetcodeData = async (res,username) => {
     try {
         const query = `#graphql
             query userContestRankingInfo($username: String!) {
@@ -105,7 +111,15 @@ module.exports.getLeetcodeData = async (username) => {
         });
         const data = await response.json();
         if (data.errors) {
-            return {};
+            if(!data.matchedUser){
+                return res.status(400).json({
+                    success:false,
+                    message:"leetcode username not found",
+                });
+            }else{
+
+                return {};
+            }
             // return next(new ErrorHand(data.errors?.message, 500))
         } else {
             // console.log(data.data);
@@ -150,12 +164,14 @@ module.exports.getLeetcodeData = async (username) => {
     }
 }
 
-module.exports.getCodechefData = async (username) => {
+module.exports.getCodechefData = async (res,username) => {
     try {
         let data = await axios.get(`https://www.codechef.com/users/${username}`);
+       
         let allRating = data.data.search("var all_rating = ") + "var all_rating = ".length;
         let allRating2 = data.data.search("var current_user_rating =") - 6;
-        let ratingData = JSON.parse(data.data.substring(allRating, allRating2))
+        let querystring=data.data.substring(allRating, allRating2);
+        let ratingData = JSON.parse(querystring);
         const contestParticipation=ratingData?.map((item)=>{
 
             return {
@@ -186,8 +202,10 @@ module.exports.getCodechefData = async (username) => {
         // req.user = await User.findByIdAndUpdate(req.user._id, { $set: { cc: { username } } }, { new: true })
         console.log(error);
         console.log("error while fetching codechef data");
-        return false;
-        // return next()
+        return res.status(400).json({
+            success:false,
+            message:"codechef username not found",
+        })
         // return next(new ErrorHand("error while fetching codechef data",500));
     }
 }
