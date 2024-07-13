@@ -45,9 +45,8 @@ const RequestBox = () => {
     }
   };
 
-  const handleWithdrawFollowRequest = async (username, userId) => {
+  const handleWithdrawFollowRequest = async (userId) => {
     const { data } = await usePostFetch("/withdraw-request", {
-      username,
       userId,
     });
     if (data && data.success) {
@@ -100,7 +99,6 @@ const RequestBox = () => {
                             :   sendfr
                                 ? () => {
                                     handleWithdrawFollowRequest(
-                                        f.senderusername,
                                         f.senderuserId
                                     );
                                     }
