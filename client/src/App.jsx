@@ -15,10 +15,9 @@ const Layout = () => {
     return (
         <div className='app'>
             <ToastContainer autoClose={3000} draggablePercent={50} limit={3} theme='dark' stacked />
-            <Navbar />
-            <Sidebar />
+            {/* <Navbar /> */}
+            {/* <Sidebar /> */}
             <Outlet />
-            {/* <Footer /> */}
         </div>
     )
 }
@@ -29,16 +28,16 @@ const router = createBrowserRouter([
         element: <Layout />,
         children: [
             {
-                path: "/home",
+                path: "/",
                 element: <Landing />
             },
             {
                 path: "/dashboard",
-                element: <Dashboard />
+                element: <><Navbar /><Sidebar /><Dashboard /></>
             },
             {
                 path: "/leaderboard",
-                element: <Leaderboard />
+                element: <><Navbar /><Sidebar /><Leaderboard /></>
             },
             {
                 path: "/auth",
@@ -46,7 +45,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "/profile/:username",
-                element: <Profile />
+                element: <><Navbar /><Sidebar /><Profile /></>
             },
             {
                 path: "/completeprofile",
