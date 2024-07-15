@@ -16,7 +16,7 @@ const bcrypt = require("bcrypt");
 
 /////////////////// Auth ////////////////////////
 
-module.exports.register = async (req, res) => {
+module.exports.register = async (req, res,next) => {
     const { username, email, password } = req.body;
 
     if (!(username || email || password)) {
@@ -146,6 +146,7 @@ module.exports.changePassword = async (req, res, next) => {
         });
     }
 };
+
 //   module.exports.forgotPassword =catchAsync( async (req, res) => {
 //     const { oldpw,newpw } = req.body;
 //     //current logged in userdetails
@@ -503,8 +504,7 @@ module.exports.getFollowDetails=async (req,res,next) =>{
 
     return res.status(200).json({
         success:true,
-        follower:req.user.follower,
-        following:req.user.following
+        user:req.user,
     })
 }
 

@@ -100,7 +100,7 @@ $darkpurple: #814fff;
                             flex-direction: column;
                             align-items: center;
 
-                            a {
+                            .element{
                                 font-weight: 600;
                                 display: flex;
                                 flex-direction: column;
@@ -110,6 +110,7 @@ $darkpurple: #814fff;
                                 span {
                                     color: $darkpurple;
                                     font-size: 1.2rem;
+                                    cursor: pointer;
                                 }
                             }
                         }

@@ -1,0 +1,96 @@
+$grey: #333333;
+$purple: #703BF7;
+$darkpurple: #814fff;
+$input-background: rgb(25, 25, 25);
+$label-color: rgb(82, 82, 82);
+
+.followcontainer{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+    height: 60vh;
+
+    .close{
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        .icon{
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: white;
+        }
+    }
+    .options{
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: space-around;
+        .follower,.followings{
+            cursor: pointer;
+            color: white;
+            font-size: 1.2rem;
+            padding: 0.5rem;
+            border-bottom: 3px solid transparent;
+            
+        }
+        .selected{
+            border-bottom: 3px solid $darkpurple;
+            color: $darkpurple;
+            span{
+                color: $darkpurple;
+            }
+        }
+    }
+    .followercontainer,.followingcontainer{
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        align-items: center;
+        padding: 0.5rem;
+        background-color: $grey;
+        border-radius: 0.25rem;
+        width: 100%;
+        overflow-Y: scroll;
+        scrollbar-width: none;
+        scroll-behavior: auto;
+        flex: 1;
+        .user {
+            width: 100%;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+
+            img {
+                height: 3rem;
+                width: 3rem;
+                border-radius: 50%;
+                object-fit: fill;
+            }
+
+            .userdetails {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                font-size: 1rem;
+                color: white;
+
+                .username {
+                    border-radius: 0.5rem;
+                    padding: 0.05rem 0.25rem;
+                    background: #3c3944;
+                    cursor: pointer;
+                    font-size: 1.2rem;
+                    color: $purple;
+                    font-weight: 700;
+                }
+            }
+        }
+
+        .noResults{
+            padding: 0.75rem;
+            color: white;
+            font-size: 1rem;
+        }
+    }
+}

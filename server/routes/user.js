@@ -36,6 +36,6 @@ router.route('/update-profile').put(catchAsync(isLoggedIn), catchAsync(updatePro
 router.route('/update-avatar').put(catchAsync(isLoggedIn), upload.single('avatar'), catchAsync(editAvatar))
 router.route('/changepw').put(catchAsync(isLoggedIn), catchAsync(changePassword));
 router.route('/change-username').put(catchAsync(isLoggedIn),catchAsync(changeUsername));
-router.route('/get-follow-details').get(catchAsync(isLoggedIn),catchAsync(getFollowDetails));
+router.route('/get-follow').get(catchAsync(isLoggedIn),catchAsync(getFollowDetails));
 
 module.exports = router;

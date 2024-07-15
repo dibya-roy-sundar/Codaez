@@ -6,15 +6,13 @@ import codechef from "../../assets/codechef.png";
 import linkedin from "../../assets/linkedin.png";
 import github from "../../assets/github.png";
 import twitter from "../../assets/twitter.png";
-import hashnode from "../../assets/hashnode.png";
-import medium from "../../assets/medium.png";
 import noProfileImage from "../../assets/noProfileImage.png"
 import Labelinput from "./Labelinput";
 import { useEffect, useRef, useState } from "react";
 import { FaBan } from "react-icons/fa";
 import { FaAngleRight, FaEnvelope, FaFloppyDisk, FaGithub, FaGraduationCap, FaHashnode, FaIdCard, FaKey, FaLinkedin, FaMedium, FaPencil, FaPenToSquare, FaUser, FaXTwitter } from "react-icons/fa6";
 import ChangePw from "./ChangePw";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 import { useDispatch, useSelector } from "react-redux";
 import usePutHook from "../../hooks/usePutHook";
@@ -22,11 +20,14 @@ import { setAuth } from "../../redux/authReducer";
 import usePostFetch from "../../hooks/usePostFetch";
 import Changeuname from "./Changeuname.jsx";
 import { toast } from "react-toastify";
+import Follow from "./Follow.jsx";
 
 
 
 const Profile = () => {
     const dispatch = useDispatch();
+    const location=useLocation();
+    const navigate=useNavigate();
     const current_user = useSelector(state => state.auth.auth)
     const [reload, setReload] = useState(0);
 
@@ -38,7 +39,7 @@ const Profile = () => {
     useEffect(() => {
         if (ownprofile && data && data.user) {
             //only for showing updates on following 
-            // othwerwise follow updated when user accept follow request
+            // othwerwise follow updated when user accept follow request    
             dispatch(setAuth(data.user));
         }
     }, [data])
@@ -60,6 +61,7 @@ const Profile = () => {
     const [sendfr, setSendfr] = useState(false);
     const changepwref = useRef();
     const changeusernameref = useRef();
+    const followRef=useRef();
     const editavatarref = useRef();
 
     const [formdata, setFormData] = useState({
@@ -244,6 +246,18 @@ const Profile = () => {
         changeusernameref.current.closeModal();
     }
 
+    const openFollowModal = () => {
+        followRef.current.openModal();
+    }
+
+    const closeFollowModal = () => {
+        followRef.current.closeModal();
+    }
+
+    const navigateCurrURL=()=>{
+        navigate(location.pathname);
+    }
+
 
     return (
         <>
@@ -252,6 +266,7 @@ const Profile = () => {
                 <div className="profileContainer" >
                     <ChangePw handleClose={closepwModal} changePwRef={changepwref} />
                     <Changeuname handleClose={closeChangeUsernameModal} changeUnameRef={changeusernameref} />
+                 { ownprofile &&    <Follow handleClose={closeFollowModal} followRef={followRef} />}
                     <div className="usercard" >
                         <div className="top">
                             <div className="user-Img-Name">
@@ -280,16 +295,17 @@ const Profile = () => {
                                     </div>
                                     <div className="follow">
                                         <div className="follower">
-                                            <a href="">
-                                                <span>{user?.follower?.length}</span>
+                                            <div className="element">
+                                                <span onClick={ ownprofile ? openFollowModal : navigateCurrURL }>{user?.follower?.length}</span>
                                                 <p>Followers</p>
-                                            </a>
+                                            </div>
                                         </div>
                                         <div className="followings">
-                                            <a href="">
-                                                <span>{user?.following?.length}</span>
+                                            <div className="element">
+
+                                                <span onClick={ownprofile ? openFollowModal : navigateCurrURL }>{user?.following?.length}</span>
                                                 <p>Followings</p>
-                                            </a>
+                                            </div>    
                                         </div>
                                     </div>
                                 </div>
