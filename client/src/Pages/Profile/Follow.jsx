@@ -11,12 +11,12 @@ import noProfileImage from '../../assets/noProfileImage.png'
 import { Link } from 'react-router-dom';
 
 
-const Follow =forwardRef( ({handleClose,followRef}) => {
+const Follow =forwardRef( ({reload,handleClose,followRef}) => {
     const [selected,setSelected]=useState(0);
     const user=useSelector(state => state.auth.auth);
     const dispatch=useDispatch()
 
-    const { data, loading, error } = useFetch('/get-follow');
+    const { data, loading, error } = useFetch('/get-follow',true,reload);
 
     useEffect(() => {
         if (data && data.success) {  

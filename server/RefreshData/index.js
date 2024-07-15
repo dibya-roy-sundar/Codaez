@@ -16,9 +16,10 @@ module.exports.getCodeforcesData = async (res,username) => {
 
         const data = await postData(`https://codeforces.com/api/user.info?handles=${username}`)
         if(data.status==="FAILED"){
+            console.log(data.comment);
             return res.status(400).json({
                 success:false,
-                message:data.comment,
+                error:data.comment,
             })
         }
         const ratingdata=await axios.get(`https://codeforces.com/api/user.rating?handle=${username}`);
@@ -112,9 +113,10 @@ module.exports.getLeetcodeData = async (res,username) => {
         const data = await response.json();
         if (data.errors) {
             if(!data.matchedUser){
+                console.log(data.errors);
                 return res.status(400).json({
                     success:false,
-                    message:"leetcode username not found",
+                    error:"leetcode username not found",
                 });
             }else{
 
@@ -204,7 +206,7 @@ module.exports.getCodechefData = async (res,username) => {
         console.log("error while fetching codechef data");
         return res.status(400).json({
             success:false,
-            message:"codechef username not found",
+            error:"codechef username not found",
         })
         // return next(new ErrorHand("error while fetching codechef data",500));
     }
