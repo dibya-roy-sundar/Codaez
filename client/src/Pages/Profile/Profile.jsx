@@ -30,6 +30,7 @@ const Profile = () => {
     const navigate=useNavigate();
     const current_user = useSelector(state => state.auth.auth)
     const [reload, setReload] = useState(0);
+    const [followReload,setFollowReload]=useState(0);
 
     const { username } = useParams();
     const ownprofile = current_user?.username === username;
@@ -119,6 +120,7 @@ const Profile = () => {
             });
             dispatch(setAuth(data.data.user));
             setEdit(false);
+            setFollowReload(reload => reload+1);
         }
         else if (data.data) {
             toast.warn(data.data.error || data.data.message, {
@@ -264,9 +266,9 @@ const Profile = () => {
             {/*  Loading component */}
             {reload === 0 && loading ? <p style={{ fontSize: "5rem", position: "absolute", top: "45%", left: "45%", zIndex: 5 }}>Loading...</p> :
                 <div className="profileContainer" >
-                    <ChangePw handleClose={closepwModal} changePwRef={changepwref} />
-                    <Changeuname handleClose={closeChangeUsernameModal} changeUnameRef={changeusernameref} />
-                 { ownprofile &&    <Follow handleClose={closeFollowModal} followRef={followRef} />}
+                    <ChangePw  handleClose={closepwModal} changePwRef={changepwref} />
+                    <Changeuname setReload={setFollowReload} handleClose={closeChangeUsernameModal} changeUnameRef={changeusernameref} />
+                 { ownprofile &&    <Follow reload={followReload} handleClose={closeFollowModal} followRef={followRef} />}
                     <div className="usercard" >
                         <div className="top">
                             <div className="user-Img-Name">

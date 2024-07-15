@@ -12,7 +12,7 @@ import { RiErrorWarningLine } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 
 // eslint-disable-next-line react/prop-types
-const Changeuname = forwardRef(({ handleClose, changeUnameRef }) => {
+const Changeuname = forwardRef(({ setReload,handleClose, changeUnameRef }) => {
   const [username, setUsername] = useState("");
   const [InputValue, setInputValue] = useState("");
   const [loading, setLoading] = useState(null);
@@ -84,6 +84,7 @@ const Changeuname = forwardRef(({ handleClose, changeUnameRef }) => {
         handleClose();
         removeData();
         dispatch(setAuth(data.user))
+        setReload(prev => prev+1);
         navigate(`/profile/${data.user.username}`)
       }
     } else {

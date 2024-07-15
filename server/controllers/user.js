@@ -409,19 +409,33 @@ module.exports.updateProfile = async (req, res, next) => {
         },
         { new: true }
     );
-    if (lc.length > 0) {
-        user.lc.username = lc
+    if (!user.lc || user.lc?.username !== lc) {
+        if(lc.length>0){
+
+            user.lc = await getLeetcodeData(res,lc);
+        }else{
+            user.lc=null;
+        }
     }
-    if (cf.length > 0) {
-        user.cf.username = cf
+    if (!user.cf || user.cf?.username !== cf) {
+        if(cf.length>0){
+
+            user.cf = await getCodeforcesData(res,cf);
+        }else{
+            user.cf=null;
+        }
     }
-    if (cc.length > 0) {
-        user.cc.username = cc
+    if (!user.cc || user.cc?.username !== cc) {
+        if(cc.length>0){
+
+            user.cc = await getCodechefData(res,cc);
+        }else{
+            user.cc=null;
+        }
     }
 
-    user.lc = await getLeetcodeData(res,user?.lc?.username);
-    user.cf = await getCodeforcesData(res,user?.cf?.username);
-    user.cc = await getCodechefData(res,user?.cc?.username);
+    
+    
 
     user.aggregateRating = calcAggregateRating(user);
 
