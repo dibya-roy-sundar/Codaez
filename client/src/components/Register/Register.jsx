@@ -1,6 +1,6 @@
 import { FaGoogle } from 'react-icons/fa';
 import { FaEye, FaEyeSlash } from 'react-icons/fa6';
-import OTPVerification from './OtpVerification';
+// import OTPVerification from './OtpVerification';
 import { useState } from 'react';
 import './Register.scss'
 const Register = ({ registerUserCredentials, handleRegisterChange, handleRegisterSubmit }) => {
@@ -10,32 +10,28 @@ const Register = ({ registerUserCredentials, handleRegisterChange, handleRegiste
     const togglePasswordVisibility = () => {
         setPasswordVisible(!passwordVisible);
     };
-    const [otpOpen, setOtpOpen] = useState(false);
+    // const [otpOpen, setOtpOpen] = useState(false);
 
-    const closeOtpModal = () => {
-        setOtpOpen(false);
-    };
+    // const closeOtpModal = () => {
+    //     setOtpOpen(false);
+    // };
 
-    const handleNextStep = (e) => {
-        e.preventDefault();
-        setOtpOpen(true);
-    }
-    
+
 
     return (
         <div className="login-container">
             <form className="login-form" onSubmit={(e) => { handleRegisterSubmit(e) }}>
                 <h2>Register</h2>
                 <div className="input-wrap">
-                    <input type="text" id='reg-username' name='username' value={registerUserCredentials.username} onChange={(e) => handleRegisterChange(e)} required />
+                    <input type="text" id='reg-username' name='username' value={registerUserCredentials.username} placeholder='' onChange={(e) => handleRegisterChange(e)} />
                     <label htmlFor="reg-username">Username</label>
                 </div>
                 <div className="input-wrap">
-                    <input type="email" id="reg-email" name='email' value={registerUserCredentials.email} onChange={(e) => handleRegisterChange(e)} required />
+                    <input type="email" id="reg-email" name='email' value={registerUserCredentials.email} placeholder='' onChange={(e) => handleRegisterChange(e)} />
                     <label htmlFor="reg-email">Email</label>
                 </div>
                 <div className="input-wrap">
-                    <input type={passwordVisible ? "text" : "password"} id="reg-password" name='password' value={registerUserCredentials.password} onChange={(e) => handleRegisterChange(e)} required />
+                    <input type={passwordVisible ? "text" : "password"} id="reg-password" name='password' placeholder='' value={registerUserCredentials.password} onChange={(e) => handleRegisterChange(e)} />
                     <label htmlFor="reg-password">Password</label>
                     <span className="toggle-password" onClick={togglePasswordVisibility}>
                         {passwordVisible ? <FaEyeSlash /> : <FaEye />}
@@ -52,8 +48,8 @@ const Register = ({ registerUserCredentials, handleRegisterChange, handleRegiste
                     </div>
                 </div>
             </form>
-
-            <OTPVerification isOpen={otpOpen} onClose={closeOtpModal} />
+            {/* 
+            <OTPVerification isOpen={otpOpen} onClose={closeOtpModal} /> */}
         </div>
     )
 }

@@ -14,7 +14,7 @@ const Auth = () => {
 
     const [isLoginMode, setIsLoginMode] = useState(true);
     const [loginUserCredentials, setLoginUserCredentials] = useState({
-        userDetails:"",
+        userDetails: "",
         password: "",
     });
 
@@ -36,7 +36,7 @@ const Auth = () => {
             dispatch(setAuth(data.data.user));
             navigate('/dashboard');
         } else if (data.data) {
-            toast.warn(data.data.error || data.data.message , {
+            toast.warn(data.data.error || data.data.message, {
                 position: "top-right"
             });
         } else {
@@ -88,9 +88,10 @@ const Auth = () => {
     return (
         <div className="auth">
             {/* Toggle Button */}
-            <input type="checkbox" id="reg-log" name="reg-log" className="checkbox" onChange={toggleMode} />
-            <label htmlFor="reg-log"></label>
-
+            <div className="toggle-container">
+                <input type="checkbox" id="reg-log" name="reg-log" className="checkbox" onChange={toggleMode} />
+                <label htmlFor="reg-log"></label>
+            </div>
             {/* Login or Register Component based on toggle state */}
             {isLoginMode ? (
                 <Login
