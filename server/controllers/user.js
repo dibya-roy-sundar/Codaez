@@ -187,9 +187,9 @@ module.exports.setUsername = async (req, res, next) => {
         return next(new ErrorHand("username is required"));
     }
 
-    req.user.lc = await getLeetcodeData(lc?.username);
-    req.user.cf = await getCodeforcesData(cf?.username);
-    req.user.cc = await getCodechefData(cc?.username);
+    req.user.lc = await getLeetcodeData(res, lc?.username);
+    req.user.cf = await getCodeforcesData(res, cf?.username);
+    req.user.cc = await getCodechefData(res, cc?.username);
 
     req.user.aggregateRating = calcAggregateRating(req.user);
 
@@ -426,32 +426,32 @@ module.exports.updateProfile = async (req, res, next) => {
         { new: true }
     );
     if (!user.lc || user.lc?.username !== lc) {
-        if(lc.length>0){
+        if (lc.length > 0) {
 
-            user.lc = await getLeetcodeData(res,lc);
-        }else{
-            user.lc=null;
+            user.lc = await getLeetcodeData(res, lc);
+        } else {
+            user.lc = null;
         }
     }
     if (!user.cf || user.cf?.username !== cf) {
-        if(cf.length>0){
+        if (cf.length > 0) {
 
-            user.cf = await getCodeforcesData(res,cf);
-        }else{
-            user.cf=null;
+            user.cf = await getCodeforcesData(res, cf);
+        } else {
+            user.cf = null;
         }
     }
     if (!user.cc || user.cc?.username !== cc) {
-        if(cc.length>0){
+        if (cc.length > 0) {
 
-            user.cc = await getCodechefData(res,cc);
-        }else{
-            user.cc=null;
+            user.cc = await getCodechefData(res, cc);
+        } else {
+            user.cc = null;
         }
     }
 
-    
-    
+
+
 
     user.aggregateRating = calcAggregateRating(user);
 
