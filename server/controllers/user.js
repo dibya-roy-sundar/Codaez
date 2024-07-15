@@ -16,10 +16,10 @@ const bcrypt = require("bcrypt");
 
 /////////////////// Auth ////////////////////////
 
-module.exports.register = async (req, res,next) => {
-    const { username, email, password } = req.body;
+module.exports.register = async (req, res, next) => {
+    const { email, password } = req.body;
 
-    if (!(username || email || password)) {
+    if (!(email || password)) {
         return next(new ErrorHand("All fields are  required", 400));
     }
 
@@ -32,17 +32,17 @@ module.exports.register = async (req, res,next) => {
         });
     }
 
-    const availableUser = await User.findOne({ username });
-    if (availableUser) {
-        return res.status(200).json({
-            success: true,
-            error: "username already taken",
-        });
-    }
+    // const availableUser = await User.findOne({ username });
+    // if (availableUser) {
+    //     return res.status(200).json({
+    //         success: true,
+    //         error: "username already taken",
+    //     });
+    // }
 
     const hash = await bcrypt.hash(password, 12);
     const user = new User({
-        username,
+        // username,
         email,
         password: hash,
     });
@@ -51,8 +51,9 @@ module.exports.register = async (req, res,next) => {
     sendjwtToken(user, 201, res);
 };
 
-module.exports.completeProfile = async (req, res) => {
+module.exports.completeProfile = async (req, res, next) => {
     const {
+        username,
         name,
         college = "",
         lc,
@@ -65,13 +66,28 @@ module.exports.completeProfile = async (req, res) => {
         medium = "",
     } = req.body;
 
+    if (!(username)) {
+        return next(new ErrorHand("Username is required", 400));
+    }
+
+    const availableUser = await User.findOne({ username });
+    if (availableUser) {
+        return res.status(200).json({
+            success: true,
+            message: "Username already taken",
+        });
+    }
+
     const user = await User.findByIdAndUpdate(
         req.user?._id,
-        { name, college, linkedin, github, twitter, hashnode, medium },
+        { username, name, college, linkedin, github, twitter, hashnode, medium },
         { new: true }
     );
 
     if (req.file) {
+        if (req.user?.avatar?.filename)
+            await cloudinary.uploader.destroy(req.user?.avatar.filename);
+
         user.avatar = {
             url: req.file?.path || "",
             filename: req.file?.filename || "",
@@ -80,15 +96,15 @@ module.exports.completeProfile = async (req, res) => {
 
     if (lc && lc.length > 0) {
         user.lc.username = lc;
-        user.lc = await getLeetcodeData(lc);
+        user.lc = await getLeetcodeData(res, lc);
     }
     if (cf && cf.length > 0) {
         user.cf.username = cf;
-        user.cf = await getCodeforcesData(cf);
+        user.cf = await getCodeforcesData(res, cf);
     }
     if (cc && cc.length > 0) {
         user.cc.username = cc;
-        user.cc = await getCodechefData(cc);
+        user.cc = await getCodechefData(res, cc);
     }
     user.aggregateRating = calcAggregateRating(user);
     await user.save();
@@ -224,8 +240,8 @@ module.exports.sendFollowRequest = async (req, res, next) => {
     }
 
     const fRequest = new FRequest({
-       sender:req.user._id,
-       reciever:userId,
+        sender: req.user._id,
+        reciever: userId,
     });
     user.fRequests.push(fRequest);
     await fRequest.save();
@@ -240,7 +256,7 @@ module.exports.sendFollowRequest = async (req, res, next) => {
 module.exports.withdrawRequest = async (req, res, next) => {
     const { userId } = req.body;
 
-    const frequest = await FRequest.findOneAndDelete({ sender:req.user._id, reciever: userId });
+    const frequest = await FRequest.findOneAndDelete({ sender: req.user._id, reciever: userId });
     await User.findByIdAndUpdate(userId, { $pull: { fRequests: frequest?._id } });
 
 
@@ -264,7 +280,7 @@ module.exports.acceptFollowRequest = async (req, res, next) => {
         return next(new ErrorHand("You have not authorized to do this", 401));
     }
 
-    const user = await User.findByIdAndUpdate(frequest?.sender,{$push:{following:req.user}},{new:true}); //sender or follower
+    const user = await User.findByIdAndUpdate(frequest?.sender, { $push: { following: req.user } }, { new: true }); //sender or follower
     req.user.follower.push(user);
 
     req.user.fRequests = req.user?.fRequests.filter((el) => el.toString() !== reqId.toString());
@@ -306,7 +322,7 @@ module.exports.rejectFollowRequest = async (req, res, next) => {
     });
 };
 
-module.exports.unFollow = async (req, res) => {
+module.exports.unFollow = async (req, res, next) => {
     const { userId } = req.body;
     const user = await User.findByIdAndUpdate(userId, { $pull: { follower: req.user?._id } }, { new: true });
 
@@ -328,27 +344,27 @@ module.exports.unFollow = async (req, res) => {
 
 module.exports.getReqeusts = async (req, res, next) => {
     await req.user.populate({
-        path:'fRequests',
-        populate:{
-            path:'sender',
-            select :'name username avatar'
+        path: 'fRequests',
+        populate: {
+            path: 'sender',
+            select: 'name username avatar'
         }
     });
 
 
 
-   const frequests=req.user.fRequests.map((item) => {
-    return {
-        _id:item._id,//reqId
-        sender:item.sender,
-        isfollowing:req.user.following.some((el) =>el.toString()===item.sender._id.toString())
-    }
-   })
+    const frequests = req.user.fRequests.map((item) => {
+        return {
+            _id: item._id,//reqId
+            sender: item.sender,
+            isfollowing: req.user.following.some((el) => el.toString() === item.sender._id.toString())
+        }
+    })
 
-   res.status(200).json({
-        status:true,
+    res.status(200).json({
+        status: true,
         frequests
-   })
+    })
 
 }
 
@@ -419,9 +435,9 @@ module.exports.updateProfile = async (req, res, next) => {
         user.cc.username = cc
     }
 
-    user.lc = await getLeetcodeData(res,user?.lc?.username);
-    user.cf = await getCodeforcesData(res,user?.cf?.username);
-    user.cc = await getCodechefData(res,user?.cc?.username);
+    user.lc = await getLeetcodeData(res, user?.lc?.username);
+    user.cf = await getCodeforcesData(res, user?.cf?.username);
+    user.cc = await getCodechefData(res, user?.cc?.username);
 
     user.aggregateRating = calcAggregateRating(user);
 
@@ -452,59 +468,59 @@ module.exports.editAvatar = async (req, res, next) => {
     });
 };
 
-module.exports.changeUsername=async (req,res,next) =>{
-    const {username,save}=req.body;
+module.exports.changeUsername = async (req, res, next) => {
+    const { username, save } = req.body;
 
-    if(!username){
+    if (!username) {
         return res.status(400).json({
-            success:false,
-            msg:"username is required"
+            success: false,
+            msg: "username is required"
         })
     }
 
-    const user=await User.findOne({username});
+    const user = await User.findOne({ username });
 
-    if(user){
+    if (user) {
         return res.status(200).json({
-            success:false,
-            msg:"username is already taken"
+            success: false,
+            msg: "username is already taken"
         })
-    }else{
-        if(save){
-            if(req.user?.usernameChanged){
+    } else {
+        if (save) {
+            if (req.user?.usernameChanged) {
                 return res.status(400).json({
-                    success:false,
-                    msg:"change username limit crossed"
+                    success: false,
+                    msg: "change username limit crossed"
                 })
-            }else{
-                req.user.username=username;
-                req.user.usernameChanged=true;
+            } else {
+                req.user.username = username;
+                req.user.usernameChanged = true;
                 await req.user.save();
-    
+
                 return res.status(200).json({
-                            success:true,
-                            msg:"username updated successfully" ,
-                            user:req.user
-                        })
+                    success: true,
+                    msg: "username updated successfully",
+                    user: req.user
+                })
             }
-        }else{
+        } else {
             res.status(200).json({
-                success:true,
-                msg:"unique username"
+                success: true,
+                msg: "unique username"
             })
         }
     }
 
-      
+
 }
 
-module.exports.getFollowDetails=async (req,res,next) =>{
-    await req.user.populate('follower','_id name username avatar');
-    await req.user.populate('following','_id name username avatar');
+module.exports.getFollowDetails = async (req, res, next) => {
+    await req.user.populate('follower', '_id name username avatar');
+    await req.user.populate('following', '_id name username avatar');
 
     return res.status(200).json({
-        success:true,
-        user:req.user,
+        success: true,
+        user: req.user,
     })
 }
 

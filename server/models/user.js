@@ -10,7 +10,7 @@ const userSchema = new Schema({
     },
     username: {
         type: String,
-        required: [true, "Username is Required"],
+        // required: [true, "Username is Required"],
         unique: true,
         indexing: true,
     },
@@ -19,9 +19,12 @@ const userSchema = new Schema({
         required: [true, "Email is required"],
         unique: true,
     },
+    googleId: {
+        type: String,
+    },
     password: {
         type: String,
-        required: [true, "Password is required"],
+        // required: [true, "Password is required"],
     },
     avatar: {
         url: String,
@@ -41,15 +44,15 @@ const userSchema = new Schema({
         easyquestions: Number,
         mediumquestions: Number,
         hardquestions: Number,
-        contestParticipation:[
+        contestParticipation: [
             {
-                title:String,
-                time:Number,
-                trendDirection:String,
-                problemsSolved:Number,
-                totalProblems:Number,
-                rating:Number,
-                rank:Number,
+                title: String,
+                time: Number,
+                trendDirection: String,
+                problemsSolved: Number,
+                totalProblems: Number,
+                rating: Number,
+                rank: Number,
             }
         ]
     },
@@ -59,14 +62,14 @@ const userSchema = new Schema({
         rank: String,
         maxRating: Number,
         maxRank: String,
-        contestParticipation:[
-            {   
-                title:String,
-                time:Number,
-                rank:Number,
+        contestParticipation: [
+            {
+                title: String,
+                time: Number,
+                rank: Number,
                 // oldRating:Number,
                 // newRating:Number,
-                rating:Number
+                rating: Number
             }
         ]
     },
@@ -77,19 +80,19 @@ const userSchema = new Schema({
         maxRating: Number,
         countryRank: Number,
         stars: String,
-        contestParticipation:[
+        contestParticipation: [
             {
-                title:String,
-                year:Number,
-                month:Number,
-                date:Number,
-                rating:Number,
-                rank:Number,
+                title: String,
+                year: Number,
+                month: Number,
+                date: Number,
+                rating: Number,
+                rank: Number,
             }
         ]
     },
     aggregateRating: {
-        type:Number
+        type: Number
     },
     gfg: {
         type: String,
@@ -131,9 +134,9 @@ const userSchema = new Schema({
             ref: "FRequest",
         },
     ],
-    usernameChanged:{
-        type:Boolean,
-        default:false,
+    usernameChanged: {
+        type: Boolean,
+        default: false,
     }
 });
 
@@ -146,7 +149,7 @@ userSchema.methods.getJWTToken = function () {
 userSchema.statics.findAndValidate = async function (userDetails, password) {
     const foundUser = await this.findOne(
         {
-            $or: [{ username:userDetails }, { email:userDetails }]
+            $or: [{ username: userDetails }, { email: userDetails }]
         }
     ).select("+password");
     //if a user is found, this means that the username is already in use

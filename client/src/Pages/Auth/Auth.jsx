@@ -48,7 +48,6 @@ const Auth = () => {
     }
 
     const [registerUserCredentials, setRegisterUserCredentials] = useState({
-        username: "",
         email: "",
         password: "",
     });
@@ -65,7 +64,7 @@ const Auth = () => {
         const data = await usePostFetch('/register', registerUserCredentials);
 
         if (data.data && data.data.user) {
-            toast.success(`Greetings, ${data.data.user.name}`, {
+            toast.success(`Email verification successful!`, {
                 position: "top-right"
             });
             dispatch(setAuth(data.data.user));

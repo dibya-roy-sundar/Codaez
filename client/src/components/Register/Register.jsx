@@ -16,16 +16,17 @@ const Register = ({ registerUserCredentials, handleRegisterChange, handleRegiste
     //     setOtpOpen(false);
     // };
 
+    const googleAuth=()=>{
+        window.open("http://localhost:3000/api/v1/auth/google",
+            '_self'
+        )
+    }
 
 
     return (
         <div className="login-container">
             <form className="login-form" onSubmit={(e) => { handleRegisterSubmit(e) }}>
                 <h2>Register</h2>
-                <div className="input-wrap">
-                    <input type="text" id='reg-username' name='username' value={registerUserCredentials.username} placeholder='' onChange={(e) => handleRegisterChange(e)} />
-                    <label htmlFor="reg-username">Username</label>
-                </div>
                 <div className="input-wrap">
                     <input type="email" id="reg-email" name='email' value={registerUserCredentials.email} placeholder='' onChange={(e) => handleRegisterChange(e)} />
                     <label htmlFor="reg-email">Email</label>
@@ -40,7 +41,7 @@ const Register = ({ registerUserCredentials, handleRegisterChange, handleRegiste
                 <button className="login-button">Register</button>
                 <div className="google-button">
 
-                    <div className='google-btn-image'>
+                    <div className='google-btn-image' onClick={googleAuth}>
                         <FaGoogle />
                     </div>
                     <div>

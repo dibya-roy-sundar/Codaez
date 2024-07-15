@@ -3,15 +3,37 @@ import leetcode from "../../assets/leetcode.png";
 import codeforces from "../../assets/codeforces.png";
 import codechef from "../../assets/codechef.png";
 import DetailModal from './DetailModal';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ContestRatingChart from './Chart'
 import PieChart from './PieChart'
 import ScrollDown from './ScrollDown';
+import { setAuth } from '../../redux/authReducer';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 
 const Dashboard = () => {
+    const [searchParams, setSearchParams] = useSearchParams();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (searchParams.get('email') && searchParams.get('username')) {
+            dispatch(setAuth({
+                email: searchParams.get('email'),
+                name: searchParams.get('name') || '',
+                username: searchParams.get('username'),
+            }))
+            navigate('', { replace: true });
+        }
+
+        // Clear the search params from the URL
+
+        // Your existing logic with the user object
+
+    }, []);
+
     const [details, setDetails] = useState({});
     const modalRef = useRef();
     const user = useSelector(state => state.auth.auth);
