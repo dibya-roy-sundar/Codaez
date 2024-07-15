@@ -23,7 +23,7 @@ passport.use(
                         url: response.url,
                         filename: response.public_id,
                     }
-                    
+
                     user = new User({
                         googleId: profile.id,
                         // username: profile.emails[0].value.split('@')[0],
@@ -33,6 +33,11 @@ passport.use(
                     });
                     await user.save();
 
+                }
+                else {
+                    if (!(user.username)) {
+                        isNew = true;
+                    }
                 }
 
                 // const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
