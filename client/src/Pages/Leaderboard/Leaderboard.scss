@@ -355,18 +355,20 @@ $darkpurple: #814fff;
         gap: 1rem;
 
         .top {
-            .stair{
-                .skewbox{
+            .stair {
+                .skewbox {
                     width: 9.4rem;
                 }
-                .verticalbox{
+
+                .verticalbox {
                     width: 9.4rem;
 
-                    .ratingsWrapper{
+                    .ratingsWrapper {
                         gap: 0.5rem;
                     }
                 }
-                .profilepic {    
+
+                .profilepic {
                     img {
                         height: 3rem;
                         width: 3rem;
@@ -379,8 +381,9 @@ $darkpurple: #814fff;
     @media (max-width:500px) {
         padding: 0 0.5rem 4rem 0.5rem;
         gap: 0;
+
         .top {
-            transform: scale(0.78);
+            transform: scale(0.69);
         }
 
         .bottom {

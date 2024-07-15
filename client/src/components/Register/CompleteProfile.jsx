@@ -166,17 +166,17 @@ const CompleteProfile = () => {
                                     </div>
                                     <div className="name-fields">
                                         <div className="input-wrap">
-                                            <input type="text" id="firstName" name="firstName" value={formValues.firstName} onChange={handleInputChange} />
+                                            <input type="text" id="firstName" name="firstName" value={formValues.firstName} placeholder='' onChange={handleInputChange} />
                                             <label htmlFor="firstName">First Name</label>
                                         </div>
                                         <div className="input-wrap">
-                                            <input type="text" id="lastName" name="lastName" value={formValues.lastName} onChange={handleInputChange} />
+                                            <input type="text" id="lastName" name="lastName" value={formValues.lastName} placeholder='' onChange={handleInputChange} />
                                             <label htmlFor="lastName">Last Name</label>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="input-wrap">
-                                    <input type="text" id="college" name="college" value={formValues.college} onChange={handleInputChange} />
+                                    <input type="text" id="college" name="college" value={formValues.college} placeholder='' onChange={handleInputChange} />
                                     <label htmlFor="college">College Name</label>
                                 </div>
                                 <div className="register-buttons">
@@ -198,7 +198,7 @@ const CompleteProfile = () => {
                                         <img src={codeforces} alt="" />
                                     </div>
                                     <div className="input-wrap">
-                                        <input type="text" id="codeforces" name="codeforces" value={formValues.codeforces} onChange={handleInputChange} />
+                                        <input type="text" id="codeforces" name="codeforces" value={formValues.codeforces} placeholder='' onChange={handleInputChange} />
                                         <label htmlFor="codeforces">Username</label>
                                     </div>
                                 </div>
@@ -207,7 +207,7 @@ const CompleteProfile = () => {
                                         <img src={leetcode} alt="" />
                                     </div>
                                     <div className="input-wrap">
-                                        <input type="text" id="leetcode" name="leetcode" value={formValues.leetcode} onChange={handleInputChange} />
+                                        <input type="text" id="leetcode" name="leetcode" value={formValues.leetcode} placeholder='' onChange={handleInputChange} />
                                         <label htmlFor="leetcode">Username</label>
                                     </div>
                                 </div>
@@ -216,7 +216,7 @@ const CompleteProfile = () => {
                                         <img src={codechef} alt="" />
                                     </div>
                                     <div className="input-wrap">
-                                        <input type="text" id="codechef" name="codechef" value={formValues.codechef} onChange={handleInputChange} />
+                                        <input type="text" id="codechef" name="codechef" value={formValues.codechef} placeholder='' onChange={handleInputChange} />
                                         <label htmlFor="codechef">Username</label>
                                     </div>
                                 </div>

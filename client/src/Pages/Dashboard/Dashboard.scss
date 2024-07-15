@@ -3,9 +3,20 @@ $purple: #703BF7;
 $darkpurple: #814fff;
 
 .dashboard {
-    margin: 5rem;
+    max-width: 88%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    // gap: 3rem;
 
     .section {
+        min-height: 100vh; // Full screen height for initial view
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+
         .cardWrapper {
             display: flex;
             justify-content: center;
@@ -21,7 +32,6 @@ $darkpurple: #814fff;
                 border-radius: 0.5rem;
                 width: 17rem;
                 padding-bottom: 1rem;
-                // border: 2px solid $purple;
 
                 .card-img {
                     width: 5rem;
@@ -49,7 +59,89 @@ $darkpurple: #814fff;
                 }
 
                 .btn {
-                    // border: 2px solid $purple;
+                    border: none;
+                    border-radius: 0.25rem;
+                    color: white;
+                    padding: 0.5rem 1.25rem;
+                    background-color: $purple;
+                    transition: all 0.2s ease-in-out;
+                    font-weight: 500;
+                    font-size: inherit;
+                    cursor: pointer;
+
+                    &:hover {
+                        background-color: $darkpurple;
+                    }
+                }
+            }
+        }
+
+    }
+
+    .contestlist {
+
+        max-width: 90%;
+
+
+
+        margin: 2rem auto;
+
+        h2 {
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .contest-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: space-between;
+            align-items: center;
+            margin: 3rem 0;
+
+            .contest-btn {
+                background: $grey;
+                color: white;
+                padding: 1.2rem 5rem;
+                border: none;
+                border-radius: 2rem;
+                cursor: pointer;
+                transition: background 0.3s;
+
+                &.active {
+                    background: $purple;
+                }
+
+                &:hover {
+                    background: $darkpurple;
+                }
+            }
+        }
+
+        .contest-details {
+            margin-top: 1rem;
+
+            .contest-card {
+                background: $grey;
+                border-radius: 0.5rem;
+                padding: 1rem;
+                margin-bottom: 1rem;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+
+
+                h3 {
+                    color: white;
+                    font-size: 1.5rem;
+                    font-weight: 700;
+
+                }
+
+
+                .details-toggle {
                     border: none;
                     border-radius: 0.25rem;
                     color: white;
@@ -67,4 +159,73 @@ $darkpurple: #814fff;
             }
         }
     }
+
+    @media screen and (max-width: 768px) {
+        .contest-buttons {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .contest-btn {
+            width: 100%;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .contest-card {
+            // flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        h3 {
+            font-size: 1rem;
+        }
+    }
+
+    @media screen and (max-width: 480px) {
+        h2 {
+            font-size: 2rem;
+        }
+
+        .contest-card {
+            padding: 0.5rem;
+        }
+    }
+
+    @media screen and (max-width:1000px) {
+        .section {
+            .cardWrapper {
+                flex-direction: column;
+                gap: 5rem;
+            }
+        }
+
+    }
+
+    @media screen and (max-width:995px) {
+        .section {
+            justify-content: normal;
+            margin-top: 2rem;
+        }
+
+    }
+
+    @media screen and (max-width:925px) {
+        .section {
+            justify-content: normal;
+            margin-top: 2.5rem;
+        }
+
+    }
+
+    @media screen and (max-width:635px) {
+        .section {
+            .cardWrapper {
+                gap: 3rem;
+            }
+        }
+
+    }
+
 }

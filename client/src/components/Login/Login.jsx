@@ -21,11 +21,11 @@ const Login = ({ loginUserCredentials, handleLoginChange, handleLoginSubmit }) =
                     <label htmlFor="username">Username</label>
                 </div> */}
                 <div className="input-wrap">
-                    <input type="text" id="userDetails" name='userDetails' value={loginUserCredentials.userDetails} onChange={(e) => handleLoginChange(e)} required />
+                    <input type="text" id="userDetails" name='userDetails' value={loginUserCredentials.userDetails} placeholder='' onChange={(e) => handleLoginChange(e)} />
                     <label htmlFor="userDetails">Email or Username </label>
                 </div>
                 <div className="input-wrap">
-                    <input type={passwordVisible ? "text" : "password"} id="password" name='password' value={loginUserCredentials.password} onChange={(e) => handleLoginChange(e)} required />
+                    <input type={passwordVisible ? "text" : "password"} id="password" name='password' value={loginUserCredentials.password} placeholder='' onChange={(e) => handleLoginChange(e)} />
                     <label htmlFor="password">Password</label>
                     <span className="toggle-password" onClick={togglePasswordVisibility}>
                         {passwordVisible ? <FaEyeSlash /> : <FaEye />}

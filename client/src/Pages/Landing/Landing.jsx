@@ -1,10 +1,13 @@
-import React from 'react';
-import { useState, useEffect, useRef } from 'react';
+
+import { useState } from 'react';
 import { FaPlus, FaMinus } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import './Landing.scss';
 import Footer from '../../components/Footer/Footer';
 import GlowingBox from '../../components/landingpage/Box';
+import { useSelector } from 'react-redux';
 
 const Landing = () => {
     const features = [
@@ -19,10 +22,18 @@ const Landing = () => {
         { question: 'What services do you offer?', answer: 'We offer a wide range of property services.' },
         { question: 'How do I list my property?', answer: 'You can list your property by signing up and following the listing process.' }
     ];
+    const user = useSelector(state => state.auth.auth);
+    const navigate = useNavigate();
+    const handleBrowseClick = () => {
+        if (user) {
+            navigate('/dashboard');
+        } else {
+            navigate('/auth');
+        }
+    }
 
     const FAQ = ({ faqs }) => {
         const [openIndex, setOpenIndex] = useState(null);
-        const answerRefs = useRef([]);
 
         // useEffect(() => {
         //     answerRefs.current.forEach((ref, index) => {
@@ -64,40 +75,44 @@ const Landing = () => {
     return (
         <div className="landing">
             <header className="header">
-                <div className="logo">Estatein</div>
+                <div className="logo">CodeHub</div>
                 <nav className="nav">
-                    <a href="#">Home</a>
-                    <a href="#">About Us</a>
-                    <a href="#">Properties</a>
-                    <a href="#">Services</a>
-                    <a href="#">Contact Us</a>
+                    {user ? (
+                        <>
+                            <Link to="/dashboard">Dashboard</Link>
+                            <Link to="/leaderboard">Leaderboard</Link>
+                            <Link to={`/profile/${user.username}`}>Profile</Link>
+                            <Link to="/logout">Logout</Link>
+                        </>
+                    ) : (
+                        <Link to="/auth">LOGIN</Link>
+                    )}
                 </nav>
-                <div><button>LOGIN</button></div>
             </header>
 
             <section className="hero">
                 <div className="hero-content">
                     <div className="content">
-                        <h1>Discover Your Dream Property with Estatein</h1>
-                        <p>Your journey to finding the perfect property begins here. Explore our listings to find the home that matches your dreams.</p>
+                        <h1>Connect  with Fellow Coders on CodeHub</h1>
+                        <p>Dive into our extensive listings of profiles from top coders. Check out their achievements, rankings, and coding styles to find inspiration and learn from the best.</p>
                         <div className="buttons">
                             <button className="btn learn-more">Learn More</button>
-                            <button className="btn browse-properties">Browse Properties</button>
+                            <button className="btn browse-properties" onClick={handleBrowseClick}>Browse Our platform</button>
                         </div>
                     </div>
 
                     <section className="stats">
                         <div className="stat">
                             <h3>200+</h3>
-                            <p>Happy Customers</p>
+                            <p>Total Visits On platform</p>
                         </div>
                         <div className="stat">
                             <h3>10k+</h3>
-                            <p>Properties For Clients</p>
+                            <p>How many Profiles</p>
                         </div>
                         <div className="stat">
                             <h3>16+</h3>
-                            <p>Years of Experience</p>
+                            <p>how many platforms</p>
                         </div>
                     </section>
 
@@ -117,7 +132,6 @@ const Landing = () => {
             <section className='project-images'>
                 <div>
                     <h1>Highlights</h1>
-
                 </div>
             </section>
 
