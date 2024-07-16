@@ -147,20 +147,33 @@ module.exports.changePassword = async (req, res, next) => {
     //current logged in userdetails
     // console.log(req.user);
 
-    const result = await bcrypt.compare(oldpw, req.user?.password);
-    if (!result) {
-        return next(new ErrorHand("Password incorrect", 401));
-    } else {
-        const hash = await bcrypt.hash(newpw, 12);
-        await User.findOneAndUpdate(
-            { username: req.user?.username },
-            { password: hash }
-        );
-        res.status(200).json({
-            success: true,
-            message: "Password successfully changed",
-        });
+    if (!oldpw.trim()) {
+        if (!(req.user.googleId)) {
+            return next(new ErrorHand("Old Password required", 401));
+        }
     }
+    else {
+        const result = await bcrypt.compare(oldpw, req.user?.password);
+        if (!result) {
+            return next(new ErrorHand("Incorrect Password", 401));
+        }
+    }
+
+    // const result = await bcrypt.compare(oldpw, req.user?.password);
+    // if (!result) {
+    //     return next(new ErrorHand("Password incorrect", 401));
+    // } else {
+    const hash = await bcrypt.hash(newpw, 12);
+    await User.findByIdAndUpdate(
+        req.user?._id,
+        { password: hash },
+        { new: true }
+    );
+    res.status(200).json({
+        success: true,
+        message: "Password Changed!",
+    });
+    // }
 };
 
 //   module.exports.forgotPassword =catchAsync( async (req, res) => {
@@ -374,7 +387,7 @@ module.exports.getReqeusts = async (req, res, next) => {
 module.exports.profile = async (req, res, next) => {
     const { username } = req.params;
 
-    const user = await User.findOne({ username: username }).select("-passsword").populate('fRequests', 'senderusername');
+    const user = await User.findOne({ username: username }).populate('fRequests', 'senderusername');
 
     if (!user) {
         return res.status(404).json({

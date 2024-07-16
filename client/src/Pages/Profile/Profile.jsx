@@ -26,11 +26,11 @@ import Follow from "./Follow.jsx";
 
 const Profile = () => {
     const dispatch = useDispatch();
-    const location=useLocation();
-    const navigate=useNavigate();
+    const location = useLocation();
+    const navigate = useNavigate();
     const current_user = useSelector(state => state.auth.auth)
     const [reload, setReload] = useState(0);
-    const [followReload,setFollowReload]=useState(0);
+    const [followReload, setFollowReload] = useState(0);
 
     const { username } = useParams();
     const ownprofile = current_user?.username === username;
@@ -62,7 +62,7 @@ const Profile = () => {
     const [sendfr, setSendfr] = useState(false);
     const changepwref = useRef();
     const changeusernameref = useRef();
-    const followRef=useRef();
+    const followRef = useRef();
     const editavatarref = useRef();
 
     const [formdata, setFormData] = useState({
@@ -120,7 +120,7 @@ const Profile = () => {
             });
             dispatch(setAuth(data.data.user));
             setEdit(false);
-            setFollowReload(reload => reload+1);
+            setFollowReload(reload => reload + 1);
         }
         else if (data.data) {
             toast.warn(data.data.error || data.data.message, {
@@ -256,7 +256,7 @@ const Profile = () => {
         followRef.current.closeModal();
     }
 
-    const navigateCurrURL=()=>{
+    const navigateCurrURL = () => {
         navigate(location.pathname);
     }
 
@@ -266,9 +266,9 @@ const Profile = () => {
             {/*  Loading component */}
             {reload === 0 && loading ? <p style={{ fontSize: "5rem", position: "absolute", top: "45%", left: "45%", zIndex: 5 }}>Loading...</p> :
                 <div className="profileContainer" >
-                    <ChangePw  handleClose={closepwModal} changePwRef={changepwref} />
+                    <ChangePw setReload={setFollowReload} handleClose={closepwModal} changePwRef={changepwref} user={user} />
                     <Changeuname setReload={setFollowReload} handleClose={closeChangeUsernameModal} changeUnameRef={changeusernameref} />
-                 { ownprofile &&    <Follow reload={followReload} handleClose={closeFollowModal} followRef={followRef} />}
+                    {ownprofile && <Follow reload={followReload} handleClose={closeFollowModal} followRef={followRef} />}
                     <div className="usercard" >
                         <div className="top">
                             <div className="user-Img-Name">
@@ -298,16 +298,16 @@ const Profile = () => {
                                     <div className="follow">
                                         <div className="follower">
                                             <div className="element">
-                                                <span onClick={ ownprofile ? openFollowModal : navigateCurrURL }>{user?.follower?.length}</span>
+                                                <span onClick={ownprofile ? openFollowModal : navigateCurrURL}>{user?.follower?.length}</span>
                                                 <p>Followers</p>
                                             </div>
                                         </div>
                                         <div className="followings">
                                             <div className="element">
 
-                                                <span onClick={ownprofile ? openFollowModal : navigateCurrURL }>{user?.following?.length}</span>
+                                                <span onClick={ownprofile ? openFollowModal : navigateCurrURL}>{user?.following?.length}</span>
                                                 <p>Followings</p>
-                                            </div>    
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -400,7 +400,7 @@ const Profile = () => {
                                 </div>
                                 <div onClick={openPwModal} className="changepw">
                                     <div>
-                                        <FaKey /> Change password
+                                        <FaKey /> {user.password ? "Change" : "Set"} password
                                     </div>
                                     <FaAngleRight />
                                 </div>
