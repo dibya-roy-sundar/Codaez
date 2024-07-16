@@ -2,8 +2,7 @@ const express = require('express');
 const { login, register, logout, changePassword, setUsername, userDetails,
     sendFollowRequest, acceptFollowRequest, rejectFollowRequest, updateProfile, profile,
     editAvatar, completeProfile, getReqeusts, withdrawRequest, unFollow,
-    changeUsername,
-    getFollowDetails } = require('../controllers/user.js');
+    changeUsername, getFollowDetails, dashboard } = require('../controllers/user.js');
 const { isLoggedIn } = require('../utils/isLoggedIn.js');
 const catchAsync = require('../utils/catchAsync');
 const multer = require('multer');
@@ -30,13 +29,13 @@ router.get('/auth/google/callback',
             ),
             httpOnly: true,
         }
-    
+
         res.status(200).cookie("token", token, options);
 
-        if(isNew){
+        if (isNew) {
             res.redirect(`${process.env.CLIENT_URL}/completeprofile?email=${user.email}&name=${user.name}&avatarUrl=${user.avatar.url}`);
         }
-        else{
+        else {
             res.redirect(`${process.env.CLIENT_URL}/dashboard?email=${user.email}&name=${user.name}&username=${user.username}`);
         }
     }
@@ -66,5 +65,6 @@ router.route('/update-avatar').put(catchAsync(isLoggedIn), upload.single('avatar
 router.route('/changepw').put(catchAsync(isLoggedIn), catchAsync(changePassword));
 router.route('/change-username').put(catchAsync(isLoggedIn), catchAsync(changeUsername));
 router.route('/get-follow').get(catchAsync(isLoggedIn), catchAsync(getFollowDetails));
+router.route('/dashboard').get(catchAsync(isLoggedIn), catchAsync(dashboard));
 
 module.exports = router;

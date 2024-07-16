@@ -551,3 +551,9 @@ module.exports.getFollowDetails = async (req, res, next) => {
     })
 }
 
+module.exports.dashboard = async (req, res, next) => {
+    return res.status(200).json({
+        success: true,
+        user: req.user,
+    })
+}
