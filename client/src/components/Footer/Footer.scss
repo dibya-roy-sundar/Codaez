@@ -11,4 +11,11 @@
     .logo {
         cursor: pointer;
     }
+
+    .footer-copyrights {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+    }
 }
