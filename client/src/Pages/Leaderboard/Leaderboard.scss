@@ -383,7 +383,7 @@ $darkpurple: #814fff;
         gap: 0;
 
         .top {
-            transform: scale(0.69);
+            transform: scale(0.78);
         }
 
         .bottom {
@@ -405,6 +405,11 @@ $darkpurple: #814fff;
                     font-size: 1rem;
                 }
             }
+        }
+    }
+    @media (max-width:400px) {
+        .top{
+            transform: scale(0.68);
         }
     }
 }

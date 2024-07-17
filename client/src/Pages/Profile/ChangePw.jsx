@@ -6,7 +6,7 @@ import usePutHook from "../../hooks/usePutHook"
 import { toast } from "react-toastify"
 
 // eslint-disable-next-line react/display-name, react/prop-types
-const ChangePw = forwardRef(({ handleClose, changePwRef }) => {
+const ChangePw = forwardRef(({ setReload, handleClose, changePwRef, user }) => {
     const [passwords, setPasswords] = useState({
         old: '',
         new: '',
@@ -69,6 +69,7 @@ const ChangePw = forwardRef(({ handleClose, changePwRef }) => {
                 toast.success(`Password Changed!`, {
                     position: "top-right"
                 });
+                setReload(prev => prev+1);
             }
             else if (data.error) {
                 toast.error(data.error, {
@@ -89,25 +90,28 @@ const ChangePw = forwardRef(({ handleClose, changePwRef }) => {
     return (
         <Modal ref={changePwRef}>
             <div className="changepwcontainer">
-                <p>Change Password</p>
+                <p>{user.password ? "Change" : "Set"} Password</p>
                 <form onSubmit={handleSubmit}>
                     <div className="inputfields">
+                        {user.password ?
+                            <div className="input-wrap">
+                                <input type={passwordVisible.old ? "text" : "password"} id="old" name='old' value={passwords.old} onChange={(e) => handleChange(e)} />
+                                <label htmlFor="old">Old Password</label>
+                                <span className="toggle-password" onClick={() => togglePasswordVisibility('old')}>
+                                    {passwordVisible.old ? <FaEyeSlash /> : <FaEye />}
+                                </span>
+                            </div>
+                            : ""
+                        }
                         <div className="input-wrap">
-                            <input type={passwordVisible.old ? "text" : "password"} id="old" name='old' value={passwords.old} onChange={(e) => handleChange(e)} required />
-                            <label htmlFor="old">Old Password</label>
-                            <span className="toggle-password" onClick={() => togglePasswordVisibility('old')}>
-                                {passwordVisible.old ? <FaEyeSlash /> : <FaEye />}
-                            </span>
-                        </div>
-                        <div className="input-wrap">
-                            <input type={passwordVisible.new ? "text" : "password"} id="new" name='new' value={passwords.new} onChange={(e) => handleChange(e)} required />
+                            <input type={passwordVisible.new ? "text" : "password"} id="new" name='new' value={passwords.new} onChange={(e) => handleChange(e)} />
                             <label htmlFor="new">New Password</label>
                             <span className="toggle-password" onClick={() => togglePasswordVisibility('new')}>
                                 {passwordVisible.new ? <FaEyeSlash /> : <FaEye />}
                             </span>
                         </div>
                         <div className="input-wrap">
-                            <input type={passwordVisible.renew ? "text" : "password"} id="renew" name='renew' value={passwords.renew} onChange={(e) => handleChange(e)} required />
+                            <input type={passwordVisible.renew ? "text" : "password"} id="renew" name='renew' value={passwords.renew} onChange={(e) => handleChange(e)} />
                             <label htmlFor="renew">Re-enter New Password</label>
                             <span className="toggle-password" onClick={() => togglePasswordVisibility('renew')}>
                                 {passwordVisible.renew ? <FaEyeSlash /> : <FaEye />}

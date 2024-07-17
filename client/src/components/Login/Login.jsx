@@ -12,6 +12,12 @@ const Login = ({ loginUserCredentials, handleLoginChange, handleLoginSubmit }) =
         setPasswordVisible(!passwordVisible);
     };
 
+    const googleAuth=()=>{
+        window.open("http://localhost:3000/api/v1/auth/google",
+            '_self'
+        )
+    }
+
     return (
         <div className="login-container">
             <form className="login-form" onSubmit={(e) => handleLoginSubmit(e)}>
@@ -34,7 +40,7 @@ const Login = ({ loginUserCredentials, handleLoginChange, handleLoginSubmit }) =
                 <button className="login-button">Login</button>
                 <div className="google-button">
 
-                    <div className='google-btn-image'>
+                    <div className='google-btn-image' onClick={googleAuth}>
                         <FaGoogle />
                     </div>
                     <div>

@@ -12,6 +12,8 @@ const userRoutes = require('./routes/user');
 const detailsRoutes = require('./routes/details');
 const error = require('./middlewares/error');
 const { refreshData, refreshUpContests } = require('./RefreshData');
+const passportSetup=require('./passport');
+const passport = require('passport');
 
 const dbUrl = process.env.ATLAS_URL;
 mongoose.connect(dbUrl)
@@ -28,7 +30,8 @@ mongoose.connect(dbUrl)
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
+app.use(cors({ credentials: true, origin: process.env.CLIENT_URL }));
+app.use(passport.initialize());
 
 
 app.use('/api/v1', userRoutes);

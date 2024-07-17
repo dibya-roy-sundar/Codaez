@@ -19,10 +19,10 @@ const otpGenerator = require('otp-generator')
 
 /////////////////// Auth ////////////////////////
 
-module.exports.register = async (req, res,next) => {
-    const { username, email, password,otp } = req.body;
+module.exports.register = async (req, res, next) => {
+    const { email, password,otp } = req.body;
 
-    if (!(username || email || password ||otp)) {
+    if (!(email || password ||otp)) {
         return next(new ErrorHand("All fields are  required", 400));
     }
 
@@ -106,8 +106,9 @@ module.exports.sendOtp=async (req,res,next) =>{
   
 }
 
-module.exports.completeProfile = async (req, res) => {
+module.exports.completeProfile = async (req, res, next) => {
     const {
+        username,
         name,
         college = "",
         lc,
@@ -152,11 +153,14 @@ module.exports.completeProfile = async (req, res) => {
 
     const user = await User.findByIdAndUpdate(
         req.user?._id,
-        { name, college, linkedin, github, twitter,lc:lcData,cf:cfData,cc:ccData },
+        { username, name, college, linkedin, github, twitter,lc:lcData,cf:cfData,cc:ccData },
         { new: true }
     );
 
     if (req.file) {
+        if (req.user?.avatar?.filename)
+            await cloudinary.uploader.destroy(req.user?.avatar.filename);
+
         user.avatar = {
             url: req.file?.path || "",
             filename: req.file?.filename || "",
@@ -205,20 +209,33 @@ module.exports.changePassword = async (req, res, next) => {
     //current logged in userdetails
     // console.log(req.user);
 
-    const result = await bcrypt.compare(oldpw, req.user?.password);
-    if (!result) {
-        return next(new ErrorHand("Password incorrect", 401));
-    } else {
-        const hash = await bcrypt.hash(newpw, 12);
-        await User.findOneAndUpdate(
-            { username: req.user?.username },
-            { password: hash }
-        );
-        res.status(200).json({
-            success: true,
-            message: "Password successfully changed",
-        });
+    if (!oldpw.trim()) {
+        if (!(req.user.googleId)) {
+            return next(new ErrorHand("Old Password required", 401));
+        }
     }
+    else {
+        const result = await bcrypt.compare(oldpw, req.user?.password);
+        if (!result) {
+            return next(new ErrorHand("Incorrect Password", 401));
+        }
+    }
+
+    // const result = await bcrypt.compare(oldpw, req.user?.password);
+    // if (!result) {
+    //     return next(new ErrorHand("Password incorrect", 401));
+    // } else {
+    const hash = await bcrypt.hash(newpw, 12);
+    await User.findByIdAndUpdate(
+        req.user?._id,
+        { password: hash },
+        { new: true }
+    );
+    res.status(200).json({
+        success: true,
+        message: "Password Changed!",
+    });
+    // }
 };
 
 //   module.exports.forgotPassword =catchAsync( async (req, res) => {
@@ -322,8 +339,8 @@ module.exports.sendFollowRequest = async (req, res, next) => {
     }
 
     const fRequest = new FRequest({
-       sender:req.user._id,
-       reciever:userId,
+        sender: req.user._id,
+        reciever: userId,
     });
     user.fRequests.push(fRequest);
     await fRequest.save();
@@ -338,7 +355,7 @@ module.exports.sendFollowRequest = async (req, res, next) => {
 module.exports.withdrawRequest = async (req, res, next) => {
     const { userId } = req.body;
 
-    const frequest = await FRequest.findOneAndDelete({ sender:req.user._id, reciever: userId });
+    const frequest = await FRequest.findOneAndDelete({ sender: req.user._id, reciever: userId });
     await User.findByIdAndUpdate(userId, { $pull: { fRequests: frequest?._id } });
 
 
@@ -362,7 +379,7 @@ module.exports.acceptFollowRequest = async (req, res, next) => {
         return next(new ErrorHand("You have not authorized to do this", 401));
     }
 
-    const user = await User.findByIdAndUpdate(frequest?.sender,{$push:{following:req.user}},{new:true}); //sender or follower
+    const user = await User.findByIdAndUpdate(frequest?.sender, { $push: { following: req.user } }, { new: true }); //sender or follower
     req.user.follower.push(user);
 
     req.user.fRequests = req.user?.fRequests.filter((el) => el.toString() !== reqId.toString());
@@ -404,7 +421,7 @@ module.exports.rejectFollowRequest = async (req, res, next) => {
     });
 };
 
-module.exports.unFollow = async (req, res) => {
+module.exports.unFollow = async (req, res, next) => {
     const { userId } = req.body;
     const user = await User.findByIdAndUpdate(userId, { $pull: { follower: req.user?._id } }, { new: true });
 
@@ -426,27 +443,27 @@ module.exports.unFollow = async (req, res) => {
 
 module.exports.getReqeusts = async (req, res, next) => {
     await req.user.populate({
-        path:'fRequests',
-        populate:{
-            path:'sender',
-            select :'name username avatar'
+        path: 'fRequests',
+        populate: {
+            path: 'sender',
+            select: 'name username avatar'
         }
     });
 
 
 
-   const frequests=req.user.fRequests.map((item) => {
-    return {
-        _id:item._id,//reqId
-        sender:item.sender,
-        isfollowing:req.user.following.some((el) =>el.toString()===item.sender._id.toString())
-    }
-   })
+    const frequests = req.user.fRequests.map((item) => {
+        return {
+            _id: item._id,//reqId
+            sender: item.sender,
+            isfollowing: req.user.following.some((el) => el.toString() === item.sender._id.toString())
+        }
+    })
 
-   res.status(200).json({
-        status:true,
+    res.status(200).json({
+        status: true,
         frequests
-   })
+    })
 
 }
 
@@ -456,7 +473,7 @@ module.exports.getReqeusts = async (req, res, next) => {
 module.exports.profile = async (req, res, next) => {
     const { username } = req.params;
 
-    const user = await User.findOne({ username: username }).select("-passsword").populate('fRequests', 'senderusername');
+    const user = await User.findOne({ username: username }).populate('fRequests', 'senderusername');
 
     if (!user) {
         return res.status(404).json({
@@ -587,59 +604,65 @@ module.exports.editAvatar = async (req, res, next) => {
     });
 };
 
-module.exports.changeUsername=async (req,res,next) =>{
-    const {username,save}=req.body;
+module.exports.changeUsername = async (req, res, next) => {
+    const { username, save } = req.body;
 
-    if(!username){
+    if (!username) {
         return res.status(400).json({
-            success:false,
-            msg:"username is required"
+            success: false,
+            msg: "username is required"
         })
     }
 
-    const user=await User.findOne({username});
+    const user = await User.findOne({ username });
 
-    if(user){
+    if (user) {
         return res.status(200).json({
-            success:false,
-            msg:"username is already taken"
+            success: false,
+            msg: "username is already taken"
         })
-    }else{
-        if(save){
-            if(req.user?.usernameChanged){
+    } else {
+        if (save) {
+            if (req.user?.usernameChanged) {
                 return res.status(400).json({
-                    success:false,
-                    msg:"change username limit crossed"
+                    success: false,
+                    msg: "change username limit crossed"
                 })
-            }else{
-                req.user.username=username;
-                req.user.usernameChanged=true;
+            } else {
+                req.user.username = username;
+                req.user.usernameChanged = true;
                 await req.user.save();
-    
+
                 return res.status(200).json({
-                            success:true,
-                            msg:"username updated successfully" ,
-                            user:req.user
-                        })
+                    success: true,
+                    msg: "username updated successfully",
+                    user: req.user
+                })
             }
-        }else{
+        } else {
             res.status(200).json({
-                success:true,
-                msg:"unique username"
+                success: true,
+                msg: "unique username"
             })
         }
     }
 
-      
+
 }
 
-module.exports.getFollowDetails=async (req,res,next) =>{
-    await req.user.populate('follower','_id name username avatar');
-    await req.user.populate('following','_id name username avatar');
+module.exports.getFollowDetails = async (req, res, next) => {
+    await req.user.populate('follower', '_id name username avatar');
+    await req.user.populate('following', '_id name username avatar');
 
     return res.status(200).json({
-        success:true,
-        user:req.user,
+        success: true,
+        user: req.user,
     })
 }
 
+module.exports.dashboard = async (req, res, next) => {
+    return res.status(200).json({
+        success: true,
+        user: req.user,
+    })
+}

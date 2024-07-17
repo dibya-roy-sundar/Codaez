@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './CompleteProfile.scss';
 // import { FaGoogle } from 'react-icons/fa';
 // import OTPVerification from './OtpVerification';
@@ -8,17 +8,39 @@ import codeforces from '../../assets/codeforces.png';
 import leetcode from '../../assets/leetcode.png';
 import codechef from '../../assets/codechef.png';
 import { setAuth } from '../../redux/authReducer';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import usePutHook from '../../hooks/usePutHook';
+import { toast } from 'react-toastify';
 
 const CompleteProfile = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const [currentStep, setCurrentStep] = useState(2);
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const userFromRedux = useSelector(state => state.auth.auth)
+
+    const [user, setUser] = useState();
+    useEffect(() => {
+        if (searchParams.get('email')) {
+            setUser({
+                email: searchParams.get('email'),
+                name: searchParams.get('name'),
+                avatarUrl: searchParams.get('avatarUrl'),
+            });
+
+            setFormValues(prev => ({ ...prev, firstName: searchParams.get('name') }));
+        }
+        else {
+            setUser(userFromRedux);
+        }
+    }, []);
+
+    const [currentStep, setCurrentStep] = useState(1);
     const [profilePicture, setProfilePicture] = useState(null);
     const [avatar, setAvatar] = useState(null);
     const [formValues, setFormValues] = useState({
+        username: '',
         firstName: '',
         lastName: '',
         college: '',
@@ -26,8 +48,6 @@ const CompleteProfile = () => {
         codeforces: '',
         codechef: ''
     });
-
-    const user = useSelector(state => state.auth.auth);
 
     const handleNextStep = () => {
         setCurrentStep((prev) => prev + 1);
@@ -41,6 +61,7 @@ const CompleteProfile = () => {
         e.preventDefault();
 
         const data = await usePutHook('/complete-profile', {
+            username: formValues.username,
             name: formValues.firstName + " " + formValues.lastName,
             college: formValues.college,
             lc: formValues.leetcode,
@@ -54,22 +75,22 @@ const CompleteProfile = () => {
         });
 
         if (data.data && data.data.user) {
-            // toast.success(`Welcome back, ${data.data.user.name}`, {
-            //     position: toast.POSITION.TOP_LEFT
-            // });
+            toast.success(`Profile Complete, ${data.data.user.name}!`, {
+                position: "top-right"
+            });
             dispatch(setAuth(data.data.user));
             navigate('/dashboard');
         }
         else if (data.data) {
-            // toast.warn(data.data.error || data.data.message, {
-            //     position: toast.POSITION.TOP_LEFT
-            // });
+            toast.warn(data.data.error || data.data.message, {
+                position: "top-right"
+            });
         }
         else {
             console.log(data);
-            // toast.error(data.error, {
-            //     position: toast.POSITION.TOP_LEFT
-            // });
+            toast.error(data.error, {
+                position: "top-right"
+            });
         }
     };
 
@@ -125,11 +146,15 @@ const CompleteProfile = () => {
                         {currentStep === 1 && (
                             <div className="register-step">
                                 <h3>User Credentails</h3>
+                                {/* <div className="input-wrap">
+                                    <input type="text" id="username" name="username" value={user.username} required />
+                                </div> */}
                                 <div className="input-wrap">
-                                    <input type="text" id="username" name="username" value={user.username} disabled required />
+                                    <input type="text" id="username" name="username" value={formValues.username} placeholder='' onChange={handleInputChange} required />
+                                    <label htmlFor="username">Username</label>
                                 </div>
                                 <div className="input-wrap">
-                                    <input type="email" id="email" name="email" value={user.email} disabled required />
+                                    <input type="email" id="email" name="email" value={user?.email} disabled required />
                                 </div>
                                 {/* <div className="input-wrap">
                                     <input type="password" id="password" name="password" required />
