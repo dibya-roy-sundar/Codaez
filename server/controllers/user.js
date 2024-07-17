@@ -5,6 +5,7 @@ const {
 } = require("../RefreshData/index.js");
 const { cloudinary } = require("../cloudinary/index.js");
 const Otp = require("../models/Otp.js");
+const UpContest = require("../models/UpContest.js");
 const FRequest = require("../models/frequests.js");
 const User = require("../models/user.js");
 const { transporter } = require("../utils/Mailer.js");
@@ -120,7 +121,7 @@ module.exports.completeProfile = async (req, res, next) => {
     let lcData,cfData,ccData;
     if (lc && lc.length > 0) {
         const data= await getLeetcodeData(lc);
-        if(data && !data?.success){
+        if(data && !data.success  && data.error){
             return res.status(404).json({
                 success:false,
                 message:data.error,
@@ -130,7 +131,7 @@ module.exports.completeProfile = async (req, res, next) => {
     }
     if (cf && cf.length > 0) {
         const data= await getCodeforcesData(cf);
-        if(data && !data?.success){
+        if(data && !data.success && data.error){
             return res.status(404).json({
                 success:false,
                 message:data.error,
@@ -140,7 +141,7 @@ module.exports.completeProfile = async (req, res, next) => {
     }
     if (cc && cc.length > 0) {
         const data= await getCodechefData(cc);
-        if(data && !data?.success){
+        if(data && !data.success && data.error){
             return res.status(404).json({
                 success:false,
                 message:data.error,
@@ -260,7 +261,7 @@ module.exports.setUsername = async (req, res, next) => {
         return next(new ErrorHand("username is required"));
     }
     const lcData= await getLeetcodeData(lc?.username);
-    if(lcData && !lcData?.success){
+    if(lcData && !lcData.success && lcData.error){
         return res.status(404).json({
             success:false,
             message:lcData.error,
@@ -268,7 +269,7 @@ module.exports.setUsername = async (req, res, next) => {
     }
 
     const cfData= await  getCodeforcesData(cf?.username);
-    if(cfData && !cfData?.success){
+    if(cfData && !cfData.success && cfData.error){
         return res.status(404).json({
             success:false,
             message:cfData.error,
@@ -277,7 +278,7 @@ module.exports.setUsername = async (req, res, next) => {
 
 
     const ccData= await  getCodechefData(cc?.username);
-    if(ccData && !ccData?.success){
+    if(ccData && !ccData.success && ccData.error){
         return res.status(404).json({
             success:false,
             message:ccData.error,
@@ -660,8 +661,17 @@ module.exports.getFollowDetails = async (req, res, next) => {
 }
 
 module.exports.dashboard = async (req, res, next) => {
+    const allContests=  await UpContest.find().sort({ startTime: -1 }); //we can't store documents in sorted manner
+    // in mongodb but while retrieving we can sort them
+    const LcContests=allContests.filter(item => item.platform==="lc");
+    const CfContests=allContests.filter(item => item.platform==="cf");
+    const CcContests=allContests.filter(item => item.platform==="cc");
     return res.status(200).json({
         success: true,
         user: req.user,
+        allContests,
+        CcContests,
+        LcContests,
+        CfContests
     })
 }
