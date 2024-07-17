@@ -11,7 +11,7 @@ const cors = require('cors');
 const userRoutes = require('./routes/user');
 const detailsRoutes = require('./routes/details');
 const error = require('./middlewares/error');
-const { refreshData } = require('./RefreshData');
+const { refreshData, refreshUpContests } = require('./RefreshData');
 
 const dbUrl = process.env.ATLAS_URL;
 mongoose.connect(dbUrl)
@@ -39,6 +39,7 @@ app.use(error);
 setInterval(() => {
 }, 100000000);
 // refreshData();
+refreshUpContests();//this timer will be greater than refreshData
 
 const port = process.env.PORT;
 app.listen(port, () => {

@@ -1,6 +1,6 @@
 import { FaGoogle } from 'react-icons/fa';
 import { FaEye, FaEyeSlash } from 'react-icons/fa6';
-// import OTPVerification from './OtpVerification';
+import OTPVerification from './OtpVerification';
 import { useState } from 'react';
 import './Register.scss'
 const Register = ({ registerUserCredentials, handleRegisterChange, handleRegisterSubmit }) => {
@@ -48,8 +48,8 @@ const Register = ({ registerUserCredentials, handleRegisterChange, handleRegiste
                     </div>
                 </div>
             </form>
-            {/* 
-            <OTPVerification isOpen={otpOpen} onClose={closeOtpModal} /> */}
+            
+             <OTPVerification isOpen={otpOpen} onClose={closeOtpModal} />
         </div>
     )
 }

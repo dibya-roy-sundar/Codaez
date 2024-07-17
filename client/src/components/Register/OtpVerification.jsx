@@ -90,8 +90,8 @@ const OTPVerification = ({ isOpen, onClose }) => {
                     <FaTimes />
                 </button>
                 <header className="otp-header">
-                    <h1>Mobile Phone Verification</h1>
-                    <p>Enter the 4-digit verification code that was sent to your phone number.</p>
+                    <h1>Email Verification</h1>
+                    <p>Enter the 4-digit verification code that was sent to your email</p>
                 </header>
                 <form id="otp-form">
                     <div className="otp-inputs">

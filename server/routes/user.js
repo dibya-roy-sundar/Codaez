@@ -3,7 +3,8 @@ const { login, register, logout, changePassword, setUsername, userDetails,
     sendFollowRequest, acceptFollowRequest, rejectFollowRequest, updateProfile, profile,
     editAvatar, completeProfile, getReqeusts, withdrawRequest, unFollow, 
     changeUsername,
-    getFollowDetails} = require('../controllers/user.js');
+    getFollowDetails,
+    sendOtp} = require('../controllers/user.js');
 const { isLoggedIn } = require('../utils/isLoggedIn.js');
 const catchAsync = require('../utils/catchAsync');
 const multer = require('multer');
@@ -15,6 +16,7 @@ const upload = multer({ storage })
 const router = express.Router({ mergeParams: true });
 
 router.route('/register').post(catchAsync(register));
+router.route('/send-otp').post(catchAsync(sendOtp));
 router.route('/login').post(catchAsync(login));
 router.route('/complete-profile').put(catchAsync(isLoggedIn),upload.single('avatar'), catchAsync(completeProfile));
 router.route('/setusername').post(catchAsync(isLoggedIn), catchAsync(setUsername));

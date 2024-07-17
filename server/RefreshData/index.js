@@ -6,8 +6,10 @@ const { JSDOM } = jsdom;
 const axios = require('axios');
 const mongoose = require('mongoose');
 const calcAggregateRating = require("../utils/calcAggregateRating");
+const UpContest = require("../models/UpContest");
+const { response } = require("express");
 
-module.exports.getCodeforcesData = async (res,username) => {
+module.exports.getCodeforcesData = async (username) => {
     try {
         async function postData(url = "", data = {}) {
             const response = await fetch(url);
@@ -17,10 +19,10 @@ module.exports.getCodeforcesData = async (res,username) => {
         const data = await postData(`https://codeforces.com/api/user.info?handles=${username}`)
         if(data.status==="FAILED"){
             console.log(data.comment);
-            return res.status(400).json({
+            return {
                 success:false,
                 error:data.comment,
-            })
+            }
         }
         const ratingdata=await axios.get(`https://codeforces.com/api/user.rating?handle=${username}`);
         const contestParticipation=ratingdata?.data.result.map((item) =>{
@@ -33,6 +35,27 @@ module.exports.getCodeforcesData = async (res,username) => {
                 rating:item.newRating,
             }
         })
+        const problemdata=await axios.get(`https://codeforces.com/api/user.status?handle=${username}`);
+        const problemsSubmitted=problemdata?.data?.result;
+        const problemSolved = problemsSubmitted.reduce((accumulator, problem) => {
+            if(problem.verdict!=="OK") {
+                return accumulator;
+            }
+            const rating = problem.problem.rating;
+            if (!accumulator.ratingCounts[rating]) {
+              accumulator.ratingCounts[rating] = 0;
+            }
+            accumulator.ratingCounts[rating]++;
+            accumulator.totalSuccessfullSubmissions++;
+            return accumulator;
+        }, {ratingCounts: {}, totalSuccessfullSubmissions: 0 });
+
+        const {ratingCounts,totalSuccessfullSubmissions}=problemSolved;
+        const ratingWiseProblems=[];
+        for(const [rating,count] of Object.entries(ratingCounts)){
+            ratingWiseProblems.push({rating:parseInt(rating),count});
+        }
+       
         if (data.result) {
             const result = {
                 username: data.result[0].handle,
@@ -40,7 +63,9 @@ module.exports.getCodeforcesData = async (res,username) => {
                 rank: data.result[0].rank,
                 maxRating: data.result[0].maxRating,
                 maxRank: data.result[0].maxRank,
-                contestParticipation
+                contestParticipation,
+                totalSuccessfullSubmissions,
+                ratingWiseProblems
             }
             // console.log("cf result",result);
             // req.user = await User.findByIdAndUpdate(req.user._id, { $set: { cf: result } }, { new: true });
@@ -63,7 +88,7 @@ module.exports.getCodeforcesData = async (res,username) => {
     }
 }
 
-module.exports.getLeetcodeData = async (res,username) => {
+module.exports.getLeetcodeData = async (username) => {
     try {
         const query = `#graphql
             query userContestRankingInfo($username: String!) {
@@ -114,10 +139,10 @@ module.exports.getLeetcodeData = async (res,username) => {
         if (data.errors) {
             if(!data.matchedUser){
                 console.log(data.errors);
-                return res.status(400).json({
+                return {
                     success:false,
                     error:"leetcode username not found",
-                });
+                };
             }else{
 
                 return {};
@@ -166,7 +191,7 @@ module.exports.getLeetcodeData = async (res,username) => {
     }
 }
 
-module.exports.getCodechefData = async (res,username) => {
+module.exports.getCodechefData = async (username) => {
     try {
         let data = await axios.get(`https://www.codechef.com/users/${username}`);
        
@@ -188,6 +213,10 @@ module.exports.getCodechefData = async (res,username) => {
         // console.log("cc result",contestParticipation);
         let dom = new JSDOM(data.data);
         let document = dom.window.document;
+            const section = document.querySelector('section.rating-data-section.problems-solved');
+            const problems = Array.from(section.querySelectorAll('h3')).map(h5 => h5.textContent.trim());
+            const string=problems[3];
+            const totalProblemSolved = parseInt(string.split(':')[1].trim());
         const result = {
             username: document.querySelector('.user-details-container')?.children[0]?.children[1]?.textContent || username,
             rating: parseInt(document.querySelector(".rating-number")?.textContent) || false,
@@ -195,7 +224,8 @@ module.exports.getCodechefData = async (res,username) => {
             rank: parseInt(document.querySelector('.rating-ranks')?.children[0]?.children[0]?.children[0]?.children[0]?.innerHTML)|| false,
             countryRank: parseInt(document.querySelector('.rating-ranks')?.children[0]?.children[1]?.children[0]?.children[0]?.innerHTML)|| false,
             stars: document.querySelector('.rating')?.textContent || "unrated",
-            contestParticipation
+            totalProblemSolved,
+            contestParticipation,
         }
         // req.user = await User.findByIdAndUpdate(req.user._id, { $set: { cc: result } }, { new: true });
         return result;
@@ -204,10 +234,10 @@ module.exports.getCodechefData = async (res,username) => {
         // req.user = await User.findByIdAndUpdate(req.user._id, { $set: { cc: { username } } }, { new: true })
         console.log(error);
         console.log("error while fetching codechef data");
-        return res.status(400).json({
+        return {
             success:false,
             error:"codechef username not found",
-        })
+        }
         // return next(new ErrorHand("error while fetching codechef data",500));
     }
 }
@@ -267,7 +297,7 @@ module.exports.refreshData = async () => {
         // console.log(bulkOps);
         const result = await User.bulkWrite(bulkOps);
         // console.log('Bulk update result:', result);
-        console.log('Bulk updated users');
+        console.log('Bulk updated users');               
     } catch (err) {
         console.error('Error:', err);
     }
@@ -275,6 +305,102 @@ module.exports.refreshData = async () => {
 
 
 
+/////////////////// Upcoming Contests /////////////////////////////
+
+const bulkUpContest=[];
+
+const getLCupContests=async () =>{
+   try {
+    const response=await axios.post('https://leetcode.com/graphql',{
+         headers: {
+             'Content-Type': 'application/json',
+         },
+         query: `{
+           topTwoContests{
+             title
+             startTime
+             duration
+             cardImg
+           }
+         }`
+       })
+       
+     function convertToSlug(text) {
+         return text
+             .toLowerCase() // Convert to lowercase
+             .replace(/[^a-z0-9]+/g, '-') // Replace non-alphanumeric characters (except hyphens) with hyphens
+             .replace(/^-+|-+$/g, ''); // Remove leading and trailing hyphens
+     }
+ 
+     response?.data?.data?.topTwoContests?.forEach((el) => {
+         bulkUpContest.push({
+             title: el.title,
+             startTime: el.startTime*1000,
+             duration: (el.duration/3600),
+             url:`https://leetcode.com/contest/${convertToSlug(el.title)}/`,
+             platform:"lc",
+         })
+     })
+     // console.log(bulkUpContest);
+   } catch (error) {
+        console.log("error while fetching leetcode upcoming contest details",error);
+   }
+}
+
+const getCFupContests=async () =>{
+   try {
+    const response=await axios.get("https://codeforces.com/api/contest.list")
+         for(const contest of response?.data?.result){
+             if(contest.phase==="FINISHED") break;
+             bulkUpContest.push({
+                 title: contest.name,
+                 startTime: contest.startTimeSeconds*1000,
+                 duration: (contest.durationSeconds/3600),
+                 url:`https://codeforces.com/contests/${contest.id}`,
+                 platform:"cf",
+             })
+         }
+         // console.log(bulkUpContest);
+   } catch (error) {
+    console.log("Error while fetching codeforces upcoming contests",error);
+   }
+}
+
+const getCCupContests=async () =>{
+    try {
+        const response=await axios.get("https://www.codechef.com/api/list/contests/all")
+            for(const contest of response?.data?.future_contests){
+                bulkUpContest.push({
+                    title: contest.contest_name,
+                    startTime: new Date(contest.contest_start_date).getTime(),
+                    duration: (contest.contest_duration/60),
+                    url:`https://www.codechef.com/${contest.contest_code}`,
+                    platform:"cc",
+                })
+            }
+            // console.log(bulkUpContest);
+    } catch (error) {
+        console.log("Error while fetching codechef upcoming contests",error);   
+    }
+}
+
+
+module.exports.refreshUpContests=async () =>{
+    await UpContest.deleteMany();
+
+    await getLCupContests();
+    await getCFupContests();
+    await getCCupContests();
+              
+    try {
+        // console.log(bulkUpContest);
+        const result = await UpContest.insertMany(bulkUpContest, { ordered: false });
+        //ordered false means if any documents fails while inserting it will continue the process not stop due to error in one document
+        console.log('Bulk insert upcoming contests successful:', result);
+    } catch (error) {
+        console.error('Bulk insert upcoming contests failed:', error);
+    }
+}
 
 
 
