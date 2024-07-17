@@ -509,53 +509,6 @@ module.exports.updateProfile = async (req, res, next) => {
      
     } = req.body;
 
-    let lcData,cfData,ccData;
-    if (!user.lc || user.lc?.username !== lc) {
-        if(lc.length>0){
-                
-        const data= await   getLeetcodeData(lc);
-        if(data && !data?.success){
-            return res.status(404).json({
-                success:false,
-                message:data.error,
-            })
-        }
-            lcData = data;
-        }else{
-            lcData=null;
-        }
-    }
-    if (!user.cf || user.cf?.username !== cf) {
-        if(cf.length>0){
-
-            const data= await   getCodeforcesData(cf);
-            if(data && !data?.success){
-                return res.status(404).json({
-                    success:false,
-                    message:data.error,
-                })
-            }
-            cfData = data;
-        }else{
-            cfData=null;
-        }
-    }
-    if (!user.cc || user.cc?.username !== cc) {
-        if(cc.length>0){
-            const data= await   getCodechefData(cc);
-            if(data && !data?.success){
-                return res.status(404).json({
-                    success:false,
-                    message:data.error,
-                })
-            }
-            ccData = data;
-
-        }else{
-            ccData=null;
-        }
-    }
-
 
     const user = await User.findByIdAndUpdate(
         req.user._id,
@@ -567,13 +520,56 @@ module.exports.updateProfile = async (req, res, next) => {
             linkedin,
             github,
             twitter,
-            lc:lcData,
-            cf:cfData,
-            cc:ccData
         },
         { new: true }
     );
        
+    
+    if (!user.lc || user.lc?.username !== lc) {
+        if(lc.length>0){
+                
+        const data= await   getLeetcodeData(lc);
+        if(data && !data?.success){
+            return res.status(404).json({
+                success:false,
+                error:data.error,
+            })
+        }
+            user.lc = data;
+        }else{
+            user.lc=null;
+        }
+    }
+    if (!user.cf || user.cf?.username !== cf) {
+        if(cf.length>0){
+
+            const data= await   getCodeforcesData(cf);
+            if(data && !data?.success){
+                return res.status(404).json({
+                    success:false,
+                    error:data.error,
+                })
+            }
+            user.cf = data;
+        }else{
+            user.cf=null;
+        }
+    }
+    if (!user.cc || user.cc?.username !== cc) {
+        if(cc.length>0){
+            const data= await   getCodechefData(cc);
+            if(data && !data?.success){
+                return res.status(404).json({
+                    success:false,
+                    error:data.error,
+                })
+            }
+            user.cc = data;
+
+        }else{
+            user.cc=null;
+        }
+    }
 
     user.aggregateRating = calcAggregateRating(user);
 

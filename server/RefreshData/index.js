@@ -396,7 +396,7 @@ module.exports.refreshUpContests=async () =>{
         // console.log(bulkUpContest);
         const result = await UpContest.insertMany(bulkUpContest, { ordered: false });
         //ordered false means if any documents fails while inserting it will continue the process not stop due to error in one document
-        console.log('Bulk insert upcoming contests successful:', result);
+        console.log('Bulk insert upcoming contests successful:');
     } catch (error) {
         console.error('Bulk insert upcoming contests failed:', error);
     }
