@@ -62,11 +62,18 @@ const userSchema = new Schema({
         rank: String,
         maxRating: Number,
         maxRank: String,
-        contestParticipation: [
+        totalSuccessfullSubmissions:Number,
+        ratingWiseProblems:[
             {
-                title: String,
-                time: Number,
-                rank: Number,
+                rating:Number,
+                count:Number
+            }
+        ],
+        contestParticipation:[
+            {   
+                title:String,
+                time:Number,
+                rank:Number,
                 // oldRating:Number,
                 // newRating:Number,
                 rating: Number
@@ -80,7 +87,8 @@ const userSchema = new Schema({
         maxRating: Number,
         countryRank: Number,
         stars: String,
-        contestParticipation: [
+        totalProblemSolved:Number,
+        contestParticipation:[
             {
                 title: String,
                 year: Number,
@@ -92,14 +100,7 @@ const userSchema = new Schema({
         ]
     },
     aggregateRating: {
-        type: Number
-    },
-    gfg: {
-        type: String,
-    },
-    hr: {
-        //hackerrank
-        type: String,
+        type:Number
     },
     linkedin: {
         type: String,
@@ -108,12 +109,6 @@ const userSchema = new Schema({
         type: String,
     },
     twitter: {
-        type: String,
-    },
-    hashnode: {
-        type: String,
-    },
-    medium: {
         type: String,
     },
     follower: [

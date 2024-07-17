@@ -2,7 +2,8 @@ const express = require('express');
 const { login, register, logout, changePassword, setUsername, userDetails,
     sendFollowRequest, acceptFollowRequest, rejectFollowRequest, updateProfile, profile,
     editAvatar, completeProfile, getReqeusts, withdrawRequest, unFollow,
-    changeUsername, getFollowDetails, dashboard } = require('../controllers/user.js');
+    changeUsername, getFollowDetails, dashboard ,
+    sendOtp} = require('../controllers/user.js');
 const { isLoggedIn } = require('../utils/isLoggedIn.js');
 const catchAsync = require('../utils/catchAsync');
 const multer = require('multer');
@@ -43,6 +44,7 @@ router.get('/auth/google/callback',
 
 
 router.route('/register').post(catchAsync(register));
+router.route('/send-otp').post(catchAsync(sendOtp));
 router.route('/login').post(catchAsync(login));
 router.route('/complete-profile').put(catchAsync(isLoggedIn), upload.single('avatar'), catchAsync(completeProfile));
 router.route('/setusername').post(catchAsync(isLoggedIn), catchAsync(setUsername));

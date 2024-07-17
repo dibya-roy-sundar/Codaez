@@ -4,25 +4,60 @@ const {
     getCodechefData,
 } = require("../RefreshData/index.js");
 const { cloudinary } = require("../cloudinary/index.js");
+const Otp = require("../models/Otp.js");
 const FRequest = require("../models/frequests.js");
 const User = require("../models/user.js");
+const { transporter } = require("../utils/Mailer.js");
 const ApiFeatures = require("../utils/apiFeatures.js");
 const calcAggregateRating = require("../utils/calcAggregateRating.js");
 const ErrorHand = require("../utils/errorHand.js");
 const sendjwtToken = require("../utils/sendjwtToken");
 const bcrypt = require("bcrypt");
+const otpGenerator = require('otp-generator')
 
 
 
 /////////////////// Auth ////////////////////////
 
 module.exports.register = async (req, res, next) => {
-    const { email, password } = req.body;
+    const { email, password,otp } = req.body;
 
-    if (!(email || password)) {
+    if (!(email || password ||otp)) {
         return next(new ErrorHand("All fields are  required", 400));
     }
 
+    const record = await Otp.findOne({ email });
+
+    if (!record || (record?.expiresAt < new Date())) {
+        return next(new ErrorHand("Invalid or expired OTP", 401));
+    }
+
+    const isMatch = await bcrypt.compare(otp, record.otp);
+
+    if(!isMatch){
+        return next(new ErrorHand("Invalid  OTP", 401));
+    }
+
+    await Otp.deleteOne({ _id: record._id }); 
+
+
+    // username -checked , email-checked , otp-verified
+
+    const hash = await bcrypt.hash(password, 12);
+    const user = new User({
+        username,
+        email,
+        password: hash,
+    });
+    await user.save();
+
+    sendjwtToken(user, 201, res);
+};
+
+module.exports.sendOtp=async (req,res,next) =>{
+    const {email}=req.body;
+
+    
     const foundUser = await User.findOne({ email });
 
     if (foundUser) {
@@ -32,24 +67,44 @@ module.exports.register = async (req, res, next) => {
         });
     }
 
-    // const availableUser = await User.findOne({ username });
-    // if (availableUser) {
-    //     return res.status(200).json({
-    //         success: true,
-    //         error: "username already taken",
-    //     });
-    // }
+    const availableUser = await User.findOne({ username });
+    if (availableUser) {
+        return res.status(200).json({
+            success: true,
+            error: "username is not available",
+        });
+    }
 
-    const hash = await bcrypt.hash(password, 12);
-    const user = new User({
-        // username,
-        email,
-        password: hash,
-    });
-    await user.save();
 
-    sendjwtToken(user, 201, res);
-};
+    const otp=otpGenerator.generate(4, {lowerCaseAlphabets:false, upperCaseAlphabets: false, specialChars: false });
+    const expiresAt = new Date(Date.now() + process.env.OTP_EXPIRY * 1000);
+
+    await Otp.deleteMany({ email }); //delete all previously generated otp - if user resend otp
+
+    await Otp.create({ email, otp, expiresAt });
+
+    try {
+        await transporter.sendMail({
+          from: process.env.SMTP_USER, // sender address
+          to: email, // recipient address
+          subject: 'Your OTP Code', // subject line
+          text: `Your OTP code is ${otp}. It will expire in ${process.env.OTP_EXPIRY / 60} minutes.`, // plain text body
+          html: "<b>Hello world?</b>", 
+        });
+        res.status(200).json({
+            success:true,
+            message:"verification otp sent to your email"
+        })
+        console.log('OTP email sent');
+      } catch (error) {
+        console.error('Error sending OTP email:', error);
+        res.status(500).json({
+            success:false,
+            message:"something went wrong while sending mail"
+        })
+      }
+  
+}
 
 module.exports.completeProfile = async (req, res, next) => {
     const {
@@ -62,25 +117,43 @@ module.exports.completeProfile = async (req, res, next) => {
         linkedin = "",
         github = "",
         twitter = "",
-        hashnode = "",
-        medium = "",
     } = req.body;
 
-    if (!(username)) {
-        return next(new ErrorHand("Username is required", 400));
+    let lcData,cfData,ccData;
+    if (lc && lc.length > 0) {
+        const data= await getLeetcodeData(lc);
+        if(data && !data?.success){
+            return res.status(404).json({
+                success:false,
+                message:data.error,
+            })
+        }
+        lcData=data;
     }
-
-    const availableUser = await User.findOne({ username });
-    if (availableUser) {
-        return res.status(200).json({
-            success: true,
-            message: "Username already taken",
-        });
+    if (cf && cf.length > 0) {
+        const data= await getCodeforcesData(cf);
+        if(data && !data?.success){
+            return res.status(404).json({
+                success:false,
+                message:data.error,
+            })
+        }
+        cfData=data;
+    }
+    if (cc && cc.length > 0) {
+        const data= await getCodechefData(cc);
+        if(data && !data?.success){
+            return res.status(404).json({
+                success:false,
+                message:data.error,
+            })
+        }
+        ccData=data;
     }
 
     const user = await User.findByIdAndUpdate(
         req.user?._id,
-        { username, name, college, linkedin, github, twitter, hashnode, medium },
+        { username, name, college, linkedin, github, twitter,lc:lcData,cf:cfData,cc:ccData },
         { new: true }
     );
 
@@ -94,18 +167,7 @@ module.exports.completeProfile = async (req, res, next) => {
         };
     }
 
-    if (lc && lc.length > 0) {
-        user.lc.username = lc;
-        user.lc = await getLeetcodeData(res, lc);
-    }
-    if (cf && cf.length > 0) {
-        user.cf.username = cf;
-        user.cf = await getCodeforcesData(res, cf);
-    }
-    if (cc && cc.length > 0) {
-        user.cc.username = cc;
-        user.cc = await getCodechefData(res, cc);
-    }
+    
     user.aggregateRating = calcAggregateRating(user);
     await user.save();
 
@@ -199,10 +261,34 @@ module.exports.setUsername = async (req, res, next) => {
     ) {
         return next(new ErrorHand("username is required"));
     }
+    const lcData= await getLeetcodeData(lc?.username);
+    if(lcData && !lcData?.success){
+        return res.status(404).json({
+            success:false,
+            message:lcData.error,
+        })
+    }
 
-    req.user.lc = await getLeetcodeData(res, lc?.username);
-    req.user.cf = await getCodeforcesData(res, cf?.username);
-    req.user.cc = await getCodechefData(res, cc?.username);
+    const cfData= await  getCodeforcesData(cf?.username);
+    if(cfData && !cfData?.success){
+        return res.status(404).json({
+            success:false,
+            message:cfData.error,
+        })
+    }
+
+
+    const ccData= await  getCodechefData(cc?.username);
+    if(ccData && !ccData?.success){
+        return res.status(404).json({
+            success:false,
+            message:ccData.error,
+        })
+    }
+
+    req.user.lc = lcData ;
+    req.user.cf = cfData;
+    req.user.cc = ccData ;
 
     req.user.aggregateRating = calcAggregateRating(req.user);
 
@@ -420,9 +506,10 @@ module.exports.updateProfile = async (req, res, next) => {
         linkedin,
         github,
         twitter,
-        hashnode,
-        medium,
+     
     } = req.body;
+
+
     const user = await User.findByIdAndUpdate(
         req.user._id,
         {
@@ -433,38 +520,56 @@ module.exports.updateProfile = async (req, res, next) => {
             linkedin,
             github,
             twitter,
-            hashnode,
-            medium,
         },
         { new: true }
     );
+       
+    
     if (!user.lc || user.lc?.username !== lc) {
-        if (lc.length > 0) {
-
-            user.lc = await getLeetcodeData(res, lc);
-        } else {
-            user.lc = null;
+        if(lc.length>0){
+                
+        const data= await   getLeetcodeData(lc);
+        if(data && !data?.success){
+            return res.status(404).json({
+                success:false,
+                error:data.error,
+            })
+        }
+            user.lc = data;
+        }else{
+            user.lc=null;
         }
     }
     if (!user.cf || user.cf?.username !== cf) {
-        if (cf.length > 0) {
+        if(cf.length>0){
 
-            user.cf = await getCodeforcesData(res, cf);
-        } else {
-            user.cf = null;
+            const data= await   getCodeforcesData(cf);
+            if(data && !data?.success){
+                return res.status(404).json({
+                    success:false,
+                    error:data.error,
+                })
+            }
+            user.cf = data;
+        }else{
+            user.cf=null;
         }
     }
     if (!user.cc || user.cc?.username !== cc) {
-        if (cc.length > 0) {
+        if(cc.length>0){
+            const data= await   getCodechefData(cc);
+            if(data && !data?.success){
+                return res.status(404).json({
+                    success:false,
+                    error:data.error,
+                })
+            }
+            user.cc = data;
 
-            user.cc = await getCodechefData(res, cc);
-        } else {
-            user.cc = null;
+        }else{
+            user.cc=null;
         }
     }
-
-
-
 
     user.aggregateRating = calcAggregateRating(user);
 

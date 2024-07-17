@@ -128,7 +128,6 @@ const Profile = () => {
             });
         }
         else {
-            console.log(data);
             toast.error(data.error, {
                 position: "top-right"
             });
