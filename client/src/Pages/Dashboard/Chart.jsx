@@ -1,29 +1,42 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
-import { Chart as ChartJS, registerables } from 'chart.js';
+import { Chart as ChartJS, elements, registerables } from 'chart.js';
 import 'chartjs-adapter-date-fns';
-import './Chart.scss'
 
 ChartJS.register(...registerables);
 
 const ContestRatingChart = ({ data, platform }) => {
+
     const chartData = {
         datasets: [
             {
-                label: `${platform} Rating`,
-                borderColor: platform === 'LeetCode' ? 'rgba(255, 99, 132, 1)' : platform === 'Codeforces' ? 'rgba(54, 162, 235, 1)' : 'rgba(75, 192, 192, 1)',
+                label: `${platform === 'cf' ? "CodeForces" : platform === 'lc' ? "LeetCode" : "CodeChef"} Rating`,
+                borderColor: platform === 'cf' ? 'rgba(255, 99, 132, 1)' : platform === 'lc' ? 'rgba(54, 162, 235, 1)' : 'rgba(75, 192, 192, 1)',
                 borderWidth: 2,
+                // fill: true,
                 fill: false,
                 radius: 0,
+                tension: 0.25,
+                hitRadius: 16,
                 data: data,
             }
         ],
     };
 
-    const totalDuration = 2000; // Total duration for the animation
-    const easingFunction = (t) => t * t; // Ease in function
+    const totalDuration = 300; // Total duration for the animation
+    const easingFunction = (t) => t; // Ease in function
 
     const options = {
+        interaction: {
+            mode: 'index',
+            axis: 'x',
+            intersect: false,
+        },
+        hover: {
+            mode: 'index',
+            intersect: false
+        },
+        normalized: true,
         animation: {
             x: {
                 type: 'number',
@@ -50,7 +63,7 @@ const ContestRatingChart = ({ data, platform }) => {
                     ctx.yStarted = true;
                     return easingFunction(ctx.index / data.length) * totalDuration;
                 }
-            }
+            },
         },
         scales: {
             x: {
@@ -60,42 +73,64 @@ const ContestRatingChart = ({ data, platform }) => {
                     tooltipFormat: 'MMM yyyy',
                     displayFormats: {
                         month: 'MMM yyyy'
-                    }
+                    },
                 },
                 title: {
                     display: true,
-                    text: 'Month'
+                    text: 'Month',
+                    font: {
+                        family: 'Urbanist',
+                        weight: 'bold'
+                    }
                 }
             },
             y: {
-                beginAtZero: true,
+                // beginAtZero: true,
                 title: {
                     display: true,
-                    text: 'Rating'
+                    text: 'Rating',
+                    font: {
+                        family: 'Urbanist',
+                        weight: 'bold'
+                    }
                 }
             },
         },
         plugins: {
             legend: {
-                display: true,
+                display: false,
             },
             title: {
                 display: true,
-                text: `${platform} Contest Rating Over Time`,
+                text: `${platform === 'cf' ? "CodeForces" : platform === 'lc' ? "LeetCode" : "CodeChef"} Contest Rating Over Time`,
+                font: {
+                    family: 'Urbanist'
+                }
             },
             tooltip: {
+                mode: 'index',
+                intersect: false,
+                backgroundColor: 'rgba(26, 26, 26, 0.8)', // Custom background color for tooltip
                 callbacks: {
                     label: function (context) {
                         return `Rating: ${context.raw.y}`;
                     }
-                }
-            }
+                },
+                bodyFont: {
+                    family: 'Urbanist',
+                },
+                titleFont: {
+                    family: 'Urbanist',
+                },
+            },
         },
+        font: {
+            family: 'Urbanist'
+        }
     };
 
     return (
         <div className="chart-container">
-            <h2>{platform} Chart</h2>
             <Line data={chartData} options={options} />
         </div>
     );

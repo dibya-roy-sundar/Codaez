@@ -1,21 +1,16 @@
-
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, registerables } from 'chart.js';
 import './PieCharts.scss'
 
 ChartJS.register(...registerables);
 
-const PieChartWithAnimation = ({ data, options }) => {
-    return <Pie data={data} options={options} />;
-};
-
-const Dashboard = () => {
-    const codeforcesData = {
-        labels: ['800', '900', '1000', '1100', '1200', '1300', '1400', '1500'],
+const PieChart = ({ data, platform }) => {
+    const pieData = {
+        labels: Object.keys(data),
         datasets: [
             {
-                label: 'Codeforces Ratings',
-                data: [5, 10, 15, 20, 25, 30, 35, 40],
+                label: `${platform === 'cf' ? 'CodeForces' : 'Leetcode'} Question`,
+                data: Object.values(data),
                 backgroundColor: [
                     '#FF6384',
                     '#36A2EB',
@@ -23,8 +18,6 @@ const Dashboard = () => {
                     '#4BC0C0',
                     '#9966FF',
                     '#FF9F40',
-                    '#FF6384',
-                    '#36A2EB'
                 ],
                 hoverBackgroundColor: [
                     '#FF6384',
@@ -33,54 +26,13 @@ const Dashboard = () => {
                     '#4BC0C0',
                     '#9966FF',
                     '#FF9F40',
-                    '#FF6384',
-                    '#36A2EB'
-                ],
-            }
-        ],
-    };
-
-    const leetcodeData = {
-        labels: ['Easy', 'Medium', 'Hard'],
-        datasets: [
-            {
-                label: 'LeetCode Problems',
-                data: [60, 30, 10],
-                backgroundColor: [
-                    '#FF6384',
-                    '#36A2EB',
-                    '#FFCE56'
-                ],
-                hoverBackgroundColor: [
-                    '#FF6384',
-                    '#36A2EB',
-                    '#FFCE56'
-                ],
-            }
-        ],
-    };
-
-    const codechefData = {
-        labels: ['Beginner', 'Intermediate', 'Advanced'],
-        datasets: [
-            {
-                label: 'CodeChef Levels',
-                data: [50, 30, 20],
-                backgroundColor: [
-                    '#FF6384',
-                    '#36A2EB',
-                    '#FFCE56'
-                ],
-                hoverBackgroundColor: [
-                    '#FF6384',
-                    '#36A2EB',
-                    '#FFCE56'
                 ],
             }
         ],
     };
 
     const options = {
+        normalized:true,
         responsive: true,
         animation: {
             animateScale: true,
@@ -89,7 +41,23 @@ const Dashboard = () => {
         plugins: {
             legend: {
                 display: true,
-                position: 'bottom'
+                position: 'bottom',
+                align:'center',
+                labels: {
+                    // This more specific font property overrides the global property
+                    font: {
+                        family:"Urbanist",
+                        weight: 'bold'
+                    }
+                }
+            },
+            
+            title: {
+                display: true,
+                text: `${platform === 'cf' ? 'CodeForces' : 'LeetCode'} Problemwise Distribution`,
+                font: {
+                    family: 'Urbanist',
+                }
             },
             tooltip: {
                 callbacks: {
@@ -98,40 +66,24 @@ const Dashboard = () => {
                         const value = context.raw;
                         return `${label}: ${value}`;
                     }
-                }
+                },
+                bodyFont: {
+                    family: 'Urbanist',
+                },
+                titleFont: {
+                    family: 'Urbanist',
+                },
             }
         }
     };
 
-    const chartStyle = {
-        width: '100%',
-        height: '100%',
-        // margin: '20px auto'
-    };
-
     return (
-        <div className='piecharts'>
-
-            <div className='chart'>
-                <h3>Codeforces Ratings</h3>
-                <div style={chartStyle}>
-                    <PieChartWithAnimation data={codeforcesData} options={options} />
-                </div>
-            </div>
-            <div className='chart'>
-                <h3>LeetCode Problems</h3>
-                <div style={chartStyle}>
-                    <PieChartWithAnimation data={leetcodeData} options={options} />
-                </div>
-            </div>
-            <div className='chart'>
-                <h3>CodeChef Levels</h3>
-                <div style={chartStyle}>
-                    <PieChartWithAnimation data={codechefData} options={options} />
-                </div>
+        <div className='chart'>
+            <div>
+                <Pie data={pieData} options={options} />
             </div>
         </div>
     );
 };
 
-export default Dashboard;
+export default PieChart;
