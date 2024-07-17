@@ -526,23 +526,25 @@ module.exports.updateProfile = async (req, res, next) => {
     if (!user.lc || user.lc?.username !== lc) {
         if(lc.length>0){
                 
-        const data= await   getLeetcodeData(lc);
-        if(data && !data?.success){
-            return res.status(404).json({
-                success:false,
-                error:data.error,
-            })
-        }
+            const data= await   getLeetcodeData(lc);
+            if(data && !data.success && data.error){
+                return res.status(404).json({
+                    success:false,
+                    error:data.error,
+                })
+            }
             user.lc = data;
         }else{
             user.lc=null;
         }
+        
+        
     }
     if (!user.cf || user.cf?.username !== cf) {
         if(cf.length>0){
 
             const data= await   getCodeforcesData(cf);
-            if(data && !data?.success){
+            if(data && !data.success && data.error){
                 return res.status(404).json({
                     success:false,
                     error:data.error,
@@ -552,21 +554,24 @@ module.exports.updateProfile = async (req, res, next) => {
         }else{
             user.cf=null;
         }
+       
     }
     if (!user.cc || user.cc?.username !== cc) {
         if(cc.length>0){
             const data= await   getCodechefData(cc);
-            if(data && !data?.success){
+            if(data && !data.success && data.error ){
                 return res.status(404).json({
                     success:false,
                     error:data.error,
                 })
+                
             }
-            user.cc = data;
+                user.cc = data;
 
         }else{
             user.cc=null;
         }
+       
     }
 
     user.aggregateRating = calcAggregateRating(user);
