@@ -1,9 +1,17 @@
 import React, { useEffect, useRef } from 'react';
 import './OTPVerification.scss';
 import { FaTimes } from 'react-icons/fa';
+import usePostFetch from '../../hooks/usePostFetch';
+import { toast } from 'react-toastify';
+import { setAuth } from '../../redux/authReducer';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
-const OTPVerification = ({ isOpen, onClose }) => {
+
+const OTPVerification = ({ resend,isOpen, onClose,email,password }) => {
     const inputsRef = useRef([]);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (isOpen) {
@@ -83,10 +91,41 @@ const OTPVerification = ({ isOpen, onClose }) => {
 
     if (!isOpen) return null;
 
+    const verifyOtp=async (e)=>{
+        e.preventDefault();
+        let otp="";
+        inputsRef.current.forEach((item) => otp+=item.value);
+    
+        const data=await usePostFetch('/register',{email,password,otp});
+        if (data.data && data.data.user) {
+                toast.success(`Email verification successful!`, {
+                    position: "top-right"
+                });
+                dispatch(setAuth(data.data.user));
+                navigate('/completeprofile');
+            } else if (data.data) {
+                toast.warn(data.data.error || data.data.message, {
+                    position: "top-right"
+                });
+            } else {
+                toast.error(data.error, {
+                    position: "top-right"
+                });
+            }
+
+        
+    }
+
+    const resendCode=(e)=>{
+        inputsRef.current.forEach((item) =>item.value=null);
+        inputsRef.current.length=0;
+        resend(e);
+    }
+
     return (
         <div className="otp-verification">
             <div className="otp-container">
-                <button className="close-button" onClick={onClose}>
+                <button className="close-button" onClick={()=>{onClose(false)}}>
                     <FaTimes />
                 </button>
                 <header className="otp-header">
@@ -105,12 +144,14 @@ const OTPVerification = ({ isOpen, onClose }) => {
                             />
                         ))}
                     </div>
-                    <button type="button" className="verify-button" onClick={onClose}>
+                    <button   className={`${inputsRef.current.length===4 ? ""  : " " } verify-button`} onClick={(e)=> verifyOtp(e)}>
                         Verify Account
                     </button>
                 </form>
                 <div className="resend-text">
-                    Didn;t receive code? <a href="#0" onClick={onClose}>Resend</a>
+                    <p>
+                        {"Didn't receive code?"} <a href="#0" onClick={(e) => resendCode(e)}>Resend</a>
+                    </p>
                 </div>
             </div>
         </div>

@@ -3,18 +3,21 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa6';
 import OTPVerification from './OtpVerification';
 import { useState } from 'react';
 import './Register.scss'
-const Register = ({ registerUserCredentials, handleRegisterChange, handleRegisterSubmit }) => {
+import { toast } from 'react-toastify';
+import usePostFetch from '../../hooks/usePostFetch';
+
+
+const Register = () => {
+   
 
     const [passwordVisible, setPasswordVisible] = useState(false);
 
     const togglePasswordVisibility = () => {
         setPasswordVisible(!passwordVisible);
     };
-    // const [otpOpen, setOtpOpen] = useState(false);
+    const [otpOpen, setOtpOpen] = useState(false);
 
-    // const closeOtpModal = () => {
-    //     setOtpOpen(false);
-    // };
+    
 
     const googleAuth=()=>{
         window.open("http://localhost:3000/api/v1/auth/google",
@@ -22,10 +25,43 @@ const Register = ({ registerUserCredentials, handleRegisterChange, handleRegiste
         )
     }
 
+    const [registerUserCredentials, setRegisterUserCredentials] = useState({
+            email: "",
+            password: "",
+        });
+    
+        const handleRegisterChange = (e) => {
+            setRegisterUserCredentials(prev => ({
+                ...prev,
+                [e.target.name]: e.target.value,
+            }));
+        }
+    
+        const handleOtpSent = async (e) => {
+            e.preventDefault();
+            const data = await usePostFetch('/send-otp', {email:registerUserCredentials.email});
+
+            if(data && data.data){  
+                if(!data.data.success){
+                    toast.warn(data.data.message, {
+                                position: "top-right"
+                            });
+                }else{
+                    setOtpOpen(true);
+                    toast.success(data.data.message, {
+                                position: "top-right"
+                            });
+                }
+            }
+            
+            
+        }
+    
+
 
     return (
         <div className="login-container">
-            <form className="login-form" onSubmit={(e) => { handleRegisterSubmit(e) }}>
+            <form className="login-form" onSubmit={(e) => { handleOtpSent(e) }}>
                 <h2>Register</h2>
                 <div className="input-wrap">
                     <input type="email" id="reg-email" name='email' value={registerUserCredentials.email} placeholder='' onChange={(e) => handleRegisterChange(e)} />
@@ -50,7 +86,7 @@ const Register = ({ registerUserCredentials, handleRegisterChange, handleRegiste
                 </div>
             </form>
             
-             <OTPVerification isOpen={otpOpen} onClose={closeOtpModal} />
+             <OTPVerification email={registerUserCredentials.email} password={registerUserCredentials.password} resend={handleOtpSent} isOpen={otpOpen} onClose={setOtpOpen} />
         </div>
     )
 }

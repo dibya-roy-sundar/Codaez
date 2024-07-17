@@ -41,11 +41,10 @@ module.exports.register = async (req, res, next) => {
     await Otp.deleteOne({ _id: record._id }); 
 
 
-    // username -checked , email-checked , otp-verified
+    //  email-checked , otp-verified
 
     const hash = await bcrypt.hash(password, 12);
     const user = new User({
-        username,
         email,
         password: hash,
     });
@@ -62,18 +61,12 @@ module.exports.sendOtp=async (req,res,next) =>{
 
     if (foundUser) {
         return res.status(200).json({
-            success: true,
-            error: "Email already in use",
+            success: false,
+            message: "Email already in use",
         });
     }
 
-    const availableUser = await User.findOne({ username });
-    if (availableUser) {
-        return res.status(200).json({
-            success: true,
-            error: "username is not available",
-        });
-    }
+    
 
 
     const otp=otpGenerator.generate(4, {lowerCaseAlphabets:false, upperCaseAlphabets: false, specialChars: false });
@@ -89,11 +82,11 @@ module.exports.sendOtp=async (req,res,next) =>{
           to: email, // recipient address
           subject: 'Your OTP Code', // subject line
           text: `Your OTP code is ${otp}. It will expire in ${process.env.OTP_EXPIRY / 60} minutes.`, // plain text body
-          html: "<b>Hello world?</b>", 
+        //   html: "<b>Hello world?</b>", 
         });
         res.status(200).json({
             success:true,
-            message:"verification otp sent to your email"
+            message:"verification code  sent to your email"
         })
         console.log('OTP email sent');
       } catch (error) {
@@ -118,6 +111,11 @@ module.exports.completeProfile = async (req, res, next) => {
         github = "",
         twitter = "",
     } = req.body;
+
+    const availableUser = await User.findOne({ username });
+    if (availableUser) {
+        return next(new ErrorHand("username is not available",400));
+    }
 
     let lcData,cfData,ccData;
     if (lc && lc.length > 0) {

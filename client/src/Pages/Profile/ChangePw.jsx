@@ -90,10 +90,10 @@ const ChangePw = forwardRef(({ setReload, handleClose, changePwRef, user }) => {
     return (
         <Modal ref={changePwRef}>
             <div className="changepwcontainer">
-                <p>{user.password ? "Change" : "Set"} Password</p>
+                <p>{user?.password ? "Change" : "Set"} Password</p>
                 <form onSubmit={handleSubmit}>
                     <div className="inputfields">
-                        {user.password ?
+                        {user?.password ?
                             <div className="input-wrap">
                                 <input type={passwordVisible.old ? "text" : "password"} id="old" name='old' value={passwords.old} onChange={(e) => handleChange(e)} />
                                 <label htmlFor="old">Old Password</label>

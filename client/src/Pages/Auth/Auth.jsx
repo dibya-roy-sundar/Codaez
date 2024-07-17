@@ -47,38 +47,38 @@ const Auth = () => {
         }
     }
 
-    const [registerUserCredentials, setRegisterUserCredentials] = useState({
-        email: "",
-        password: "",
-    });
+    // const [registerUserCredentials, setRegisterUserCredentials] = useState({
+    //     email: "",
+    //     password: "",
+    // });
 
-    const handleRegisterChange = (e) => {
-        setRegisterUserCredentials(prev => ({
-            ...prev,
-            [e.target.name]: e.target.value,
-        }));
-    }
+    // const handleRegisterChange = (e) => {
+    //     setRegisterUserCredentials(prev => ({
+    //         ...prev,
+    //         [e.target.name]: e.target.value,
+    //     }));
+    // }
 
-    const handleRegisterSubmit = async (e) => {
-        e.preventDefault();
-        const data = await usePostFetch('/register', registerUserCredentials);
+    // const handleRegisterSubmit = async (e) => {
+    //     e.preventDefault();
+    //     const data = await usePostFetch('/register', registerUserCredentials);
 
-        if (data.data && data.data.user) {
-            toast.success(`Email verification successful!`, {
-                position: "top-right"
-            });
-            dispatch(setAuth(data.data.user));
-            navigate('/completeprofile');
-        } else if (data.data) {
-            toast.warn(data.data.error || data.data.message, {
-                position: "top-right"
-            });
-        } else {
-            toast.error(data.error, {
-                position: "top-right"
-            });
-        }
-    }
+    //     if (data.data && data.data.user) {
+    //         toast.success(`Email verification successful!`, {
+    //             position: "top-right"
+    //         });
+    //         dispatch(setAuth(data.data.user));
+    //         navigate('/completeprofile');
+    //     } else if (data.data) {
+    //         toast.warn(data.data.error || data.data.message, {
+    //             position: "top-right"
+    //         });
+    //     } else {
+    //         toast.error(data.error, {
+    //             position: "top-right"
+    //         });
+    //     }
+    // }
 
     const toggleMode = () => {
         setIsLoginMode(prevMode => !prevMode);
@@ -100,9 +100,9 @@ const Auth = () => {
                 />
             ) : (
                 <Register
-                    registerUserCredentials={registerUserCredentials}
-                    handleRegisterChange={handleRegisterChange}
-                    handleRegisterSubmit={handleRegisterSubmit}
+                    // registerUserCredentials={registerUserCredentials}
+                    // handleRegisterChange={handleRegisterChange}
+                    // handleRegisterSubmit={handleRegisterSubmit}
                 />
             )}
         </div>

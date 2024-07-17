@@ -83,6 +83,13 @@
                     background-color: #4f46e5;
                 }
             }
+            .disable{
+                cursor: not-allowed;
+                background-color: grey;
+                &:hover {
+                    background-color: grey;
+                }
+            }
         }
 
         .resend-text {
