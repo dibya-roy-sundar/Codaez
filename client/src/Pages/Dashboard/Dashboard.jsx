@@ -7,8 +7,9 @@ import { useDispatch } from 'react-redux';
 import ContestRatingChart from './Chart'
 import PieChart from './PieChart'
 import { setAuth } from '../../redux/authReducer';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
+import { BiLinkExternal } from "react-icons/bi";
 
 
 const Dashboard = () => {
@@ -18,7 +19,6 @@ const Dashboard = () => {
 
     const { data, loading, error } = useFetch("/dashboard");
     const user = data.user
-    console.log(user)
 
     useEffect(() => {
         if (searchParams.get('email') && searchParams.get('username')) {
@@ -34,6 +34,8 @@ const Dashboard = () => {
     const [activePlatform, setActivePlatform] = useState('cf');
     const [lineGraphData, setLineGraphData] = useState([]);
     const [pieChartData, setPieChartData] = useState({});
+    const [details, setDetails] = useState({});
+
     useEffect(() => {
         setDetails(user?.[`${activePlatform}`]);
         const contestPaticipation = user?.[`${activePlatform}`]?.contestParticipation
@@ -71,27 +73,13 @@ const Dashboard = () => {
 
     }, [user, activePlatform])
 
-    const [details, setDetails] = useState({});
+    const [activeContest, setActiveContest] = useState('allContests'); // Default to Codeforces
+    const [contestData, setContestData] = useState([]);
 
+    useEffect(() => {
+        setContestData(data[`${activeContest}`]);
+    }, [data, activeContest])
 
-
-
-
-
-
-
-
-    const [showDetails, setShowDetails] = useState(false);
-    const [activeContest, setActiveContest] = useState('cf'); // Default to Codeforces
-
-    const handleContestChange = (platform) => {
-        setActiveContest(platform);
-        setShowDetails(false); // Reset details when changing contests
-    };
-
-    const toggleDetails = () => {
-        setShowDetails(!showDetails);
-    };
 
     return (
         <div className="dashboard">
@@ -213,50 +201,55 @@ const Dashboard = () => {
                                 </div>}
                             </div>
                         </div>
+                        <div className='contests'>
+                            <h2>Upcoming Contests</h2>
+                            <div className='contestButtonWrapper'>
+                                <div className={`platformBtn ${activeContest === 'allContests' ? 'activeContest' : ''}`} onClick={() => setActiveContest('allContests')}>
+                                    <img src={codeforces} alt="" />
+                                    <span className='title'>All Contests</span>
+                                </div>
+                                <div className={`platformBtn ${activeContest === 'CfContests' ? 'activeContest' : ''}`} onClick={() => setActiveContest('CfContests')}>
+                                    <img src={codeforces} alt="" />
+                                    <span className='title'>CodeForces</span>
+                                </div>
+                                <div className={`platformBtn ${activeContest === 'LcContests' ? 'activeContest' : ''}`} onClick={() => setActiveContest('LcContests')}>
+                                    <img src={leetcode} alt="" />
+                                    <span className='title'>LeetCode</span>
+                                </div>
+                                <div className={`platformBtn ${activeContest === 'CcContests' ? 'activeContest' : ''}`} onClick={() => setActiveContest('CcContests')}>
+                                    <img src={codechef} alt="" />
+                                    <span className='title'>CodeChef</span>
+                                </div>
+                            </div>
+                            <div className="contestWrapper">
+                                {contestData?.map((contest, index) => (
+                                    <div className='eachContest'>
+                                        <div className="logo">
+                                            <img src={contest?.platform === 'cf' ? codeforces : contest?.platform === 'lc' ? leetcode : codechef} alt="" />
+                                        </div>
+                                        <div className="heading">
+                                            <span className="title">{contest?.title}</span>
+                                            <span className="duration">Duration: {contest?.duration} hrs</span>
+                                        </div>
+                                        <div className="startTime">
+                                            {new Date(contest?.startTime).toLocaleString('en-US', {
+                                                month: 'long',
+                                                day: 'numeric',
+                                                year: 'numeric',
+                                                hour: 'numeric',
+                                                minute: 'numeric',
+                                                hour12: false
+                                            })}
+                                        </div>
+                                        <Link to={contest.url} target='_blank' className='viewBtn'>
+                                            View <BiLinkExternal />
+                                        </Link>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     </div>
             }
-            <div className='contestlist'>
-                <h2>Upcoming Contests</h2>
-                <div className="contest-buttons">
-                    {["cf", "lc", "cc"].map((platform) => (
-                        <button
-                            key={platform}
-                            className={`contest-btn ${activeContest === platform ? 'active' : ''}`}
-                            onClick={() => handleContestChange(platform)}
-                        >
-                            {platform === 'cf' ? 'Codeforces Contest' : platform === 'lc' ? 'LeetCode Contest' : 'CodeChef Contest'}
-                        </button>
-                    ))}
-                </div>
-                <div className={`contest-details ${showDetails ? 'active' : ''}`}>
-                    <div className='contest-card'>
-                        <h3>
-                            {activeContest === 'cf'
-                                ? 'Codeforces Contests'
-                                : activeContest === 'lc'
-                                    ? 'LeetCode Contests'
-                                    : 'CodeChef Contests'}
-                        </h3>
-                        <button className="details-toggle" onClick={toggleDetails}>
-                            {showDetails ? 'Hide Details' : 'More Details'}
-                        </button>
-                    </div>
-                    <div>
-                        {
-                            showDetails && (
-                                <div className='contest-details'>
-                                    <div className='contest-detail'>
-                                        <h4>Contest 1</h4>
-                                        <p>Details of Contest 1</p>
-                                    </div>
-                                    {/* Add more contest details as needed */}
-                                </div>
-                            )
-                        }
-                    </div>
-
-                </div>
-            </div>
         </div>
 
     )

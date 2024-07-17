@@ -3,7 +3,7 @@ $purple: #703BF7;
 $darkpurple: #814fff;
 
 .dashboard {
-    padding: 0 1rem 0 4rem;
+    padding: 0 1rem 2rem 4rem;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -12,70 +12,7 @@ $darkpurple: #814fff;
 
     .section {
         width: 100%;
-        // min-height: 100vh; // Full screen height for initial view
-        // display: flex;
-        // justify-content: center;
-        // align-items: center;
-        // flex-direction: column;
 
-        // .cardWrapper {
-        //     display: flex;
-        //     justify-content: center;
-        //     align-items: center;
-        //     gap: 2rem;
-
-        //     .card {
-        //         background: $grey;
-        //         display: flex;
-        //         flex-direction: column;
-        //         align-items: center;
-        //         gap: 0.5rem;
-        //         border-radius: 0.5rem;
-        //         width: 17rem;
-        //         padding-bottom: 1rem;
-
-        //         .card-img {
-        //             width: 5rem;
-        //             height: 5rem;
-        //             margin-top: -2.5rem;
-
-        //             img {
-        //                 width: 100%;
-        //                 height: 100%;
-        //                 object-fit: contain;
-        //                 object-position: center;
-        //             }
-        //         }
-
-        //         h2 {
-        //             color: white;
-        //             font-size: 1.2rem;
-        //             font-weight: 500;
-        //         }
-
-        //         span {
-        //             color: white;
-        //             font-size: 2rem;
-        //             font-weight: 700;
-        //         }
-
-        //         .btn {
-        //             border: none;
-        //             border-radius: 0.25rem;
-        //             color: white;
-        //             padding: 0.5rem 1.25rem;
-        //             background-color: $purple;
-        //             transition: all 0.2s ease-in-out;
-        //             font-weight: 500;
-        //             font-size: inherit;
-        //             cursor: pointer;
-
-        //             &:hover {
-        //                 background-color: $darkpurple;
-        //             }
-        //         }
-        //     }
-        // }
         .buttonWrapper {
             display: flex;
             width: 100%;
@@ -84,11 +21,18 @@ $darkpurple: #814fff;
                 flex: 1;
                 display: flex;
                 align-items: center;
-                gap: 2rem;
+                justify-content: center;
+                gap: 1rem;
                 // background-color: $grey;
                 padding: 1rem;
                 // border-radius: 0.5rem;
                 border-bottom: 2px solid transparent;
+                transition: all 0.2s ease-in-out;
+                cursor: pointer;
+
+                &:hover {
+                    border-bottom: 2px solid $grey;
+                }
 
                 img {
                     height: 2rem;
@@ -101,6 +45,10 @@ $darkpurple: #814fff;
 
             .activePlatform {
                 border-bottom: 2px solid $purple;
+
+                &:hover {
+                    border-bottom: 2px solid $darkpurple;
+                }
             }
         }
 
@@ -169,156 +117,110 @@ $darkpurple: #814fff;
                 }
             }
         }
-    }
 
-    .contestlist {
-
-        max-width: 90%;
-
-
-
-        margin: 2rem auto;
-
-        h2 {
-            color: white;
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-
-        .contest-buttons {
+        .contests {
+            margin-top: 4rem;
             display: flex;
+            flex-direction: column;
             gap: 1rem;
-            justify-content: space-between;
-            align-items: center;
-            margin: 3rem 0;
 
-            .contest-btn {
-                background: $grey;
-                color: white;
-                padding: 1.2rem 5rem;
-                border: none;
-                border-radius: 2rem;
-                cursor: pointer;
-                transition: background 0.3s;
+            h2 {
+                text-align: center;
+                font-size: 2rem;
+            }
 
-                &.active {
-                    background: $purple;
+            .contestButtonWrapper {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 1rem;
+
+                .platformBtn {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 1rem;
+                    background-color: $grey;
+                    padding: 0.5rem 1rem;
+                    border-radius: 0.5rem 0.5rem 0 0;
+                    border-bottom: 2px solid transparent;
+                    cursor: pointer;
+                    transition: all 0.2s ease-in-out;
+
+                    img {
+                        height: 2rem;
+                    }
+
+                    .title {
+                        font-size: 1.1rem;
+                        font-weight: 600;
+                    }
                 }
 
-                &:hover {
-                    background: $darkpurple;
+                .activeContest {
+                    border-bottom: 2px solid $purple;
                 }
             }
-        }
 
-        .contest-details {
-            margin-top: 1rem;
-
-            .contest-card {
-                background: $grey;
-                border-radius: 0.5rem;
-                padding: 1rem;
-                margin-bottom: 1rem;
+            .contestWrapper {
                 display: flex;
-                justify-content: space-between;
-                align-items: center;
+                flex-direction: column;
+                gap: 1rem;
 
+                .eachContest {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    // gap: 2rem;
+                    background-color: #222222;
+                    padding: 0.5rem 1rem;
 
-                h3 {
-                    color: white;
-                    font-size: 1.5rem;
-                    font-weight: 700;
+                    .logo {
+                        width: 5%;
 
-                }
+                        img {
+                            height: 2rem;
+                        }
+                    }
 
+                    .heading {
+                        width: 65%;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 0.1rem;
 
-                .details-toggle {
-                    border: none;
-                    border-radius: 0.25rem;
-                    color: white;
-                    padding: 0.5rem 1.25rem;
-                    background-color: $purple;
-                    transition: all 0.2s ease-in-out;
-                    font-weight: 500;
-                    font-size: inherit;
-                    cursor: pointer;
+                        .title {
+                            font-size: 1.2rem;
+                            font-weight: 600;
+                        }
 
-                    &:hover {
-                        background-color: $darkpurple;
+                        .duration {
+                            color: $purple;
+                        }
+                    }
+
+                    .startTime {
+                        width: 20%;
+                    }
+
+                    .viewBtn {
+                        width: 10%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 0.2rem;
+                        padding: 0.5rem 1rem;
+                        background-color: $purple;
+                        font-size: 1.1rem;
+                        border-radius: 0.2rem;
+                        transition: all 0.2s ease-in-out;
+
+                        &:hover {
+                            background-color: $darkpurple;
+                        }
                     }
                 }
             }
         }
     }
-
-    @media screen and (max-width: 768px) {
-        .contest-buttons {
-            flex-direction: column;
-            align-items: stretch;
-        }
-
-        .contest-btn {
-            width: 100%;
-            padding: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .contest-card {
-            // flex-direction: column;
-            align-items: flex-start;
-            gap: 1rem;
-        }
-
-        h3 {
-            font-size: 1rem;
-        }
-    }
-
-    @media screen and (max-width: 480px) {
-        h2 {
-            font-size: 2rem;
-        }
-
-        .contest-card {
-            padding: 0.5rem;
-        }
-    }
-
-    @media screen and (max-width:1000px) {
-        .section {
-            .cardWrapper {
-                flex-direction: column;
-                gap: 5rem;
-            }
-        }
-
-    }
-
-    @media screen and (max-width:995px) {
-        .section {
-            justify-content: normal;
-            margin-top: 2rem;
-        }
-
-    }
-
-    @media screen and (max-width:925px) {
-        .section {
-            justify-content: normal;
-            margin-top: 2.5rem;
-        }
-
-    }
-
-    @media screen and (max-width:635px) {
-        .section {
-            .cardWrapper {
-                gap: 3rem;
-            }
-        }
-
-    }
-
 }
