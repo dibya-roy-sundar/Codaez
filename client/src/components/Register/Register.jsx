@@ -8,7 +8,7 @@ import usePostFetch from '../../hooks/usePostFetch';
 
 
 const Register = () => {
-   
+
 
     const [passwordVisible, setPasswordVisible] = useState(false);
 
@@ -17,46 +17,46 @@ const Register = () => {
     };
     const [otpOpen, setOtpOpen] = useState(false);
 
-    
 
-    const googleAuth=()=>{
+
+    const googleAuth = () => {
         window.open("http://localhost:3000/api/v1/auth/google",
             '_self'
         )
     }
 
     const [registerUserCredentials, setRegisterUserCredentials] = useState({
-            email: "",
-            password: "",
-        });
-    
-        const handleRegisterChange = (e) => {
-            setRegisterUserCredentials(prev => ({
-                ...prev,
-                [e.target.name]: e.target.value,
-            }));
-        }
-    
-        const handleOtpSent = async (e) => {
-            e.preventDefault();
-            const data = await usePostFetch('/send-otp', {email:registerUserCredentials.email});
+        email: "",
+        password: "",
+    });
 
-            if(data && data.data){  
-                if(!data.data.success){
-                    toast.warn(data.data.message, {
-                                position: "top-right"
-                            });
-                }else{
-                    setOtpOpen(true);
-                    toast.success(data.data.message, {
-                                position: "top-right"
-                            });
-                }
+    const handleRegisterChange = (e) => {
+        setRegisterUserCredentials(prev => ({
+            ...prev,
+            [e.target.name]: e.target.value,
+        }));
+    }
+
+    const handleOtpSent = async (e) => {
+        e.preventDefault();
+        const data = await usePostFetch('/send-otp', { email: registerUserCredentials.email });
+
+        if (data && data.data) {
+            if (!data.data.success) {
+                toast.warn(data.data.message, {
+                    position: "top-right"
+                });
+            } else {
+                setOtpOpen(true);
+                toast.success(data.data.message, {
+                    position: "top-right"
+                });
             }
-            
-            
         }
-    
+
+
+    }
+
 
 
     return (
@@ -85,8 +85,8 @@ const Register = () => {
                     </div>
                 </div>
             </form>
-            
-             <OTPVerification email={registerUserCredentials.email} password={registerUserCredentials.password} resend={handleOtpSent} isOpen={otpOpen} onClose={setOtpOpen} />
+
+            <OTPVerification email={registerUserCredentials.email} password={registerUserCredentials.password} resend={handleOtpSent} isOpen={otpOpen} onClose={setOtpOpen} />
         </div>
     )
 }

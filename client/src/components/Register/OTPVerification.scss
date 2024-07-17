@@ -53,6 +53,7 @@
                 display: flex;
                 justify-content: space-between;
                 margin-bottom: 20px;
+                gap: 1rem;
 
                 .otp-input {
                     width: 40px;
@@ -83,9 +84,11 @@
                     background-color: #4f46e5;
                 }
             }
-            .disable{
+
+            .verify-button.disabled {
                 cursor: not-allowed;
                 background-color: grey;
+
                 &:hover {
                     background-color: grey;
                 }

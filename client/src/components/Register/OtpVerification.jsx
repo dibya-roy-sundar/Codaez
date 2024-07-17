@@ -6,12 +6,12 @@ import { toast } from 'react-toastify';
 import { setAuth } from '../../redux/authReducer';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-
-
-const OTPVerification = ({ resend,isOpen, onClose,email,password }) => {
+import { useState } from 'react';
+const OTPVerification = ({ resend, isOpen, onClose, email, password }) => {
     const inputsRef = useRef([]);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [isComplete, setIsComplete] = useState(false);
 
     useEffect(() => {
         if (isOpen) {
@@ -34,8 +34,14 @@ const OTPVerification = ({ resend,isOpen, onClose,email,password }) => {
                 if (e.key === 'Delete' || e.key === 'Backspace') {
                     const index = inputs.indexOf(e.target);
                     if (index > 0) {
-                        inputs[index - 1].value = '';
-                        inputs[index - 1].focus();
+                        if (inputs[index].value === '') {
+                            inputs[index - 1].focus();
+                            inputs[index - 1].value = '';
+                        } else {
+                            inputs[index].value = '';
+                        }
+                    } else {
+                        inputs[index].value = '';
                     }
                 }
             };
@@ -50,6 +56,7 @@ const OTPVerification = ({ resend,isOpen, onClose,email,password }) => {
                         inputs[inputs.length - 1].blur();
                     }
                 }
+                checkIfComplete();
             };
 
             const handleFocus = (e) => {
@@ -65,8 +72,12 @@ const OTPVerification = ({ resend,isOpen, onClose,email,password }) => {
                 const digits = text.split('');
                 inputs.forEach((input, index) => input.value = digits[index]);
                 inputs[inputs.length - 1].blur();
+                checkIfComplete();
             };
-
+            const checkIfComplete = () => {
+                const allFilled = inputs.every(input => input.value !== '');
+                setIsComplete(allFilled);
+            };
             inputs.forEach((input) => {
                 if (input) {
                     input.addEventListener('input', handleInput);
@@ -91,41 +102,39 @@ const OTPVerification = ({ resend,isOpen, onClose,email,password }) => {
 
     if (!isOpen) return null;
 
-    const verifyOtp=async (e)=>{
+    const verifyOtp = async (e) => {
         e.preventDefault();
-        let otp="";
-        inputsRef.current.forEach((item) => otp+=item.value);
-    
-        const data=await usePostFetch('/register',{email,password,otp});
-        if (data.data && data.data.user) {
-                toast.success(`Email verification successful!`, {
-                    position: "top-right"
-                });
-                dispatch(setAuth(data.data.user));
-                navigate('/completeprofile');
-            } else if (data.data) {
-                toast.warn(data.data.error || data.data.message, {
-                    position: "top-right"
-                });
-            } else {
-                toast.error(data.error, {
-                    position: "top-right"
-                });
-            }
+        let otp = "";
+        inputsRef.current.forEach((item) => otp += item.value);
 
-        
+        const data = await usePostFetch('/register', { email, password, otp });
+        if (data.data && data.data.user) {
+            toast.success(`Email verification successful!`, {
+                position: "top-right"
+            });
+            dispatch(setAuth(data.data.user));
+            navigate('/completeprofile');
+        } else if (data.data) {
+            toast.warn(data.data.error || data.data.message, {
+                position: "top-right"
+            });
+        } else {
+            toast.error(data.error, {
+                position: "top-right"
+            });
+        }
     }
 
-    const resendCode=(e)=>{
-        inputsRef.current.forEach((item) =>item.value=null);
-        inputsRef.current.length=0;
+    const resendCode = (e) => {
+        inputsRef.current.forEach((item) => item.value = null);
+        inputsRef.current.length = 0;
         resend(e);
     }
 
     return (
         <div className="otp-verification">
             <div className="otp-container">
-                <button className="close-button" onClick={()=>{onClose(false)}}>
+                <button className="close-button" onClick={() => { onClose(false) }}>
                     <FaTimes />
                 </button>
                 <header className="otp-header">
@@ -144,7 +153,11 @@ const OTPVerification = ({ resend,isOpen, onClose,email,password }) => {
                             />
                         ))}
                     </div>
-                    <button   className={`${inputsRef.current.length===4 ? ""  : " " } verify-button`} onClick={(e)=> verifyOtp(e)}>
+                    <button
+                        className={`verify-button ${isComplete ? '' : 'disabled'}`}
+                        onClick={(e) => verifyOtp(e)}
+                        disabled={!isComplete}
+                    >
                         Verify Account
                     </button>
                 </form>

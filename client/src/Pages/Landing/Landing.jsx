@@ -19,6 +19,7 @@ import followgif from '../../assets/follow.gif'
 import codeforcesIcon from '../../assets/codeforces.png';
 import codechefIcon from '../../assets/codechef.png';
 import leetcodeIcon from '../../assets/leetcode.png';
+import HomeNavbar from './HomepageNavbar';
 
 const Landing = () => {
     const dispatch = useDispatch();
@@ -42,7 +43,9 @@ const Landing = () => {
     };
 
     const features = [
-        { id: 1, icon: leaderboardgif, text: 'Compete and collaborate with your friends on the leaderboard. Track each other’s progress, challenge your coding skills, and celebrate victories together!' },
+        {
+            id: 1, icon: leaderboardgif, text: 'Compete and collaborate with your friends on the leaderboard. Track each other’s progress, challenge your coding skills, and celebrate victories together! having fun while learning is the best way to grow.'
+        },
         { id: 2, icon: followgif, text: 'Connect with fellow programmers by following them. Stay updated on their activities and learn from their coding journeys. Share insights to enhance your collective growth.' },
         { id: 3, icon: comparisongif, text: 'Utilize powerful self-analysis tools to evaluate your performance across platforms. Identify strengths, pinpoint areas for improvement, and create a personalized learning path for success.' },
     ];
@@ -93,21 +96,7 @@ const Landing = () => {
 
     return (
         <div className="landing">
-            <header className="header">
-                <div className="logo">CodeHub</div>
-                <nav className="nav">
-                    {user.username ? (
-                        <>
-                            <Link to="/dashboard">Dashboard</Link>
-                            <Link to="/leaderboard">Leaderboard</Link>
-                            <Link to={`/profile/${user.username}`}>Profile</Link>
-                            <button onClick={handleLogout}>Logout</button>
-                        </>
-                    ) : (
-                        <Link to="/auth">LOGIN</Link>
-                    )}
-                </nav>
-            </header>
+            <HomeNavbar user={user} handleLogout={handleLogout} />
 
             <section className="hero">
                 <div className="hero-content">
