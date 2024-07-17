@@ -3,7 +3,7 @@ $purple: #703BF7;
 $darkpurple: #814fff;
 
 .dashboard {
-    max-width: 88%;
+    padding: 0 1rem 0 4rem;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -11,71 +11,164 @@ $darkpurple: #814fff;
     // gap: 3rem;
 
     .section {
-        min-height: 100vh; // Full screen height for initial view
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
+        width: 100%;
+        // min-height: 100vh; // Full screen height for initial view
+        // display: flex;
+        // justify-content: center;
+        // align-items: center;
+        // flex-direction: column;
 
-        .cardWrapper {
+        // .cardWrapper {
+        //     display: flex;
+        //     justify-content: center;
+        //     align-items: center;
+        //     gap: 2rem;
+
+        //     .card {
+        //         background: $grey;
+        //         display: flex;
+        //         flex-direction: column;
+        //         align-items: center;
+        //         gap: 0.5rem;
+        //         border-radius: 0.5rem;
+        //         width: 17rem;
+        //         padding-bottom: 1rem;
+
+        //         .card-img {
+        //             width: 5rem;
+        //             height: 5rem;
+        //             margin-top: -2.5rem;
+
+        //             img {
+        //                 width: 100%;
+        //                 height: 100%;
+        //                 object-fit: contain;
+        //                 object-position: center;
+        //             }
+        //         }
+
+        //         h2 {
+        //             color: white;
+        //             font-size: 1.2rem;
+        //             font-weight: 500;
+        //         }
+
+        //         span {
+        //             color: white;
+        //             font-size: 2rem;
+        //             font-weight: 700;
+        //         }
+
+        //         .btn {
+        //             border: none;
+        //             border-radius: 0.25rem;
+        //             color: white;
+        //             padding: 0.5rem 1.25rem;
+        //             background-color: $purple;
+        //             transition: all 0.2s ease-in-out;
+        //             font-weight: 500;
+        //             font-size: inherit;
+        //             cursor: pointer;
+
+        //             &:hover {
+        //                 background-color: $darkpurple;
+        //             }
+        //         }
+        //     }
+        // }
+        .buttonWrapper {
             display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 2rem;
+            width: 100%;
 
-            .card {
-                background: $grey;
+            .platformBtn {
+                flex: 1;
                 display: flex;
-                flex-direction: column;
                 align-items: center;
-                gap: 0.5rem;
-                border-radius: 0.5rem;
-                width: 17rem;
-                padding-bottom: 1rem;
+                gap: 2rem;
+                // background-color: $grey;
+                padding: 1rem;
+                // border-radius: 0.5rem;
+                border-bottom: 2px solid transparent;
 
-                .card-img {
-                    width: 5rem;
-                    height: 5rem;
-                    margin-top: -2.5rem;
-
-                    img {
-                        width: 100%;
-                        height: 100%;
-                        object-fit: contain;
-                        object-position: center;
-                    }
+                img {
+                    height: 2rem;
                 }
 
-                h2 {
-                    color: white;
-                    font-size: 1.2rem;
-                    font-weight: 500;
+                .username {
+                    font-size: 1.1rem;
                 }
+            }
 
-                span {
-                    color: white;
-                    font-size: 2rem;
-                    font-weight: 700;
-                }
-
-                .btn {
-                    border: none;
-                    border-radius: 0.25rem;
-                    color: white;
-                    padding: 0.5rem 1.25rem;
-                    background-color: $purple;
-                    transition: all 0.2s ease-in-out;
-                    font-weight: 500;
-                    font-size: inherit;
-                    cursor: pointer;
-
-                    &:hover {
-                        background-color: $darkpurple;
-                    }
-                }
+            .activePlatform {
+                border-bottom: 2px solid $purple;
             }
         }
 
+        .detailsSection {
+            display: flex;
+            flex-direction: column;
+            margin-top: 1rem;
+            gap: 1rem;
+
+            .topDetails {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                // align-items: center;
+                gap: 1rem;
+
+                .eachDetail {
+                    flex: 1;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    background-color: $grey;
+                    border-radius: 0.5rem;
+                    padding: 0.25rem 0.5rem;
+
+                    img {
+                        height: 2rem;
+                    }
+
+                    .content {
+                        display: flex;
+                        flex-direction: column;
+
+                        .heading {
+                            font-size: 0.8rem;
+                            color: rgb(207, 207, 207);
+                        }
+
+                        .data {
+                            font-size: 1.2rem;
+                            font-weight: 600;
+                        }
+                    }
+                }
+            }
+
+            .graphs {
+                display: flex;
+                justify-content: center;
+                gap: 1rem;
+
+                .lineGraph {
+                    min-height: 100%;
+                    width: 60%;
+                    background-color: #222222;
+                    border-radius: 0.5rem;
+                    padding: 0.5rem;
+                }
+
+                .piechart {
+                    width: 40%;
+                    min-height: 100%;
+                    background-color: #222222;
+                    border-radius: 0.5rem;
+                    padding: 0.5rem;
+                }
+            }
+        }
     }
 
     .contestlist {

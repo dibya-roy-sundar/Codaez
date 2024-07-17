@@ -2,21 +2,23 @@ import './Dashboard.scss';
 import leetcode from "../../assets/leetcode.png";
 import codeforces from "../../assets/codeforces.png";
 import codechef from "../../assets/codechef.png";
-import DetailModal from './DetailModal';
 import { useEffect, useState } from 'react';
-import { useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import ContestRatingChart from './Chart'
 import PieChart from './PieChart'
-import ScrollDown from './ScrollDown';
 import { setAuth } from '../../redux/authReducer';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import useFetch from '../../hooks/useFetch';
 
 
 const Dashboard = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    const { data, loading, error } = useFetch("/dashboard");
+    const user = data.user
+    console.log(user)
 
     useEffect(() => {
         if (searchParams.get('email') && searchParams.get('username')) {
@@ -27,27 +29,61 @@ const Dashboard = () => {
             }))
             navigate('', { replace: true });
         }
-
-        // Clear the search params from the URL
-
-        // Your existing logic with the user object
-
     }, []);
 
-    const [details, setDetails] = useState({});
-    const modalRef = useRef();
-    const user = useSelector(state => state.auth.auth);
-    const [activeContest, setActiveContest] = useState('cf'); // Default to Codeforces
-    const [showDetails, setShowDetails] = useState(false);
+    const [activePlatform, setActivePlatform] = useState('cf');
+    const [lineGraphData, setLineGraphData] = useState([]);
+    const [pieChartData, setPieChartData] = useState({});
+    useEffect(() => {
+        setDetails(user?.[`${activePlatform}`]);
+        const contestPaticipation = user?.[`${activePlatform}`]?.contestParticipation
 
-    const handleClick = (e) => {
-        setDetails({
-            platform: e.target.name,
-            logo: e.target.name === 'cf' ? codeforces : e.target.name === 'lc' ? leetcode : codechef,
-            ...user[e.target.name]
-        });
-        modalRef.current.openModal();
-    }
+        const data = [];
+        let prev = 100;
+        for (let i = 0; i < contestPaticipation?.length; i++) {
+            let date;
+            if (activePlatform === 'cc') {
+                date = new Date(contestPaticipation[i].year, contestPaticipation[i].month - 1, contestPaticipation[i].date)
+            }
+            else {
+                date = new Date(contestPaticipation[i]?.time * 1000);
+            }
+            data.push({ x: date, y: contestPaticipation[i]?.rating });
+        }
+        setLineGraphData(data)
+
+        let piedata = {}
+        if (activePlatform === 'cf') {
+            const questionData = user?.cf?.ratingWiseProblems
+            for (let i = 0; i < questionData?.length; i++) {
+                piedata[`${questionData[i].rating}`] = questionData[i].count;
+            }
+        }
+        else if (activePlatform === 'lc') {
+            piedata.Easy = user?.lc?.easyquestions
+            piedata.Medium = user?.lc?.mediumquestions
+            piedata.Hard = user?.lc?.hardquestions
+        }
+        else {
+            piedata = null
+        }
+        setPieChartData(piedata)
+
+    }, [user, activePlatform])
+
+    const [details, setDetails] = useState({});
+
+
+
+
+
+
+
+
+
+    const [showDetails, setShowDetails] = useState(false);
+    const [activeContest, setActiveContest] = useState('cf'); // Default to Codeforces
+
     const handleContestChange = (platform) => {
         setActiveContest(platform);
         setShowDetails(false); // Reset details when changing contests
@@ -57,51 +93,128 @@ const Dashboard = () => {
         setShowDetails(!showDetails);
     };
 
-    const dummyData = (startDate) => {
-        const data = [];
-        let prev = 100;
-        for (let i = 0; i < 12; i++) {
-            const date = new Date(startDate);
-            date.setMonth(date.getMonth() + i);
-            prev += 5 - Math.random() * 10;
-            data.push({ x: date, y: prev });
-        }
-        return data;
-    };
-
-    const leetcodeData = dummyData(new Date(2022, 0, 1));
-    const codeforcesData = dummyData(new Date(2022, 0, 1));
-    const codechefData = dummyData(new Date(2022, 0, 1));
-
     return (
         <div className="dashboard">
-            <DetailModal details={details} ref={modalRef} />
-            <div className="section">
-                <div className="cardWrapper">
-                    {["cf", "lc", "cc"].map((platform) => {
-                        return <div className="card" key={platform}>
-                            <div className="card-img">
-                                <img src={platform === "cf" ? codeforces : platform === "lc" ? leetcode : codechef} alt="" />
+            {error
+                ? "error"
+                : loading
+                    ? "loading"
+                    : <div className="section">
+                        <div className='buttonWrapper'>
+                            <div className={`platformBtn ${activePlatform === 'cf' ? 'activePlatform' : ''}`} onClick={() => setActivePlatform('cf')}>
+                                <img src={codeforces} alt="" />
+                                <span className='username'>{user?.cf?.username}</span>
                             </div>
-                            {user[platform]
-                                ? <>
-                                    <h2>{user[platform].username}</h2>
-                                    <span>{Math.round(user[platform].rating) || '--'}</span>
-                                    <button className="btn" name={platform} onClick={(e) => handleClick(e)}>Details</button>
-                                </>
-                                : <button className="btn" name="cf">Add Username</button>
-                            }
+                            <div className={`platformBtn ${activePlatform === 'lc' ? 'activePlatform' : ''}`} onClick={() => setActivePlatform('lc')}>
+                                <img src={leetcode} alt="" />
+                                <span className='username'>{user?.lc?.username}</span>
+                            </div>
+                            <div className={`platformBtn ${activePlatform === 'cc' ? 'activePlatform' : ''}`} onClick={() => setActivePlatform('cc')}>
+                                <img src={codechef} alt="" />
+                                <span className='username'>{user?.cc?.username}</span>
+                            </div>
                         </div>
-                    })}
-                </div>
-                <ScrollDown />
-            </div>
-            <div className="charts">
-                <ContestRatingChart data={leetcodeData} platform="LeetCode" />
-                <ContestRatingChart data={codeforcesData} platform="Codeforces" />
-                <ContestRatingChart data={codechefData} platform="CodeChef" />
-            </div>
-            <PieChart />
+
+                        <div className="detailsSection">
+                            <div className="topDetails">
+                                {details?.contestParticipation && <div className="eachDetail">
+                                    <img src={leetcode} alt="" />
+                                    <div className="content">
+                                        <span className='heading'>Contests</span>
+                                        <span className='data'>{details?.contestParticipation.length}</span>
+                                    </div>
+                                </div>}
+                                {details?.rating && <div className="eachDetail">
+                                    <img src={leetcode} alt="" />
+                                    <div className="content">
+                                        <span className='heading'>Rating</span>
+                                        <span className='data'>{details?.rating}</span>
+                                    </div>
+                                </div>}
+                                {details?.maxRating && <div className="eachDetail">
+                                    <img src={leetcode} alt="" />
+                                    <div className="content">
+                                        <span className='heading'>Max Rating</span>
+                                        <span className='data'>{details?.maxRating}</span>
+                                    </div>
+                                </div>}
+                                {details?.rank && <div className="eachDetail">
+                                    <img src={leetcode} alt="" />
+                                    <div className="content">
+                                        <span className='heading'>Rank</span>
+                                        <span className='data'>{details?.rank}</span>
+                                    </div>
+                                </div>}
+                                {details?.maxRank && <div className="eachDetail">
+                                    <img src={leetcode} alt="" />
+                                    <div className="content">
+                                        <span className='heading'>Max Rank</span>
+                                        <span className='data'>{details?.maxRank}</span>
+                                    </div>
+                                </div>}
+                                {details?.totalSuccessfullSubmissions && <div className="eachDetail">
+                                    <img src={leetcode} alt="" />
+                                    <div className="content">
+                                        <span className='heading'>Submissions</span>
+                                        <span className='data'>{details?.totalSuccessfullSubmissions}</span>
+                                    </div>
+                                </div>}
+
+                                {details?.badge && <div className="eachDetail">
+                                    <img src={leetcode} alt="" />
+                                    <div className="content">
+                                        <span className='heading'>Badge</span>
+                                        <span className='data'>{details?.badge}</span>
+                                    </div>
+                                </div>}
+                                {details?.topPercentage && <div className="eachDetail">
+                                    <img src={leetcode} alt="" />
+                                    <div className="content">
+                                        <span className='heading'>Top Percentage</span>
+                                        <span className='data'>{details?.topPercentage}</span>
+                                    </div>
+                                </div>}
+                                {details?.totalquestions && <div className="eachDetail">
+                                    <img src={leetcode} alt="" />
+                                    <div className="content">
+                                        <span className='heading'>Problems</span>
+                                        <span className='data'>{details?.totalquestions}</span>
+                                    </div>
+                                </div>}
+
+                                {details?.countryRank && <div className="eachDetail">
+                                    <img src={leetcode} alt="" />
+                                    <div className="content">
+                                        <span className='heading'>Country Rank</span>
+                                        <span className='data'>{details?.countryRank}</span>
+                                    </div>
+                                </div>}
+                                {details?.stars && <div className="eachDetail">
+                                    <img src={leetcode} alt="" />
+                                    <div className="content">
+                                        <span className='heading'>Stars</span>
+                                        <span className='data'>{details?.stars}</span>
+                                    </div>
+                                </div>}
+                                {details?.totalProblemSolved && <div className="eachDetail">
+                                    <img src={leetcode} alt="" />
+                                    <div className="content">
+                                        <span className='heading'>Problems</span>
+                                        <span className='data'>{details?.totalProblemSolved}</span>
+                                    </div>
+                                </div>}
+                            </div>
+                            <div className="graphs">
+                                <div className="lineGraph">
+                                    <ContestRatingChart data={lineGraphData} platform={activePlatform} />
+                                </div>
+                                {pieChartData && <div className="piechart">
+                                    <PieChart data={pieChartData} platform={activePlatform} />
+                                </div>}
+                            </div>
+                        </div>
+                    </div>
+            }
             <div className='contestlist'>
                 <h2>Upcoming Contests</h2>
                 <div className="contest-buttons">
