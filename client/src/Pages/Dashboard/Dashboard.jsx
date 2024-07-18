@@ -11,8 +11,17 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
 import { BiLinkExternal } from "react-icons/bi";
 import usernameNotFound from "../../assets/usernameNotFound.png";
-import codaez from '../../assets/codaez.png'
-
+import question from '../../assets/flaticon/question.gif'
+import contest from '../../assets/flaticon/contest.gif'
+import upRightArrow from '../../assets/flaticon/up-right-arrow.gif'
+import ratings from '../../assets/flaticon/ratings.gif'
+import bestQuality from '../../assets/flaticon/best-quality.gif'
+import blackFriday from '../../assets/flaticon/black-friday.gif'
+import militaryMedal from '../../assets/flaticon/military-medal.gif'
+import flags from '../../assets/flaticon/flags.gif'
+import favourite from '../../assets/flaticon/favourite.gif'
+import chart from '../../assets/flaticon/chart.gif'
+import upcoming from '../../assets/flaticon/upcoming.gif'
 
 const Dashboard = () => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -21,7 +30,6 @@ const Dashboard = () => {
 
     const { data, loading, error } = useFetch("/dashboard");
     const user = data.user
-    console.log(user)
 
     useEffect(() => {
         if (searchParams.get('email') && searchParams.get('username')) {
@@ -111,42 +119,42 @@ const Dashboard = () => {
                         <div className="detailsSection">
                             <div className="topDetails">
                                 {details?.contestParticipation?.length > 0 && <div className="eachDetail">
-                                    <img src={leetcode} alt="" />
+                                    <img src={contest} alt="" />
                                     <div className="content">
                                         <span className='heading'>Contests</span>
                                         <span className='data'>{details?.contestParticipation.length}</span>
                                     </div>
                                 </div>}
                                 {details?.rating && <div className="eachDetail">
-                                    <img src={leetcode} alt="" />
+                                    <img src={chart} alt="" />
                                     <div className="content">
                                         <span className='heading'>Rating</span>
                                         <span className='data'>{details?.rating}</span>
                                     </div>
                                 </div>}
                                 {details?.maxRating && <div className="eachDetail">
-                                    <img src={leetcode} alt="" />
+                                    <img src={upRightArrow} alt="" />
                                     <div className="content">
                                         <span className='heading'>Max Rating</span>
                                         <span className='data'>{details?.maxRating}</span>
                                     </div>
                                 </div>}
                                 {details?.rank && <div className="eachDetail">
-                                    <img src={leetcode} alt="" />
+                                    <img src={militaryMedal} alt="" />
                                     <div className="content">
                                         <span className='heading'>Rank</span>
                                         <span className='data'>{details?.rank}</span>
                                     </div>
                                 </div>}
                                 {details?.maxRank && <div className="eachDetail">
-                                    <img src={leetcode} alt="" />
+                                    <img src={ratings} alt="" />
                                     <div className="content">
                                         <span className='heading'>Max Rank</span>
                                         <span className='data'>{details?.maxRank}</span>
                                     </div>
                                 </div>}
                                 {details?.totalSuccessfullSubmissions > 0 ? <div className="eachDetail">
-                                    <img src={leetcode} alt="" />
+                                    <img src={question} alt="" />
                                     <div className="content">
                                         <span className='heading'>Submissions</span>
                                         <span className='data'>{details?.totalSuccessfullSubmissions}</span>
@@ -156,21 +164,21 @@ const Dashboard = () => {
                                 }
 
                                 {details?.badge && <div className="eachDetail">
-                                    <img src={leetcode} alt="" />
+                                    <img src={bestQuality} alt="" />
                                     <div className="content">
                                         <span className='heading'>Badge</span>
                                         <span className='data'>{details?.badge}</span>
                                     </div>
                                 </div>}
                                 {details?.topPercentage && <div className="eachDetail">
-                                    <img src={leetcode} alt="" />
+                                    <img src={blackFriday} alt="" />
                                     <div className="content">
                                         <span className='heading'>Top Percentage</span>
                                         <span className='data'>{details?.topPercentage}</span>
                                     </div>
                                 </div>}
                                 {details?.totalquestions ? <div className="eachDetail">
-                                    <img src={leetcode} alt="" />
+                                    <img src={question} alt="" />
                                     <div className="content">
                                         <span className='heading'>Problems</span>
                                         <span className='data'>{details?.totalquestions}</span>
@@ -179,21 +187,21 @@ const Dashboard = () => {
                                     : details?.totalquestions == 0 && 'No Submission Found'}
 
                                 {details?.countryRank && <div className="eachDetail">
-                                    <img src={leetcode} alt="" />
+                                    <img src={flags} alt="" />
                                     <div className="content">
                                         <span className='heading'>Country Rank</span>
                                         <span className='data'>{details?.countryRank}</span>
                                     </div>
                                 </div>}
                                 {details?.stars && <div className="eachDetail">
-                                    <img src={leetcode} alt="" />
+                                    <img src={favourite} alt="" />
                                     <div className="content">
                                         <span className='heading'>Stars</span>
                                         <span className='data'>{details?.stars}</span>
                                     </div>
                                 </div>}
                                 {details?.totalProblemSolved ? <div className="eachDetail">
-                                    <img src={leetcode} alt="" />
+                                    <img src={question} alt="" />
                                     <div className="content">
                                         <span className='heading'>Problems</span>
                                         <span className='data'>{details?.totalProblemSolved}</span>
@@ -226,7 +234,7 @@ const Dashboard = () => {
                             <h2>Upcoming Contests</h2>
                             <div className='contestButtonWrapper'>
                                 <div className={`platformBtn ${activeContest === 'allContests' ? 'activeContest' : ''}`} onClick={() => setActiveContest('allContests')}>
-                                    <img src={codaez} alt="" />
+                                    <img src={upcoming} alt="" />
                                     <span className='title'>All Contests</span>
                                 </div>
                                 <div className={`platformBtn ${activeContest === 'CfContests' ? 'activeContest' : ''}`} onClick={() => setActiveContest('CfContests')}>
@@ -244,7 +252,7 @@ const Dashboard = () => {
                             </div>
                             <div className="contestWrapper">
                                 {contestData?.map((contest, index) => (
-                                    <div className='eachContest'>
+                                    <div className='eachContest' key={index}>
                                         <div className="logo">
                                             <img src={contest?.platform === 'cf' ? codeforces : contest?.platform === 'lc' ? leetcode : codechef} alt="" />
                                         </div>
