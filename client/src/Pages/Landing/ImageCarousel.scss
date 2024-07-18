@@ -1,113 +1,38 @@
-.image-box {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    overflow: hidden;
+$grey: #333333;
+$purple: #703BF7;
+$darkpurple: #814fff;
 
-    .slider {
-        position: absolute;
-        top: 10vh;
+.image-card-highlights {
+    border: 1px solid #ccc;
+    padding: 1rem;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+
+    .card-heading {
+        font-size: 1.5rem;
+        margin-bottom: 2.5rem;
+        color: white;
+
+        @media screen and (max-width: 768px) {
+            font-size: 1rem;
+            margin-bottom: 2rem;
+
+        }
+
+        @media screen and (max-width: 480px) {
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+
+        }
+    }
+
+
+    .card-image {
         width: 100%;
-        height: 100%;
-        overflow: hidden;
-        perspective: 300px;
-        perspective-origin: 50% 50%;
-
-        .card {
-            position: absolute;
-            top: 35%;
-            left: 50%;
-            width: 50%;
-            max-width: 600px;
-            height: 400px;
-            max-height: 600px;
-            border-radius: 10px;
-            overflow: hidden;
-            transform: translate3d(-50%, -50%, 0);
-            background-color: #000;
-
-            img {
-                position: absolute;
-                opacity: 0.75;
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
-
-            .copy {
-                position: absolute;
-                top: 80%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                width: 90%;
-                clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
-
-                h1 {
-                    position: relative;
-                    text-align: center;
-                    font-size: 3rem;
-                    font-weight: 300;
-                    letter-spacing: -0.05em;
-                    text-transform: uppercase;
-                    color: #dfe1c8;
-                }
-            }
-        }
-    }
-
-    @media (max-width: 1200px) {
-        .slider {
-            top: 12vh;
-
-            .card {
-                width: 60%;
-                max-width: 500px;
-                height: 350px;
-                max-height: 500px;
-
-                .copy h1 {
-                    font-size: 2.5rem;
-                }
-            }
-        }
-    }
-
-    @media (max-width: 768px) {
-        .slider {
-            top: 4vh;
-
-            .card {
-                width: 80%;
-                max-width: 400px;
-                height: 300px;
-                max-height: 300px;
-
-                img {
-                    object-fit: cover;
-                }
-
-                .copy h1 {
-                    font-size: 2rem;
-                }
-            }
-        }
-    }
-
-    @media (max-width: 500px) {
-        .slider {
-            top: 2vh;
-
-            .card {
-                width: 90%;
-                max-width: 300px;
-                height: 250px;
-                max-height: 300px;
-                // top: 50%;
-
-                .copy h1 {
-                    font-size: 1.5rem;
-                }
-            }
-        }
+        height: auto;
+        object-fit: cover;
+        border-radius: 6px;
     }
 }

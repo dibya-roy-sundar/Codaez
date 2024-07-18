@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import './Homepagenavbar.scss'; // Import your CSS file
+import codaez from '../../assets/codaez.png';
 
 
 const HomeNavbar = ({ user, handleLogout }) => {
@@ -14,12 +15,26 @@ const HomeNavbar = ({ user, handleLogout }) => {
     return (
         <nav className="nav">
             <div className="nav-container">
-                <Link to="/" className="nav-logo">
-                    Logo
+                <Link className='logo-link' to={'/'}>
+                    <img src={codaez} alt="" />
+                    <span>Cod<span className="purple">a</span>e<span className="purple">z</span></span>
                 </Link>
-                <div className="nav-icon" onClick={toggleMenu}>
+                {/* <div className="nav-icon" onClick={toggleMenu}>
                     {isOpen ? <FaTimes /> : <FaBars />}
-                </div>
+                </div> */}
+                {
+                    user?.username ? (
+                        <div className='nav-icon' onClick={toggleMenu}>
+                            {isOpen ? <FaTimes /> : <FaBars />}
+                        </div>
+                    ) : (
+                        <div className='nav-icon'>
+                            <Link to="/auth" className="nav-links">
+                                Login
+                            </Link>
+                        </div>
+                    )
+                }
                 <ul className={`nav-menu ${isOpen ? 'active' : ''}`}>
                     {user?.username ? (
                         <>
@@ -45,16 +60,19 @@ const HomeNavbar = ({ user, handleLogout }) => {
                             </li>
                         </>
                     ) : (
+                        // if user is not looged in don;y show hamburger show Login only
+
                         <li className="nav-item">
                             <Link to="/auth" className="nav-links" onClick={toggleMenu}>
-                                LOGIN
+                                Login
                             </Link>
                         </li>
+
                     )}
                 </ul>
             </div>
         </nav>
     );
-};
+}
 
 export default HomeNavbar;

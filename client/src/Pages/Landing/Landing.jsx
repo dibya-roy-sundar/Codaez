@@ -12,7 +12,7 @@ import './Landing.scss';
 // Import images
 import DashboardImg from '../../assets/Dashboard.jpeg';
 import ProfileImg from '../../assets/Profile.jpeg';
-import LeaderboardImg from '../../assets/LeaderBoard.jpeg';
+import LeaderboardImg from '../../assets/Leaderboard.jpeg'
 import leaderboardgif from '../../assets/leaderboard.gif';
 import comparisongif from '../../assets/comparison.gif';
 import followgif from '../../assets/follow.gif'
@@ -20,6 +20,8 @@ import codeforcesIcon from '../../assets/codeforces.png';
 import codechefIcon from '../../assets/codechef.png';
 import leetcodeIcon from '../../assets/leetcode.png';
 import HomeNavbar from './HomepageNavbar';
+import codeaz from '../../assets/codaez.png';
+import Contest from '../../assets/Contest.jpeg';
 
 const Landing = () => {
     const dispatch = useDispatch();
@@ -51,9 +53,10 @@ const Landing = () => {
     ];
 
     const images = [
-        { src: DashboardImg, alt: 'Dashboard', title: 'Dashboard' },
-        { src: ProfileImg, alt: 'Profile', title: 'Profile' },
-        { src: LeaderboardImg, alt: 'Leaderboard', title: 'Leaderboard' }
+        { src: DashboardImg, alt: 'Dashboard', title: 'Navigate Your Success, One Insight at a Time' },
+        { src: ProfileImg, alt: 'Profile', title: 'Showcase Your Journey, Inspire Your Network' },
+        { src: LeaderboardImg, alt: 'Leaderboard', title: 'Rise to the Top, Celebrate Your Success!' },
+        { src: Contest, alt: 'Contest', title: 'Prepare to Compete, Unleash Your Potential!' }
     ];
 
     const handleBrowseClick = () => {
@@ -101,27 +104,34 @@ const Landing = () => {
             <section className="hero">
                 <div className="hero-content">
                     <div className="content">
-                        <h1>Connect with Fellow Coders on CodeHub</h1>
-                        <p>Dive into our extensive listings of profiles from top coders. Check out their achievements, rankings, and coding styles to find inspiration and learn from the best.</p>
+                        <h1>Analyze, Improve, Dominate Together</h1>
+                        <p>Next-Level Analysis + Next-Level Community = Next-Level You</p>
                         <div className="buttons">
-                            <button className="btn learn-more" onClick={handleMoreClick}>LeaderBoard</button>
-                            <button className="btn browse-properties" onClick={handleBrowseClick}>DashBoard</button>
+                            <button className="btn learn-more" onClick={handleMoreClick}>Peak Performers</button>
+                            <button className="btn browse-properties" onClick={handleBrowseClick}>Self-Analysis</button>
                         </div>
                     </div>
                     <section className="stats">
-                        <div className="stat"><h3>200+</h3><p>Total Visits On Platform</p></div>
+                        <div className="stat"><h3>200+</h3><p>Total Visitors</p></div>
                         <div className="stat"><h3>10k+</h3><p>Profiles Available</p></div>
-                        <div className="stat"><h3>16+</h3><p>Supported Platforms</p></div>
+                        <div className="stat"><h3>3</h3><p>Supported Platforms</p></div>
                     </section>
 
                 </div>
-                <div className="app__header-circles">
-                    {[codechefIcon, codeforcesIcon, leetcodeIcon]
-                        .map((circle, index) => (
-                            <div className="circle-cmp app__flex" key={`circle-${index}`}>
-                                <img src={circle} alt="platform_icons" />
-                            </div>
-                        ))}
+
+                <div className='home-logos' >
+                    <div className='home-main-logo'>
+                        <img src={codeaz} alt="" />
+                    </div>
+                    <div className="app__header-circles">
+                        {[codechefIcon, codeforcesIcon, leetcodeIcon]
+                            .map((circle, index) => (
+                                <div className="circle-cmp app__flex" key={`circle-${index}`}>
+                                    <img src={circle} alt="platform_icons" />
+                                </div>
+                            ))}
+                    </div>
+
                 </div>
 
 
@@ -137,9 +147,13 @@ const Landing = () => {
             </section>
 
             <section className='project-images'>
-                <div>
-                    <h2>Highlights</h2>
-                    <ImageCard images={images} />
+                <div className='grid-container'>
+                    <h2 className='heading'>Project Highlights</h2>
+                    <div className='image-grid'>
+                        {images.map((image, index) => (
+                            <ImageCard key={index} image={image} />
+                        ))}
+                    </div>
                 </div>
             </section>
 

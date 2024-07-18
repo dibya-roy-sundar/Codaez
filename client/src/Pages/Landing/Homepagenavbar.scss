@@ -7,6 +7,7 @@ $button-background-color: #141414;
 $stat-bg-color: #0d0d0d;
 $stat-text-color: #888888;
 $div-background-color: rgb(26, 26, 26);
+$purple: #5b4ef2;
 
 
 
@@ -23,12 +24,22 @@ $div-background-color: rgb(26, 26, 26);
         justify-content: space-between;
         align-items: center;
 
-        .nav-logo {
-            font-size: 2rem;
+        .logo-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.1rem;
 
-            a {
-                color: $primary-color;
-                text-decoration: none;
+            img {
+                height: 2rem;
+                width: 2rem;
+                object-fit: contain;
+            }
+
+            .purple {
+                color: $purple;
             }
         }
 
@@ -38,8 +49,7 @@ $div-background-color: rgb(26, 26, 26);
             text-decoration: none;
             list-style: none;
 
-            a,
-            button {
+            a {
                 color: $text-color;
                 text-decoration: none;
                 background: none;
@@ -53,7 +63,15 @@ $div-background-color: rgb(26, 26, 26);
             }
 
             button {
-                padding: 0;
+                color: $text-color;
+                background: none;
+                border: none;
+                cursor: pointer;
+                font-size: 1rem;
+
+                &:hover {
+                    color: $primary-color;
+                }
             }
         }
 
@@ -77,11 +95,11 @@ $div-background-color: rgb(26, 26, 26);
                 max-height: 0;
                 overflow: hidden;
                 transition: max-height 0.3s ease;
-                border-bottom: 1px solid $highlight-color;
+                // border-bottom: 1px solid $highlight-color;
 
                 &.active {
                     max-height: 500px;
-                    border-bottom: 1px solid $highlight-color;
+                    // border-bottom: 1px solid $highlight-color;
                 }
 
                 a,

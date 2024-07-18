@@ -7,12 +7,15 @@ $button-background-color: #141414;
 $stat-bg-color: #0d0d0d;
 $stat-text-color: #888888;
 $div-background-color: rgb(26, 26, 26);
+$grey: #333333;
 $purple: #703BF7;
 $darkpurple: #814fff;
 
 .landing {
     background-color: $background-color;
     color: $text-color;
+    overflow-x: hidden;
+    overflow-y: hidden;
 
     .hero {
         display: flex;
@@ -23,7 +26,7 @@ $darkpurple: #814fff;
         margin: 2rem auto;
         background-color: $background-color;
 
-        @media (min-width: 768px) {
+        @media (min-width: 900px) {
             flex-direction: row;
             justify-content: space-between;
             align-items: center;
@@ -35,7 +38,7 @@ $darkpurple: #814fff;
             justify-content: space-between;
             width: 100%;
 
-            @media (min-width: 768px) {
+            @media (min-width: 900px) {
                 width: 50%;
             }
 
@@ -43,22 +46,26 @@ $darkpurple: #814fff;
                 h1 {
                     font-size: 36px;
 
-                    @media (min-width: 768px) {
-                        font-size: 48px;
+                    @media (min-width: 900px) {
+                        font-size: 2.5rem;
                     }
                 }
 
                 p {
                     margin: 20px 0;
                     color: $secondary-text-color;
+                    font-size: 1.2rem;
                 }
 
                 .buttons {
                     display: flex;
-                    flex-direction: column;
-                    gap: 10px;
+                    flex-direction: row;
+                    // justify-content: space-around;
+                    align-items: center;
 
-                    @media (min-width: 768px) {
+                    gap: 1.5rem;
+
+                    @media (min-width: 900px) {
                         flex-direction: row;
                         gap: 20px;
                     }
@@ -72,12 +79,13 @@ $darkpurple: #814fff;
                         &.learn-more {
                             background-color: $button-background-color;
                             color: $text-color;
-                            border: 2px solid gray;
+                            border: 1px solid $highlight-color;
                         }
 
                         &.browse-properties {
                             background-color: $darkpurple;
                             color: $text-color;
+                            border: 1px solid $highlight-color;
                         }
                     }
                 }
@@ -85,32 +93,35 @@ $darkpurple: #814fff;
 
             .stats {
                 display: flex;
-                flex-direction: column;
+                flex-direction: row;
                 justify-content: space-between;
-                padding: 2rem 0;
+                padding: 1.5rem 0;
                 // margin: 2rem 0;
+                gap: 1rem;
 
-                @media (min-width: 768px) {
+                @media (min-width: 900px) {
                     flex-direction: row;
                 }
 
                 .stat {
                     background-color: $div-background-color;
                     border: 1px solid $highlight-color;
-                    padding: 1rem;
+                    padding: 0.5rem;
                     border-radius: 14px;
                     margin-bottom: 1rem;
+                    flex: 1;
 
-                    @media (min-width: 768px) {
+                    @media (min-width: 900px) {
                         margin-bottom: 0;
+                        padding: 1rem;
                     }
 
                     h3 {
-                        font-size: 24px;
+                        font-size: 1rem;
                         margin-bottom: 10px;
 
-                        @media (min-width: 768px) {
-                            font-size: 32px;
+                        @media (min-width: 900px) {
+                            font-size: 1.5rem;
                         }
                     }
 
@@ -118,7 +129,7 @@ $darkpurple: #814fff;
                         font-size: 14px;
                         color: $stat-text-color;
 
-                        @media (min-width: 768px) {
+                        @media (min-width: 900px) {
                             font-size: 16px;
                         }
                     }
@@ -129,7 +140,7 @@ $darkpurple: #814fff;
         .image {
             width: 100%;
 
-            @media (min-width: 768px) {
+            @media (min-width: 900px) {
                 width: 50%;
             }
 
@@ -139,25 +150,18 @@ $darkpurple: #814fff;
             }
         }
 
-        .app__header-circles {
+        .home-logos {
             display: flex;
             flex-direction: row;
             justify-content: center;
             align-items: center;
-            height: auto;
-            // margin: 2rem 0;
+            gap: 0.5rem;
 
-            @media (min-width: 768px) {
-                flex-direction: column;
-                justify-content: space-evenly;
-                align-items: flex-start;
-                height: 100%;
-                margin-left: 0rem;
-                margin-top: -2rem;
-                margin-right: 3rem;
+            @media (min-width: 900px) {
+                gap: 1.75rem;
             }
 
-            .circle-cmp {
+            .home-main-logo {
                 width: 80px;
                 height: 80px;
                 border-radius: 50%;
@@ -169,24 +173,76 @@ $darkpurple: #814fff;
                 align-items: center;
                 justify-content: center;
 
-                @media (min-width: 768px) {
-                    width: 100px;
-                    height: 100px;
-                }
+
 
                 img {
                     width: 60%;
                     height: 60%;
                 }
-            }
 
-            div:nth-child(2) {
-                margin: 1rem;
 
-                @media (min-width: 768px) {
+
+                @media (min-width: 900px) {
                     margin: 1.75rem;
                     width: 150px;
                     height: 150px;
+                }
+
+            }
+
+            .app__header-circles {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                height: auto;
+                max-width: 90%;
+
+
+                // margin: 2rem 0;
+
+                @media (min-width: 900px) {
+                    flex-direction: column;
+                    justify-content: space-evenly;
+                    align-items: flex-start;
+                    height: 100%;
+                    margin-left: 0rem;
+                    margin-top: -2rem;
+                    margin-right: 3rem;
+                }
+
+                .circle-cmp {
+                    width: 80px;
+                    height: 80px;
+                    border-radius: 50%;
+                    display: flex;
+                    flex-direction: column;
+                    background: none;
+                    border: 1px solid $highlight-color;
+                    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+                    align-items: center;
+                    justify-content: center;
+
+                    @media (min-width: 900px) {
+                        width: 100px;
+                        height: 100px;
+                    }
+
+                    img {
+                        width: 60%;
+                        height: 60%;
+                    }
+                }
+
+                div:nth-child(2) {
+                    margin: 1.75rem;
+                }
+
+                @media screen and (max-width: 900px) {
+                    div:nth-child(2) {
+                        margin: 0.5rem;
+                    }
+
                 }
             }
         }
@@ -201,7 +257,7 @@ $darkpurple: #814fff;
         margin: 2rem auto;
         flex-wrap: wrap;
 
-        @media (min-width: 768px) {
+        @media (min-width: 900px) {
             flex-direction: row;
         }
 
@@ -237,13 +293,45 @@ $darkpurple: #814fff;
     }
 
     .project-images {
-        div {
-            h2 {
-                text-align: center;
+        max-width: 95%;
+        margin: 2rem auto;
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            padding: 20px;
+            text-align: center;
+
+            .heading {
                 font-size: 2rem;
+                margin-bottom: 20px;
+                color: white;
             }
+
+
+            .image-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+
+                img {
+                    width: 100%;
+                    height: auto;
+                    object-fit: cover;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                }
+
+                @media screen and (max-width: 900px) {
+                    grid-template-columns: 1fr;
+
+                }
+            }
+
         }
     }
+
 
     .faq-section {
         max-width: 95%;
@@ -256,7 +344,7 @@ $darkpurple: #814fff;
             text-align: center;
         }
 
-        @media screen and (max-width:768px) {
+        @media screen and (max-width:900px) {
             h3 {
                 font-size: 1.5rem;
             }
@@ -283,6 +371,11 @@ $darkpurple: #814fff;
 
                 .faq-icon {
                     font-size: 18px;
+                    color: #fff;
+
+                    // padding: 0.5rem;
+
+
                 }
             }
 
