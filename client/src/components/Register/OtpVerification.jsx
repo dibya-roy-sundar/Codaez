@@ -130,7 +130,9 @@ const OTPVerification = ({ resend, isOpen, onClose, email, password }) => {
     const resendCode = (e) => {
         inputsRef.current.forEach((item) => item.value = null);
         inputsRef.current.length = 0;
+
         resend(e);
+        setIsComplete(false);
     }
 
     return (

@@ -4,7 +4,7 @@ import codeforces from "../../assets/codeforces.png";
 import codechef from "../../assets/codechef.png";
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import ContestRatingChart from './Chart'
+import LineGraph from './LineGraph'
 import PieChart from './PieChart'
 import { setAuth } from '../../redux/authReducer';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
@@ -194,9 +194,12 @@ const Dashboard = () => {
                             </div>
                             <div className="graphs">
                                 <div className="lineGraph">
-                                    <ContestRatingChart data={lineGraphData} platform={activePlatform} />
+                                    <LineGraph data={lineGraphData} platform={activePlatform} />
                                 </div>
-                                {pieChartData && <div className="piechart">
+                                {pieChartData && activePlatform === 'cf' && <div className="piechart">
+                                    <PieChart data={pieChartData} platform={activePlatform} />
+                                </div>}
+                                {pieChartData && activePlatform === 'lc' && <div className="piechart">
                                     <PieChart data={pieChartData} platform={activePlatform} />
                                 </div>}
                             </div>

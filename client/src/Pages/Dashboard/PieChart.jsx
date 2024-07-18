@@ -79,9 +79,7 @@ const PieChart = ({ data, platform }) => {
 
     return (
         <div className='chart'>
-            <div>
                 <Pie data={pieData} options={options} />
-            </div>
         </div>
     );
 };
