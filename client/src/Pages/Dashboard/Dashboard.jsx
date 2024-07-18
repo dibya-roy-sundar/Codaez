@@ -10,6 +10,7 @@ import { setAuth } from '../../redux/authReducer';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
 import { BiLinkExternal } from "react-icons/bi";
+import usernameNotFound from "../../assets/usernameNotFound.png";
 
 
 const Dashboard = () => {
@@ -52,7 +53,7 @@ const Dashboard = () => {
             }
             data.push({ x: date, y: contestPaticipation[i]?.rating });
         }
-        setLineGraphData(data)
+        setLineGraphData(data?.length > 0 ? data : null)
 
         let piedata = {}
         if (activePlatform === 'cf') {
@@ -62,15 +63,17 @@ const Dashboard = () => {
             }
         }
         else if (activePlatform === 'lc') {
-            piedata.Easy = user?.lc?.easyquestions
-            piedata.Medium = user?.lc?.mediumquestions
-            piedata.Hard = user?.lc?.hardquestions
+            if (user?.lc?.easyquestions)
+                piedata.Easy = user?.lc?.easyquestions
+            if (user?.lc?.mediumquestions)
+                piedata.Medium = user?.lc?.mediumquestions
+            if (user?.lc?.hardquestions)
+                piedata.Hard = user?.lc?.hardquestions
         }
         else {
             piedata = null
         }
-        setPieChartData(piedata)
-
+        setPieChartData(piedata ? Object.keys(piedata).length ? piedata : null : null)
     }, [user, activePlatform])
 
     const [activeContest, setActiveContest] = useState('allContests'); // Default to Codeforces
@@ -105,7 +108,7 @@ const Dashboard = () => {
 
                         <div className="detailsSection">
                             <div className="topDetails">
-                                {details?.contestParticipation && <div className="eachDetail">
+                                {details?.contestParticipation?.length > 0 && <div className="eachDetail">
                                     <img src={leetcode} alt="" />
                                     <div className="content">
                                         <span className='heading'>Contests</span>
@@ -140,13 +143,15 @@ const Dashboard = () => {
                                         <span className='data'>{details?.maxRank}</span>
                                     </div>
                                 </div>}
-                                {details?.totalSuccessfullSubmissions && <div className="eachDetail">
+                                {details?.totalSuccessfullSubmissions > 0 ? <div className="eachDetail">
                                     <img src={leetcode} alt="" />
                                     <div className="content">
                                         <span className='heading'>Submissions</span>
                                         <span className='data'>{details?.totalSuccessfullSubmissions}</span>
                                     </div>
-                                </div>}
+                                </div>
+                                    : details?.totalSuccessfullSubmissions == 0 && 'No Submission Found'
+                                }
 
                                 {details?.badge && <div className="eachDetail">
                                     <img src={leetcode} alt="" />
@@ -162,13 +167,14 @@ const Dashboard = () => {
                                         <span className='data'>{details?.topPercentage}</span>
                                     </div>
                                 </div>}
-                                {details?.totalquestions && <div className="eachDetail">
+                                {details?.totalquestions ? <div className="eachDetail">
                                     <img src={leetcode} alt="" />
                                     <div className="content">
                                         <span className='heading'>Problems</span>
                                         <span className='data'>{details?.totalquestions}</span>
                                     </div>
-                                </div>}
+                                </div>
+                                    : details?.totalquestions == 0 && 'No Submission Found'}
 
                                 {details?.countryRank && <div className="eachDetail">
                                     <img src={leetcode} alt="" />
@@ -184,18 +190,28 @@ const Dashboard = () => {
                                         <span className='data'>{details?.stars}</span>
                                     </div>
                                 </div>}
-                                {details?.totalProblemSolved && <div className="eachDetail">
+                                {details?.totalProblemSolved ? <div className="eachDetail">
                                     <img src={leetcode} alt="" />
                                     <div className="content">
                                         <span className='heading'>Problems</span>
                                         <span className='data'>{details?.totalProblemSolved}</span>
                                     </div>
-                                </div>}
+                                </div>
+                                    : details?.totalProblemSolved == 0 && 'No Submission Found'}
+                                {!user?.[`${activePlatform}`]?.username
+                                    ? <div className="noUsername">
+                                        <img src={usernameNotFound} alt="" />
+                                        <div className='notFound'>Username Not Found</div>
+                                        <Link to={`/profile/${user?.username}`} className='setBtn'>
+                                            Set Now <BiLinkExternal />
+                                        </Link>
+                                    </div>
+                                    : null}
                             </div>
                             <div className="graphs">
-                                <div className="lineGraph">
+                                {lineGraphData && <div className="lineGraph">
                                     <LineGraph data={lineGraphData} platform={activePlatform} />
-                                </div>
+                                </div>}
                                 {pieChartData && activePlatform === 'cf' && <div className="piechart">
                                     <PieChart data={pieChartData} platform={activePlatform} />
                                 </div>}

@@ -27,12 +27,13 @@ const PieChart = ({ data, platform }) => {
                     '#9966FF',
                     '#FF9F40',
                 ],
+                hoverOffset: 4,
             }
         ],
     };
 
     const options = {
-        normalized:true,
+        normalized: true,
         responsive: true,
         animation: {
             animateScale: true,
@@ -42,16 +43,16 @@ const PieChart = ({ data, platform }) => {
             legend: {
                 display: true,
                 position: 'bottom',
-                align:'center',
+                align: 'center',
                 labels: {
                     // This more specific font property overrides the global property
                     font: {
-                        family:"Urbanist",
+                        family: "Urbanist",
                         weight: 'bold'
                     }
                 }
             },
-            
+
             title: {
                 display: true,
                 text: `${platform === 'cf' ? 'CodeForces' : 'LeetCode'} Problemwise Distribution`,
@@ -79,7 +80,7 @@ const PieChart = ({ data, platform }) => {
 
     return (
         <div className='chart'>
-                <Pie data={pieData} options={options} />
+            <Pie data={pieData} options={options} />
         </div>
     );
 };
