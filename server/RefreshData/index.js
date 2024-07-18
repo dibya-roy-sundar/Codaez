@@ -153,32 +153,32 @@ module.exports.getLeetcodeData = async (username) => {
             // return next(new ErrorHand(data.errors?.message, 500))
         } else {
             // console.log(data.data);
-            const contestParticipation= data.data.userContestRankingHistory.filter(
-                (obj) => obj.attended === true
+            const contestParticipation= data?.data?.userContestRankingHistory?.filter(
+                (obj) => obj?.attended === true
               )
             //   console.log(contestParticipation);
-            const   newContestParticipation=contestParticipation.map((item) =>{
+            const   newContestParticipation=contestParticipation?.map((item) =>{
                 return {
-                    title:item.contest.title,
-                    time:item.contest.startTime,
-                    trendDirection:item.trendDirection,
-                    problemsSolved:item.problemsSolved,
-                    totalProblems:item.totalProblems,
-                    rating:item.rating,
-                    rank:item.ranking,
+                    title:item?.contest?.title,
+                    time:item?.contest?.startTime,
+                    trendDirection:item?.trendDirection,
+                    problemsSolved:item?.problemsSolved,
+                    totalProblems:item?.totalProblems,
+                    rating:item?.rating,
+                    rank:item?.ranking,
                 }
               })
             const result = {
                 username: username,
-                rating: data.data.userContestRanking.rating && Math.round(data.data.userContestRanking.rating),
-                rank: data.data.userContestRanking.globalRanking,
-                topPercentage: data.data.userContestRanking.topPercentage,
-                badge: data.data.userContestRanking.badge,
-                attendedContestsCount: data.data.userContestRanking.attendedContestsCount,
-                totalquestions: data.data.matchedUser.submitStats.acSubmissionNum[0]?.count,
-                easyquestions: data.data.matchedUser.submitStats.acSubmissionNum[1]?.count,
-                mediumquestions: data.data.matchedUser.submitStats.acSubmissionNum[2]?.count,
-                hardquestions: data.data.matchedUser.submitStats.acSubmissionNum[3]?.count,
+                rating: data?.data?.userContestRanking?.rating && Math.round(data?.data?.userContestRanking?.rating),
+                rank: data?.data?.userContestRanking?.globalRanking,
+                topPercentage: data?.data?.userContestRanking?.topPercentage,
+                badge: data?.data?.userContestRanking?.badge,
+                attendedContestsCount: data?.data?.userContestRanking?.attendedContestsCount,
+                totalquestions: data?.data?.matchedUser?.submitStats?.acSubmissionNum[0]?.count,
+                easyquestions: data?.data?.matchedUser?.submitStats?.acSubmissionNum[1]?.count,
+                mediumquestions: data?.data?.matchedUser?.submitStats?.acSubmissionNum[2]?.count,
+                hardquestions: data?.data?.matchedUser?.submitStats?.acSubmissionNum[3]?.count,
                 contestParticipation:newContestParticipation
             }
             // console.log("lc result",result);
