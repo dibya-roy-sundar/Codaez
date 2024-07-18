@@ -43,7 +43,7 @@ $label-color: rgb(82, 82, 82);
                     }
 
                     &:focus+label,
-                    &:valid+label {
+                    &:not(:placeholder-shown)+label {
                         top: 0rem;
                         left: 0.75rem;
                         font-size: 0.75rem;
