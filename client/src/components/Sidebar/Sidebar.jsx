@@ -9,6 +9,7 @@ import { makeRequest } from "../../hooks/makeRequest";
 import { removeAuth } from "../../redux/authReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import codaez from '../../assets/codaez.png'
 
 const Sidebar = () => {
     const dispatch = useDispatch();
@@ -53,7 +54,8 @@ const Sidebar = () => {
         <div className="sidebar">
             <div className="top">
                 <Link to={'/'}>
-                    <img src={codeforces} alt="" />
+                    <img src={codaez} alt="" />
+                    <span>Cod<span className="purple">a</span>e<span className="purple">z</span></span>
                 </Link>
             </div>
             <div className="middle">

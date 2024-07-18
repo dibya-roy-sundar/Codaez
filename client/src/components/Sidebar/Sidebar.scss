@@ -10,7 +10,7 @@ $darkpurple: #814fff;
     position: fixed;
     top: 0;
     left: 0;
-    padding: 0.5rem;
+    padding: 0.5rem 0.25rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -18,9 +18,23 @@ $darkpurple: #814fff;
     z-index: 1000;
 
     .top {
-        img {
-            height: 2rem;
-            width: 2rem;
+        a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.1rem;
+
+            img {
+                height: 2rem;
+                width: 2rem;
+                object-fit: contain;
+            }
+
+            .purple {
+                color: $purple;
+            }
         }
     }
 
@@ -89,7 +103,7 @@ $darkpurple: #814fff;
             flex: 3;
         }
 
-        .bottom{
+        .bottom {
             flex: 1;
             display: flex;
             justify-content: center;
@@ -102,7 +116,7 @@ $darkpurple: #814fff;
             padding: 0.25rem;
 
             .linktag {
-                visibility:visible;
+                visibility: visible;
                 position: static;
                 font-size: 0.75rem;
                 background-color: inherit;

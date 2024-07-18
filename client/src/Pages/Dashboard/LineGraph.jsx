@@ -113,7 +113,7 @@ const LineGraph = ({ data, platform }) => {
                 backgroundColor: 'rgba(26, 26, 26, 0.8)', // Custom background color for tooltip
                 callbacks: {
                     label: function (context) {
-                        return `Rating: ${context.raw.y}`;
+                        return [`Rating: ${context.raw.y}`, `Rank: ${context.raw.rank}`];
                     }
                 },
                 bodyFont: {

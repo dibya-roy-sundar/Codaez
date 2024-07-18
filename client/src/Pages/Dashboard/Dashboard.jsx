@@ -11,6 +11,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
 import { BiLinkExternal } from "react-icons/bi";
 import usernameNotFound from "../../assets/usernameNotFound.png";
+import codaez from '../../assets/codaez.png'
 
 
 const Dashboard = () => {
@@ -20,6 +21,7 @@ const Dashboard = () => {
 
     const { data, loading, error } = useFetch("/dashboard");
     const user = data.user
+    console.log(user)
 
     useEffect(() => {
         if (searchParams.get('email') && searchParams.get('username')) {
@@ -51,7 +53,7 @@ const Dashboard = () => {
             else {
                 date = new Date(contestPaticipation[i]?.time * 1000);
             }
-            data.push({ x: date, y: contestPaticipation[i]?.rating });
+            data.push({ x: date, y: contestPaticipation[i]?.rating, rank:contestPaticipation[i]?.rank });
         }
         setLineGraphData(data?.length > 0 ? data : null)
 
@@ -224,7 +226,7 @@ const Dashboard = () => {
                             <h2>Upcoming Contests</h2>
                             <div className='contestButtonWrapper'>
                                 <div className={`platformBtn ${activeContest === 'allContests' ? 'activeContest' : ''}`} onClick={() => setActiveContest('allContests')}>
-                                    <img src={codeforces} alt="" />
+                                    <img src={codaez} alt="" />
                                     <span className='title'>All Contests</span>
                                 </div>
                                 <div className={`platformBtn ${activeContest === 'CfContests' ? 'activeContest' : ''}`} onClick={() => setActiveContest('CfContests')}>

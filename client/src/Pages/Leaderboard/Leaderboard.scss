@@ -149,9 +149,27 @@ $darkpurple: #814fff;
                 display: flex;
                 align-items: center;
                 gap: 0.25rem;
-
-                img {
+                img{
                     height: 1.5rem;
+                }
+
+                .codaezLogo {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    font-size: 0.5rem;
+                    font-weight: 700;
+                    letter-spacing: 0.1rem;
+
+                    img {
+                        height: 1.5rem;
+                        width: 1.5rem;
+                        object-fit: contain;
+                    }
+
+                    .purple {
+                        color: $purple;
+                    }
                 }
             }
         }
@@ -407,8 +425,9 @@ $darkpurple: #814fff;
             }
         }
     }
+
     @media (max-width:400px) {
-        .top{
+        .top {
             transform: scale(0.68);
         }
     }

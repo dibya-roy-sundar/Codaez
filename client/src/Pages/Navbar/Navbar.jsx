@@ -6,6 +6,7 @@ import useFetch from "../../hooks/useFetch";
 import { RiUserFollowFill } from "react-icons/ri";
 import RequestBox from "./RequestBox";
 import noProfileImage from '../../assets/noProfileImage.png'
+import codaez from '../../assets/codaez.png'
 
 const Navbar = () => {
     const [value, setValue] = useState("");
@@ -61,8 +62,9 @@ const Navbar = () => {
         <>
             <div className="navbar">
                 <div className="logo">
-                    <Link to={"/"}>
-                        <img alt="app logo" src={leetcode} />
+                    <Link to={'/'}>
+                        <img src={codaez} alt="" />
+                        <span>Cod<span className="purple">a</span>e<span className="purple">z</span></span>
                     </Link>
                 </div>
                 <div className="searchcontainer">

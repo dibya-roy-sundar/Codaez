@@ -10,6 +10,7 @@ import { FaSort } from "react-icons/fa6";
 import { FaTrophy } from "react-icons/fa";
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import codaez from '../../assets/codaez.png'
 
 let list = []
 const Leaderboard = () => {
@@ -206,7 +207,10 @@ const Leaderboard = () => {
                                     </span>
                                 </div>
                                 <div className="aggregate rating" onClick={handleSortReset}>
-                                    <span><img src={noProfileImage} alt="" /></span>
+                                    <span className='codaezLogo'>
+                                        <img src={codaez} alt="" />
+                                        <span>Cod<span className="purple">a</span>e<span className="purple">z</span></span>
+                                    </span>
                                     <span className='sortArrows'>
                                         {sortBy.platform === ""
                                             ? defaultDesc
