@@ -44,6 +44,7 @@ const OTPVerification = ({ resend, isOpen, onClose, email, password }) => {
                         inputs[index].value = '';
                     }
                 }
+                checkIfComplete();
             };
 
             const handleInput = (e) => {
@@ -76,6 +77,7 @@ const OTPVerification = ({ resend, isOpen, onClose, email, password }) => {
             };
             const checkIfComplete = () => {
                 const allFilled = inputs.every(input => input.value !== '');
+
                 setIsComplete(allFilled);
             };
             inputs.forEach((input) => {
