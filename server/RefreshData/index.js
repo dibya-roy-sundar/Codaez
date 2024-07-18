@@ -173,7 +173,7 @@ module.exports.getLeetcodeData = async (username) => {
                 rating: data?.data?.userContestRanking?.rating && Math.round(data?.data?.userContestRanking?.rating),
                 rank: data?.data?.userContestRanking?.globalRanking,
                 topPercentage: data?.data?.userContestRanking?.topPercentage,
-                badge: data?.data?.userContestRanking?.badge,
+                badge: data?.data?.userContestRanking?.badge?.name,
                 attendedContestsCount: data?.data?.userContestRanking?.attendedContestsCount,
                 totalquestions: data?.data?.matchedUser?.submitStats?.acSubmissionNum[0]?.count,
                 easyquestions: data?.data?.matchedUser?.submitStats?.acSubmissionNum[1]?.count,
