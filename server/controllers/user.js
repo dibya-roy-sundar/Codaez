@@ -661,7 +661,7 @@ module.exports.getFollowDetails = async (req, res, next) => {
 }
 
 module.exports.dashboard = async (req, res, next) => {
-    const allContests=  await UpContest.find().sort({ startTime: -1 }); //we can't store documents in sorted manner
+    const allContests=  await UpContest.find().sort({ startTime: 1 }); //we can't store documents in sorted manner
     // in mongodb but while retrieving we can sort them
     const LcContests=allContests.filter(item => item.platform==="lc");
     const CfContests=allContests.filter(item => item.platform==="cf");

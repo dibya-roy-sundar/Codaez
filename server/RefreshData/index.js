@@ -52,8 +52,11 @@ module.exports.getCodeforcesData = async (username) => {
 
         const {ratingCounts,totalSuccessfullSubmissions}=problemSolved;
         const ratingWiseProblems=[];
+        // console.log(ratingCounts); 
         for(const [rating,count] of Object.entries(ratingCounts)){
-            ratingWiseProblems.push({rating:parseInt(rating),count});
+           if(rating!=="undefined" && count!=="undefined"){
+               ratingWiseProblems.push({rating:parseInt(rating),count});
+           }
         }
        
         if (data.result) {
