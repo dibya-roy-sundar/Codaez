@@ -254,6 +254,21 @@ $darkpurple: #814fff;
                         }
                     }
                 }
+
+                .noContests {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 1rem;
+
+                    img {
+                        height: 10rem;
+                    }
+
+                    .contestNotFound {
+                        font-size: 1.2rem;
+                    }
+                }
             }
         }
     }
@@ -422,6 +437,17 @@ $darkpurple: #814fff;
                             padding: 0.25rem 0.5rem;
                         }
                     }
+
+                    .noContests {
+                        img {
+                            height: 8rem;
+                        }
+
+                        .contestNotFound {
+                            text-align: center;
+                            font-size: 1rem;
+                        }
+                    }
                 }
             }
         }
@@ -457,7 +483,7 @@ $darkpurple: #814fff;
                             width: fit-content;
                         }
 
-                        .heading{
+                        .heading {
                             font-size: 0.9rem;
                         }
 

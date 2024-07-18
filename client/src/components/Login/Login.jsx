@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux';
 import { setAuth } from '../../redux/authReducer';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { ClipLoader } from "react-spinners";
 
 const Login = () => {
     const dispatch = useDispatch();
@@ -30,40 +31,40 @@ const Login = () => {
         }));
     }
 
-    const [isLoginprocess,setisLoginprocess]=useState(false);
+    const [isLoginprocess, setisLoginprocess] = useState(false);
     const handleLoginSubmit = async (e) => {
         e.preventDefault();
-        if(isLoginprocess) return ;
-       try {
-        setisLoginprocess(true);
-         const data = await usePostFetch('/login', loginUserCredentials);
- 
-         if (data.data && data.data.user) {
-             toast.success(`Welcome back, ${data.data.user.name}`, {
-                 position: "top-right"
-             });
-             dispatch(setAuth(data.data.user));
-             navigate('/dashboard');
-         } else if (data.data) {
-             toast.warn(data.data.error || data.data.message, {
-                 position: "top-right"
-             });
-         } else {
-             toast.error(data.error, {
-                 position: "top-right"
-             });
-         }
-       } catch (error) {
-        toast.error(error.message || "something went wrong!", {
-            position: "top-right"
-        });
-       }finally{
-        setisLoginprocess(false);
-       }
+        if (isLoginprocess) return;
+        try {
+            setisLoginprocess(true);
+            const data = await usePostFetch('/login', loginUserCredentials);
+
+            if (data.data && data.data.user) {
+                toast.success(`Welcome back, ${data.data.user.name}`, {
+                    position: "top-right"
+                });
+                dispatch(setAuth(data.data.user));
+                navigate('/dashboard');
+            } else if (data.data) {
+                toast.warn(data.data.error || data.data.message, {
+                    position: "top-right"
+                });
+            } else {
+                toast.error(data.error, {
+                    position: "top-right"
+                });
+            }
+        } catch (error) {
+            toast.error(error.message || "something went wrong!", {
+                position: "top-right"
+            });
+        } finally {
+            setisLoginprocess(false);
+        }
     }
 
 
-    const googleAuth=()=>{
+    const googleAuth = () => {
         window.open("http://localhost:3000/api/v1/auth/google",
             '_self'
         )
@@ -84,7 +85,14 @@ const Login = () => {
                         {passwordVisible ? <FaEyeSlash /> : <FaEye />}
                     </span>
                 </div>
-                <button className="login-button">{isLoginprocess ? "Loading..." : "Login"}</button>
+                <button className="login-button">{isLoginprocess
+                    ? <ClipLoader
+                        color="#ffffff"
+                        className="icon"
+                        size={16}
+                        speedMultiplier={1}
+                    />
+                    : "Login"}</button>
                 <div className="google-button">
 
                     <div className='google-btn-image' onClick={googleAuth}>

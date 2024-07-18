@@ -11,6 +11,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
 import { BiLinkExternal } from "react-icons/bi";
 import usernameNotFound from "../../assets/usernameNotFound.png";
+import noContestFound from "../../assets/noContestFound.png";
 import question from '../../assets/flaticon/question.gif'
 import contest from '../../assets/flaticon/contest.gif'
 import upRightArrow from '../../assets/flaticon/up-right-arrow.gif'
@@ -61,7 +62,7 @@ const Dashboard = () => {
             else {
                 date = new Date(contestPaticipation[i]?.time * 1000);
             }
-            data.push({ x: date, y: contestPaticipation[i]?.rating, rank:contestPaticipation[i]?.rank });
+            data.push({ x: date, y: contestPaticipation[i]?.rating, rank: contestPaticipation[i]?.rank });
         }
         setLineGraphData(data?.length > 0 ? data : null)
 
@@ -251,7 +252,7 @@ const Dashboard = () => {
                                 </div>
                             </div>
                             <div className="contestWrapper">
-                                {contestData?.map((contest, index) => (
+                                {contestData?.length ? contestData?.map((contest, index) => (
                                     <div className='eachContest' key={index}>
                                         <div className="logo">
                                             <img src={contest?.platform === 'cf' ? codeforces : contest?.platform === 'lc' ? leetcode : codechef} alt="" />
@@ -274,7 +275,12 @@ const Dashboard = () => {
                                             View <BiLinkExternal />
                                         </Link>
                                     </div>
-                                ))}
+                                ))
+                                    : <div className="noContests">
+                                        <img src={noContestFound} alt="" />
+                                        <div className='contestNotFound'>No contests for now or the server isn't responding</div>
+                                    </div>
+                                }
                             </div>
                         </div>
                     </div>

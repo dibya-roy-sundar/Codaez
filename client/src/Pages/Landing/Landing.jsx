@@ -12,7 +12,7 @@ import './Landing.scss';
 // Import images
 import DashboardImg from '../../assets/Dashboard.jpeg';
 import ProfileImg from '../../assets/Profile.jpeg';
-import LeaderboardImg from '../../assets/Leaderboard.jpeg'
+import LeaderboardImg from '../../assets/LeaderBoard.jpeg'
 import leaderboardgif from '../../assets/leaderboard.gif';
 import comparisongif from '../../assets/comparison.gif';
 import followgif from '../../assets/follow.gif'

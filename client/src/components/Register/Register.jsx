@@ -5,6 +5,7 @@ import { useState } from 'react';
 import './Register.scss'
 import { toast } from 'react-toastify';
 import usePostFetch from '../../hooks/usePostFetch';
+import { ClipLoader } from 'react-spinners';
 
 
 const Register = () => {
@@ -37,34 +38,34 @@ const Register = () => {
         }));
     }
 
-    const [issendotpProcess,setisOtpProcess]=useState(false);
+    const [issendotpProcess, setisOtpProcess] = useState(false);
     const handleOtpSent = async (e) => {
         e.preventDefault();
-        if(issendotpProcess) return ;
+        if (issendotpProcess) return;
 
-       try {
-         setisOtpProcess(true);
-         const data = await usePostFetch('/send-otp', { email: registerUserCredentials.email });
- 
-         if (data && data.data) {
-             if (!data.data.success) {
-                 toast.warn(data.data.message, {
-                     position: "top-right"
-                 });
-             } else {
-                 setOtpOpen(true);
-                 toast.success(data.data.message, {
-                     position: "top-right"
-                 });
-             }
-         }
-       } catch (error) {
-        toast.warn(error.message || "something went wrong!!!", {
-            position: "top-right"
-        });
-       }finally{
-        setisOtpProcess(false);
-       }
+        try {
+            setisOtpProcess(true);
+            const data = await usePostFetch('/send-otp', { email: registerUserCredentials.email });
+
+            if (data && data.data) {
+                if (!data.data.success) {
+                    toast.warn(data.data.message, {
+                        position: "top-right"
+                    });
+                } else {
+                    setOtpOpen(true);
+                    toast.success(data.data.message, {
+                        position: "top-right"
+                    });
+                }
+            }
+        } catch (error) {
+            toast.warn(error.message || "something went wrong!!!", {
+                position: "top-right"
+            });
+        } finally {
+            setisOtpProcess(false);
+        }
 
 
     }
@@ -86,7 +87,15 @@ const Register = () => {
                         {passwordVisible ? <FaEyeSlash /> : <FaEye />}
                     </span>
                 </div>
-                <button disabled={issendotpProcess} className="login-button">{ issendotpProcess ? "sending otp..." :"Register"}</button>
+                <button disabled={issendotpProcess} className="login-button">{issendotpProcess ? <>
+                    <ClipLoader
+                        color="#ffffff"
+                        className="icon"
+                        size={16}
+                        speedMultiplier={1}
+                    />
+                </>
+                    : "Register"}</button>
                 <div className="google-button">
 
                     <div className='google-btn-image' onClick={googleAuth}>
@@ -98,7 +107,7 @@ const Register = () => {
                 </div>
             </form>
 
-           {otpOpen &&  <OTPVerification email={registerUserCredentials.email} password={registerUserCredentials.password} resend={handleOtpSent} isOpen={otpOpen} onClose={setOtpOpen} />}
+            {otpOpen && <OTPVerification email={registerUserCredentials.email} password={registerUserCredentials.password} resend={handleOtpSent} isOpen={otpOpen} onClose={setOtpOpen} />}
         </div>
     )
 }

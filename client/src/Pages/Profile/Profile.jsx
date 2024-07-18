@@ -21,6 +21,7 @@ import usePostFetch from "../../hooks/usePostFetch";
 import Changeuname from "./Changeuname.jsx";
 import { toast } from "react-toastify";
 import Follow from "./Follow.jsx";
+import { ClipLoader } from "react-spinners";
 
 
 
@@ -109,15 +110,15 @@ const Profile = () => {
         })
     }
 
-    const [isProfileSubmitting,setisProfileSubmitting]=useState(false);
+    const [isProfileSubmitting, setisProfileSubmitting] = useState(false);
     const handleProfileSubmit = async (e) => {
         e.preventDefault();
-        if(isProfileSubmitting) return ;
+        if (isProfileSubmitting) return;
 
         try {
             setisProfileSubmitting(true);
             const data = await usePutHook('/update-profile', formdata);
-    
+
             if (data.data && data.data.user) {
                 toast.success(`Profile Updated!`, {
                     position: "top-right"
@@ -140,10 +141,10 @@ const Profile = () => {
             toast.error(error.message || "something went wrong!", {
                 position: "top-right"
             });
-        } finally{
+        } finally {
             setisProfileSubmitting(false);
         }
-        
+
     }
 
 
@@ -433,13 +434,23 @@ const Profile = () => {
                                                 </button>
                                                 <button type="submit">
                                                     <div className="icon">
-                                                        {isProfileSubmitting ? "Loading..." :
-                                                        <>
-                                                        <FaFloppyDisk />
-                                                         save
-                                                        </>
+                                                        {isProfileSubmitting
+                                                            ? <span className="submittingForm">
+                                                                <ClipLoader
+                                                                    loading={isProfileSubmitting}
+                                                                    color="#ffffff"
+                                                                    className="icon"
+                                                                    size={16}
+                                                                    speedMultiplier={1}
+                                                                />
+                                                                Saving...
+                                                            </span>
+                                                            : <>
+                                                                <FaFloppyDisk />
+                                                                Save
+                                                            </>
                                                         }
-                                                        
+
                                                     </div>
                                                 </button>
                                             </div>

@@ -104,15 +104,15 @@ const OTPVerification = ({ resend, isOpen, onClose, email, password }) => {
 
     if (!isOpen) return null;
 
-    const [isverifying,setisverifying]=useState(false);
+    const [isverifying, setisverifying] = useState(false);
     const verifyOtp = async (e) => {
         e.preventDefault();
-        if(isverifying) return;
+        if (isverifying) return;
         try {
             setisverifying(true);
             let otp = "";
             inputsRef.current.forEach((item) => otp += item.value);
-    
+
             const data = await usePostFetch('/register', { email, password, otp });
             if (data.data && data.data.user) {
                 toast.success(`Email verification successful!`, {
@@ -133,7 +133,7 @@ const OTPVerification = ({ resend, isOpen, onClose, email, password }) => {
             toast.error(error.message || "something went wrong", {
                 position: "top-right"
             });
-        } finally{
+        } finally {
             setisverifying(false);
         }
     }
@@ -173,7 +173,14 @@ const OTPVerification = ({ resend, isOpen, onClose, email, password }) => {
                         onClick={(e) => verifyOtp(e)}
                         disabled={(!isComplete) || isverifying}
                     >
-                      {isverifying ? "verifying otp..." :  "Verify Account"}
+                        {isverifying
+                            ? <ClipLoader
+                                color="#ffffff"
+                                className="icon"
+                                size={16}
+                                speedMultiplier={1}
+                            />
+                            : "Verify Account"}
                     </button>
                 </form>
                 <div className="resend-text">

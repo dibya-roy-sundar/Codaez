@@ -307,6 +307,11 @@ $darkpurple: #814fff;
             }
         }
     }
+    .submittingForm{
+        display: flex;
+        align-items: center;
+        gap: 0.2rem;
+    }
 
     @media screen and (max-width:990px) {
         flex-direction: column;
