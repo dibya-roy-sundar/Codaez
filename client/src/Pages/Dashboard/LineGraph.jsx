@@ -5,7 +5,7 @@ import 'chartjs-adapter-date-fns';
 
 ChartJS.register(...registerables);
 
-const ContestRatingChart = ({ data, platform }) => {
+const LineGraph = ({ data, platform }) => {
 
     const chartData = {
         datasets: [
@@ -70,13 +70,13 @@ const ContestRatingChart = ({ data, platform }) => {
                 type: 'time',
                 time: {
                     unit: 'month',
-                    tooltipFormat: 'MMM yyyy',
+                    tooltipFormat: 'MMM yy',
                     displayFormats: {
-                        month: 'MMM yyyy'
+                        month: 'MMM yy'
                     },
                 },
                 title: {
-                    display: true,
+                    display: window.innerWidth > 630,
                     text: 'Month',
                     font: {
                         family: 'Urbanist',
@@ -87,7 +87,7 @@ const ContestRatingChart = ({ data, platform }) => {
             y: {
                 // beginAtZero: true,
                 title: {
-                    display: true,
+                    display: window.innerWidth > 630,
                     text: 'Rating',
                     font: {
                         family: 'Urbanist',
@@ -136,4 +136,4 @@ const ContestRatingChart = ({ data, platform }) => {
     );
 };
 
-export default ContestRatingChart;
+export default LineGraph;
