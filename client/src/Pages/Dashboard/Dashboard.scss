@@ -8,6 +8,7 @@ $darkpurple: #814fff;
     display: flex;
     flex-direction: column;
     align-items: center;
+    max-width: 1500px;
     // gap: 3rem;
 
     .section {
@@ -24,7 +25,7 @@ $darkpurple: #814fff;
                 justify-content: center;
                 gap: 1rem;
                 // background-color: $grey;
-                padding: 1rem;
+                padding: 0.5rem 0;
                 // border-radius: 0.5rem;
                 border-bottom: 2px solid transparent;
                 transition: all 0.2s ease-in-out;
@@ -127,6 +128,7 @@ $darkpurple: #814fff;
             h2 {
                 text-align: center;
                 font-size: 2rem;
+                margin: 2rem 0;
             }
 
             .contestButtonWrapper {
@@ -217,6 +219,201 @@ $darkpurple: #814fff;
 
                         &:hover {
                             background-color: $darkpurple;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @media (max-width:1000px) {
+        .section {
+            .buttonWrapper {
+                .platformBtn {
+                    flex-direction: column;
+                    gap: 0;
+                }
+            }
+
+            .graphs {
+                flex-direction: column;
+                align-items: center;
+
+                .lineGraph {
+                    min-width: 100%;
+                }
+
+                .piechart {
+                    min-width: 100%;
+                }
+            }
+
+            .contests {
+                .contestWrapper {
+                    .eachContest {
+                        gap: 0.25rem;
+
+                        .logo {
+                            width: 5%;
+
+                            img {
+                                height: 1.25rem;
+                            }
+                        }
+
+                        .heading {
+                            width: 55%;
+                        }
+
+                        .startTime {
+                            width: 25%;
+                        }
+
+                        .viewBtn {
+                            width: 15%;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @media (max-width:800px) {
+        .section {
+            .contests {
+                .contestButtonWrapper {
+                    gap: 0.25rem;
+
+                    .platformBtn {
+                        gap: 0.5rem;
+                        padding: 0.25rem 0.5rem;
+                    }
+                }
+
+                .contestWrapper {
+                    .eachContest {
+                        .logo {
+                            width: 5%;
+                        }
+
+                        .heading {
+                            width: 50%;
+
+                            .title {
+                                font-size: 1rem;
+                            }
+
+                            .duration {
+                                font-size: 0.75rem;
+                            }
+                        }
+
+                        .startTime {
+                            width: 30%;
+                            font-size: 0.85rem;
+                        }
+
+                        .viewBtn {
+                            width: 15%;
+                            font-size: 0.85rem;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @media (max-width:630px) {
+        padding: 0 0.5rem 4rem 0.5rem;
+
+        .section {
+            .buttonWrapper {
+                .platformBtn {
+                    .username {
+                        display: none;
+                    }
+                }
+            }
+
+            .graphs {
+                flex-direction: column;
+                align-items: center;
+
+                .lineGraph {
+                    min-width: 100%;
+                    min-height: 500px;
+                }
+
+                .piechart {
+                    min-width: 100%;
+                }
+            }
+
+            .contests {
+                .contestButtonWrapper {
+                    display: grid;
+                    grid-template-columns: repeat(2, 1fr);
+                    grid-template-rows: repeat(2, 1fr);
+                    gap: 0.5rem;
+                    width: fit-content;
+                    margin: 0 auto;
+                }
+
+                .contestWrapper {
+                    .eachContest {
+                        padding: 0.25rem;
+
+                        .logo {
+                            width: 5%;
+                        }
+
+                        .heading {
+                            // width: 47%;
+
+                            .title {
+                                font-size: 1rem;
+                            }
+
+                            .duration {
+                                font-size: 0.75rem;
+                            }
+                        }
+
+                        .startTime {
+                            width: 28%;
+                            font-size: 0.85rem;
+                        }
+
+                        .viewBtn {
+                            width: fit-content;
+                            font-size: 0.85rem;
+                            padding: 0.25rem 0.5rem;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @media (max-width:500px) {
+
+        .section {
+            .contests {
+                .contestWrapper {
+                    .eachContest {
+                        gap: 0.5rem;
+
+                        .logo {
+                            width: fit-content;
+                        }
+
+                        .startTime {
+                            width: 20%;
+                            font-size: 0.75rem;
+                        }
+
+                        .viewBtn {
+                            width: fit-content;
                         }
                     }
                 }
