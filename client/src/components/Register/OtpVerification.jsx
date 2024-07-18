@@ -104,26 +104,37 @@ const OTPVerification = ({ resend, isOpen, onClose, email, password }) => {
 
     if (!isOpen) return null;
 
+    const [isverifying,setisverifying]=useState(false);
     const verifyOtp = async (e) => {
         e.preventDefault();
-        let otp = "";
-        inputsRef.current.forEach((item) => otp += item.value);
-
-        const data = await usePostFetch('/register', { email, password, otp });
-        if (data.data && data.data.user) {
-            toast.success(`Email verification successful!`, {
+        if(isverifying) return;
+        try {
+            setisverifying(true);
+            let otp = "";
+            inputsRef.current.forEach((item) => otp += item.value);
+    
+            const data = await usePostFetch('/register', { email, password, otp });
+            if (data.data && data.data.user) {
+                toast.success(`Email verification successful!`, {
+                    position: "top-right"
+                });
+                dispatch(setAuth(data.data.user));
+                navigate('/completeprofile');
+            } else if (data.data) {
+                toast.warn(data.data.error || data.data.message, {
+                    position: "top-right"
+                });
+            } else {
+                toast.error(data.error, {
+                    position: "top-right"
+                });
+            }
+        } catch (error) {
+            toast.error(error.message || "something went wrong", {
                 position: "top-right"
             });
-            dispatch(setAuth(data.data.user));
-            navigate('/completeprofile');
-        } else if (data.data) {
-            toast.warn(data.data.error || data.data.message, {
-                position: "top-right"
-            });
-        } else {
-            toast.error(data.error, {
-                position: "top-right"
-            });
+        } finally{
+            setisverifying(false);
         }
     }
 
@@ -160,9 +171,9 @@ const OTPVerification = ({ resend, isOpen, onClose, email, password }) => {
                     <button
                         className={`verify-button ${isComplete ? '' : 'disabled'}`}
                         onClick={(e) => verifyOtp(e)}
-                        disabled={!isComplete}
+                        disabled={(!isComplete) || isverifying}
                     >
-                        Verify Account
+                      {isverifying ? "verifying otp..." :  "Verify Account"}
                     </button>
                 </form>
                 <div className="resend-text">

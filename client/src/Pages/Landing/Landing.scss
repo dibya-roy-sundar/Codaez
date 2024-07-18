@@ -7,6 +7,8 @@ $button-background-color: #141414;
 $stat-bg-color: #0d0d0d;
 $stat-text-color: #888888;
 $div-background-color: rgb(26, 26, 26);
+$purple: #703BF7;
+$darkpurple: #814fff;
 
 .landing {
     background-color: $background-color;
@@ -74,7 +76,7 @@ $div-background-color: rgb(26, 26, 26);
                         }
 
                         &.browse-properties {
-                            background-color: $primary-color;
+                            background-color: $darkpurple;
                             color: $text-color;
                         }
                     }

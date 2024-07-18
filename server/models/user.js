@@ -12,7 +12,8 @@ const userSchema = new Schema({
         type: String,
         // required: [true, "Username is Required"],
         unique: true,
-        indexing: true,
+        index:true,
+        sparse: true // This ensures that the unique index only applies to non-null values
     },
     email: {
         type: String,

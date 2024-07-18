@@ -109,29 +109,41 @@ const Profile = () => {
         })
     }
 
+    const [isProfileSubmitting,setisProfileSubmitting]=useState(false);
     const handleProfileSubmit = async (e) => {
         e.preventDefault();
+        if(isProfileSubmitting) return ;
 
-        const data = await usePutHook('/update-profile', formdata);
-
-        if (data.data && data.data.user) {
-            toast.success(`Profile Updated!`, {
+        try {
+            setisProfileSubmitting(true);
+            const data = await usePutHook('/update-profile', formdata);
+    
+            if (data.data && data.data.user) {
+                toast.success(`Profile Updated!`, {
+                    position: "top-right"
+                });
+                dispatch(setAuth(data.data.user));
+                setEdit(false);
+                setFollowReload(reload => reload + 1);
+            }
+            else if (data.data) {
+                toast.warn(data.data.error || data.data.message, {
+                    position: "top-right"
+                });
+            }
+            else {
+                toast.error(data.error, {
+                    position: "top-right"
+                });
+            }
+        } catch (error) {
+            toast.error(error.message || "something went wrong!", {
                 position: "top-right"
             });
-            dispatch(setAuth(data.data.user));
-            setEdit(false);
-            setFollowReload(reload => reload + 1);
+        } finally{
+            setisProfileSubmitting(false);
         }
-        else if (data.data) {
-            toast.warn(data.data.error || data.data.message, {
-                position: "top-right"
-            });
-        }
-        else {
-            toast.error(data.error, {
-                position: "top-right"
-            });
-        }
+        
     }
 
 
@@ -421,8 +433,13 @@ const Profile = () => {
                                                 </button>
                                                 <button type="submit">
                                                     <div className="icon">
+                                                        {isProfileSubmitting ? "Loading..." :
+                                                        <>
                                                         <FaFloppyDisk />
-                                                        Save
+                                                         save
+                                                        </>
+                                                        }
+                                                        
                                                     </div>
                                                 </button>
                                             </div>

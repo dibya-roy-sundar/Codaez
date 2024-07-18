@@ -37,22 +37,34 @@ const Register = () => {
         }));
     }
 
+    const [issendotpProcess,setisOtpProcess]=useState(false);
     const handleOtpSent = async (e) => {
         e.preventDefault();
-        const data = await usePostFetch('/send-otp', { email: registerUserCredentials.email });
+        if(issendotpProcess) return ;
 
-        if (data && data.data) {
-            if (!data.data.success) {
-                toast.warn(data.data.message, {
-                    position: "top-right"
-                });
-            } else {
-                setOtpOpen(true);
-                toast.success(data.data.message, {
-                    position: "top-right"
-                });
-            }
-        }
+       try {
+         setisOtpProcess(true);
+         const data = await usePostFetch('/send-otp', { email: registerUserCredentials.email });
+ 
+         if (data && data.data) {
+             if (!data.data.success) {
+                 toast.warn(data.data.message, {
+                     position: "top-right"
+                 });
+             } else {
+                 setOtpOpen(true);
+                 toast.success(data.data.message, {
+                     position: "top-right"
+                 });
+             }
+         }
+       } catch (error) {
+        toast.warn(error.message || "something went wrong!!!", {
+            position: "top-right"
+        });
+       }finally{
+        setisOtpProcess(false);
+       }
 
 
     }
@@ -74,7 +86,7 @@ const Register = () => {
                         {passwordVisible ? <FaEyeSlash /> : <FaEye />}
                     </span>
                 </div>
-                <button className="login-button">Register</button>
+                <button disabled={issendotpProcess} className="login-button">{ issendotpProcess ? "sending otp..." :"Register"}</button>
                 <div className="google-button">
 
                     <div className='google-btn-image' onClick={googleAuth}>
@@ -86,7 +98,7 @@ const Register = () => {
                 </div>
             </form>
 
-            <OTPVerification email={registerUserCredentials.email} password={registerUserCredentials.password} resend={handleOtpSent} isOpen={otpOpen} onClose={setOtpOpen} />
+           {otpOpen &&  <OTPVerification email={registerUserCredentials.email} password={registerUserCredentials.password} resend={handleOtpSent} isOpen={otpOpen} onClose={setOtpOpen} />}
         </div>
     )
 }

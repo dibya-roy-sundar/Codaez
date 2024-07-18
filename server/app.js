@@ -42,7 +42,7 @@ app.use(error);
 setInterval(() => {
 }, 100000000);
 // refreshData();
-refreshUpContests();//this timer will be greater than refreshData
+// refreshUpContests();//this timer will be greater than refreshData
 
 const port = process.env.PORT;
 app.listen(port, () => {
