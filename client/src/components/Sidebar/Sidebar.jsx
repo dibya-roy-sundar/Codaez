@@ -4,7 +4,6 @@ import { MdLeaderboard } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
 import { FiLogOut } from "react-icons/fi";
 import './Sidebar.scss';
-import codeforces from '../../assets/codeforces.png';
 import { makeRequest } from "../../hooks/makeRequest";
 import { removeAuth } from "../../redux/authReducer";
 import { useDispatch, useSelector } from "react-redux";
@@ -29,7 +28,7 @@ const Sidebar = () => {
                     position: "top-right"
                 });
                 dispatch(removeAuth());
-                navigate('/');
+                navigate("/", { state: { showToastify: false } });
             }
             else {
                 console.log({ error: data.error })

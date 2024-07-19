@@ -16,6 +16,7 @@ import CompleteProfile from "./components/Register/CompleteProfile";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import Error_404 from "./Pages/404Page/Error_404";
+import Protected from "./Protected";
 
 const Layout = () => {
   return (
@@ -46,40 +47,47 @@ const router = createBrowserRouter([
       {
         path: "/dashboard",
         element: (
-          <>
-            <Navbar />
-            <Sidebar />
-            <Dashboard />
-          </>
+          <Protected>
+            <>
+              <Navbar />
+              <Sidebar />
+              <Dashboard />
+            </>
+          </Protected>
         ),
       },
       {
         path: "/leaderboard",
         element: (
-          <>
-            <Navbar />
-            <Sidebar />
-            <Leaderboard />
-          </>
+          <Protected>
+            <>
+              <Navbar />
+              <Sidebar />
+              <Leaderboard />
+            </>
+          </Protected>
         ),
       },
       {
         path: "/auth",
-        element: <Auth />,
+        element:<Auth />,
       },
       {
         path: "/profile/:username",
         element: (
-          <>
-            <Navbar />
-            <Sidebar />
-            <Profile />
-          </>
+          <Protected>
+            <>
+              <Navbar />
+              <Sidebar />
+              <Profile />
+            </>
+          </Protected>
         ),
       },
       {
         path: "/completeprofile",
-        element: <CompleteProfile />,
+        element:
+          <CompleteProfile />
       },
       { path: "404", element:(
       <>

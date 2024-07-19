@@ -23,6 +23,9 @@ passport.use(
                         url: response.url,
                         filename: response.public_id,
                     }
+                //   const  firstName=profile.name.givenName;
+                //   const lastName=profile.name.familyName;
+                //   console.log(firstName,lastName);
 
                     user = new User({
                         googleId: profile.id,
