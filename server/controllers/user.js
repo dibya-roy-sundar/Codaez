@@ -1,3 +1,4 @@
+const { MailTemplate } = require("../Mail/MailTemplate.js");
 const {
     getLeetcodeData,
     getCodeforcesData,
@@ -81,15 +82,14 @@ module.exports.sendOtp=async (req,res,next) =>{
         await transporter.sendMail({
           from: process.env.SMTP_USER, // sender address
           to: email, // recipient address
-          subject: 'Your OTP Code', // subject line
-          text: `Your OTP code is ${otp}. It will expire in ${process.env.OTP_EXPIRY / 60} minutes.`, // plain text body
-        //   html: "<b>Hello world?</b>", 
+          subject: `Your OTP Code is ${otp}`, // subject line
+          html:MailTemplate(otp)  
         });
         res.status(200).json({
             success:true,
             message:"verification code  sent to your email"
         })
-        console.log('OTP email sent');
+        // console.log('OTP email sent');
       } catch (error) {
         console.error('Error sending OTP email:', error);
         res.status(500).json({
