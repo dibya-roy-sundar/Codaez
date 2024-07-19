@@ -7,6 +7,8 @@ import { setAuth } from '../../redux/authReducer';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { ClipLoader } from 'react-spinners';
+
 const OTPVerification = ({ resend, isOpen, onClose, email, password }) => {
     const inputsRef = useRef([]);
     const dispatch = useDispatch();

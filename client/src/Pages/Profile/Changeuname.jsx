@@ -10,6 +10,8 @@ import { ClipLoader } from "react-spinners";
 import { SiTicktick } from "react-icons/si";
 import { RiErrorWarningLine } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
+
 
 // eslint-disable-next-line react/prop-types
 const Changeuname = forwardRef(({ setReload,handleClose, changeUnameRef }) => {
@@ -17,9 +19,12 @@ const Changeuname = forwardRef(({ setReload,handleClose, changeUnameRef }) => {
   const [InputValue, setInputValue] = useState("");
   const [loading, setLoading] = useState(null);
   const [unique, setUnique] = useState(null);
+  const [isnormal,setisnormal]=useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector(state => state.auth.auth);
+
+  const allset=!loading && unique && isnormal;
 
   useEffect(() => {
     const changeuname = async () => {
@@ -32,6 +37,14 @@ const Changeuname = forwardRef(({ setReload,handleClose, changeUnameRef }) => {
         setLoading(false);
         if (data.success) {
           setUnique(true);
+          if(data.isnormal){
+            setisnormal(true);
+          }else{
+            setisnormal(false);
+            toast.warn(" username must be 18 characters or fewer", {
+              position: "top-right"
+            });
+          }
           // unique username found
         } else {
           setUnique(false);

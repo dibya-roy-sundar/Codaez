@@ -32,7 +32,7 @@ $darkpurple: #814fff;
                 display: flex;
                 align-items: center;
                 gap: 1rem;
-                cursor: pointer;
+                
 
                 .progress-step {
                     display: flex;
@@ -58,6 +58,9 @@ $darkpurple: #814fff;
                     }
                 }
             }
+            .restricted{
+                cursor: pointer;
+            }
         }
 
         .register-form {
@@ -82,6 +85,7 @@ $darkpurple: #814fff;
                     input {
                         width: 100%;
                         padding: 1rem;
+                        padding-right: 2.85rem;
                         background: $input-background;
                         border: 2px solid transparent;
                         border-radius: 5px;
@@ -116,6 +120,11 @@ $darkpurple: #814fff;
                         pointer-events: none;
                         background: transparent;
                         padding: 0 0.25rem;
+                    }
+                    .spinner{
+                        position: absolute;
+                        right: 3%;
+                        top: 35%;
                     }
                 }
 
@@ -152,6 +161,7 @@ $darkpurple: #814fff;
                             // background-position: center;
                             background-size: cover;
                             background-repeat: no-repeat;
+                            cursor: pointer;
                         }
                     }
 
@@ -204,6 +214,13 @@ $darkpurple: #814fff;
 
                     &:hover {
                         background: $darkpurple;
+                    }
+                }
+                .disable{
+                    cursor: not-allowed;
+                    background: #636262;
+                    &:hover {
+                        background: #545252;
                     }
                 }
             }
