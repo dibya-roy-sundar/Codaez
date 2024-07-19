@@ -34,7 +34,7 @@ router.get('/auth/google/callback',
         res.status(200).cookie("token", token, options);
 
         if (isNew) {
-            res.redirect(`${process.env.CLIENT_URL}/completeprofile?email=${user.email}&name=${user.name}&avatarUrl=${user.avatar.url}`);
+            res.redirect(`${process.env.CLIENT_URL}/completeprofile?email=${user.email}&name=${user.name}&avatarUrl=${user.avatar.url}&fromgauth=${true}`);
         }
         else {
             res.redirect(`${process.env.CLIENT_URL}/dashboard?email=${user.email}&name=${user.name}&username=${user.username}`);

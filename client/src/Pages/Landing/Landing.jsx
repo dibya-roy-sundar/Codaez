@@ -27,7 +27,6 @@ const Landing = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const user = useSelector(state => state.auth.auth); // Get user from Redux state
-    console.log(user);
 
     const handleLogout = async () => {
         try {

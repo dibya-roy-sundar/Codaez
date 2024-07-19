@@ -8,7 +8,7 @@ import codeforces from '../../assets/codeforces.png';
 import leetcode from '../../assets/leetcode.png';
 import codechef from '../../assets/codechef.png';
 import { setAuth } from '../../redux/authReducer';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import usePutHook from '../../hooks/usePutHook';
 import { toast } from 'react-toastify';
 import { ClipLoader } from "react-spinners";
@@ -19,7 +19,7 @@ import { RiErrorWarningLine } from "react-icons/ri";
 const CompleteProfile = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
+    
     const avatarref=useRef();
 
     const [searchParams, setSearchParams] = useSearchParams();
@@ -28,9 +28,6 @@ const CompleteProfile = () => {
     const [unique, setUnique] = useState(null);
     const [isnormal,setisnormal]=useState(false);
 
-
-
-    const allset=!loading && unique && isnormal;
     const userFromRedux = useSelector(state => state.auth.auth)
     const [currentStep, setCurrentStep] = useState(1);
     const [profilePicture, setProfilePicture] = useState(null);
@@ -47,6 +44,12 @@ const CompleteProfile = () => {
 
 
     const [user, setUser] = useState();
+    const [isFormSubmitting,setisFormSubmitting]=useState(false);
+
+
+
+
+    
     useEffect(() => {
         if (searchParams.get('email')) {
             setUser({
@@ -62,6 +65,75 @@ const CompleteProfile = () => {
         }
     }, []);
 
+    useEffect(() => {
+        const changeuname = async () => {
+          const { data } = await usePutHook("/change-username", {
+            username: InputValue,
+            save: false,
+          });
+    
+          if (data) {
+            setLoading(false);
+            if (data.success) {
+              setUnique(true);
+              // unique username found
+              if(data.isnormal){
+                setisnormal(true);
+              }else{
+                setisnormal(false);
+                toast.warn(" username must be 18 characters or fewer", {
+                  position: "top-right"
+                });
+              }
+            } else {
+              setUnique(false);
+              toast.warn(data.data.error || data.data.message, {
+                 position: "top-right"
+              });
+              // username already taken - Toastify
+            }
+          }
+        };
+    
+        if (InputValue.length > 0) {
+          changeuname();
+        }
+      }, [InputValue]);
+    
+       
+    
+        
+      useEffect(() => {
+        const timer = setTimeout(() => {
+          setInputValue(formValues.username.trim());
+        }, 500);
+    
+        return () => {
+          clearTimeout(timer);
+        };
+      }, [formValues.username]);
+
+
+    const location=useLocation();
+    const state=location.state || {};
+    const gauth=searchParams.get('fromgauth');
+    if(!state || Object.keys(state).length===0){
+        if(!gauth){
+            return <Navigate  to={"/"} replace />
+        }
+    }else{
+        if(!state?.fromregister){
+            return <Navigate  to={"/"} replace />
+        }
+    }
+       
+    
+
+
+
+
+    const allset=!loading && unique && isnormal;
+    
    
     const handleNextStep = () => {
         setCurrentStep((prev) => prev + 1);
@@ -71,7 +143,7 @@ const CompleteProfile = () => {
         setCurrentStep((prev) => prev - 1);
     };
 
-    const [isFormSubmitting,setisFormSubmitting]=useState(false);
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
         if(isFormSubmitting) return ;
@@ -135,41 +207,6 @@ const CompleteProfile = () => {
         setCurrentStep(step);
     }
 
-    
-  useEffect(() => {
-    const changeuname = async () => {
-      const { data } = await usePutHook("/change-username", {
-        username: InputValue,
-        save: false,
-      });
-
-      if (data) {
-        setLoading(false);
-        if (data.success) {
-          setUnique(true);
-          // unique username found
-          if(data.isnormal){
-            setisnormal(true);
-          }else{
-            setisnormal(false);
-            toast.warn(" username must be 18 characters or fewer", {
-              position: "top-right"
-            });
-          }
-        } else {
-          setUnique(false);
-          toast.warn(data.data.error || data.data.message, {
-             position: "top-right"
-          });
-          // username already taken - Toastify
-        }
-      }
-    };
-
-    if (InputValue.length > 0) {
-      changeuname();
-    }
-  }, [InputValue]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -182,20 +219,8 @@ const CompleteProfile = () => {
           setLoading(false);
         }
     };
-
     
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setInputValue(formValues.username.trim());
-    }, 500);
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [formValues.username]);
-
-
-  
+   
 
     return (
         <div className="register-container">

@@ -121,7 +121,7 @@ const OTPVerification = ({ resend, isOpen, onClose, email, password }) => {
                     position: "top-right"
                 });
                 dispatch(setAuth(data.data.user));
-                navigate('/completeprofile');
+                navigate('/completeprofile',{state:{fromregister:true}});
             } else if (data.data) {
                 toast.warn(data.data.error || data.data.message, {
                     position: "top-right"
@@ -158,7 +158,7 @@ const OTPVerification = ({ resend, isOpen, onClose, email, password }) => {
                     <h1>Email Verification</h1>
                     <p>Enter the 4-digit verification code that was sent to your email</p>
                 </header>
-                <form id="otp-form">
+                <form onSubmit={(e) => verifyOtp(e)} id="otp-form">
                     <div className="otp-inputs">
                         {Array.from({ length: 4 }).map((_, index) => (
                             <input
@@ -172,7 +172,6 @@ const OTPVerification = ({ resend, isOpen, onClose, email, password }) => {
                     </div>
                     <button
                         className={`verify-button ${isComplete ? '' : 'disabled'}`}
-                        onClick={(e) => verifyOtp(e)}
                         disabled={(!isComplete) || isverifying}
                     >
                         {isverifying
