@@ -3,11 +3,13 @@ $purple: #703BF7;
 $darkpurple: #814fff;
 
 .profileContainer {
-    padding: 1rem 1rem 1rem 4rem;
+    padding: 1rem 1rem 1rem 4.5rem;
     display: flex;
     justify-content: center;
     gap: 1rem;
     position: relative;
+    max-width: 1500px;
+    margin: auto;
 
     .usercard {
         flex: 1.5;
@@ -99,6 +101,7 @@ $darkpurple: #814fff;
                             display: flex;
                             flex-direction: column;
                             align-items: center;
+                            cursor: pointer;
 
                             .element{
                                 font-weight: 600;
@@ -110,7 +113,6 @@ $darkpurple: #814fff;
                                 span {
                                     color: $darkpurple;
                                     font-size: 1.2rem;
-                                    cursor: pointer;
                                 }
                             }
                         }
@@ -313,10 +315,11 @@ $darkpurple: #814fff;
         gap: 0.2rem;
     }
 
-    @media screen and (max-width:990px) {
+    @media screen and (max-width:1030px) {
         flex-direction: column;
         // padding: 1rem;
         gap: 1rem;
+        max-width: 700px;
 
         .usercard {
             max-width: 100%;
@@ -324,11 +327,16 @@ $darkpurple: #814fff;
 
         .formcontainer {
             max-width: 100%;
+            form{
+                .fieldcontainer{
+                    column-gap: 0.5rem;
+                }
+            }
         }
     }
 
     @media screen and (max-width:630px) {
-        padding: 1.4rem;
+        padding: 1rem 3rem 4.25rem 3rem;
 
         .usercard {
             padding: 1rem;
@@ -336,7 +344,15 @@ $darkpurple: #814fff;
 
         .formcontainer {
             padding: 1rem;
+            form{
+                .fieldcontainer{
+                    grid-template-columns: 1fr;
+                }
+            }
         }
+    }
 
+    @media screen and (max-width:500px) {
+        padding: 1rem 1rem 4.25rem 1rem;
     }
 }

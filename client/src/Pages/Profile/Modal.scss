@@ -1,11 +1,12 @@
 $grey: #333333;
 $purple: #703BF7;
 $darkpurple: #814fff;
-.modalDialog{
-    padding: 2rem;
+
+.modalDialog {
+    padding: 1.5rem;
     border-radius: 0.5rem;
     border: 1px solid $purple;
-    background: $grey;
+    background: #222222;
     text-align: center;
     width: 25rem;
     margin: auto;
