@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@800&family=Roboto:wght@100;300&display=swap');
+
 :root {
     --button: #b3b3b3;
     --button-color: #0a0a0a;
@@ -7,6 +9,11 @@
     --color: #fafafa;
     --lit-header: #e6e6e6;
     --speed: 2s;
+}
+
+* {
+    // box-sizing: border-box;
+    transform-style: preserve-3d;
 }
 
 @property --swing-x {
@@ -22,16 +29,23 @@
 }
 
 .error-404 {
-    min-height: 90vh;
+    min-height: 89vh;
     display: flex;
+    font-family: 'Roboto', sans-serif;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     background: var(--bg);
     color: var(--color);
-    perspective: 1000px;
-    overflow-x: hidden;
+    perspective: 1200px;
+    overflow: hidden;
     overflow-y: hidden;
+
+    @media screen and (max-width: 625px) {
+        min-height: 93vh;
+
+    }
+
 
     a {
         text-transform: uppercase;
@@ -42,8 +56,6 @@
         border-radius: 4rem;
         font-size: 0.875rem;
         letter-spacing: 0.05rem;
-
-        cursor: pointer;
     }
 
     p {
@@ -53,7 +65,8 @@
     h1 {
         -webkit-animation: swing var(--speed) infinite alternate ease-in-out;
         animation: swing var(--speed) infinite alternate ease-in-out;
-        font-size: clamp(5rem, 40vmin, 15rem);
+        font-size: clamp(5rem, 40vmin, 20rem);
+        font-family: 'Open Sans', sans-serif;
         margin: 0;
         margin-bottom: 1rem;
         letter-spacing: 1rem;
@@ -62,21 +75,18 @@
         background: radial-gradient(var(--lit-header), var(--header) 45%) var(--x) 100%/200% 200%;
         -webkit-background-clip: text;
         color: transparent;
-        position: relative;
-        z-index: 3;
+    }
 
-        &::after {
-            -webkit-animation: swing var(--speed) infinite alternate ease-in-out;
-            animation: swing var(--speed) infinite alternate ease-in-out;
-            content: "404";
-            position: absolute;
-            top: 0;
-            left: 0;
-            color: var(--shadow);
-            filter: blur(1.5vmin);
-            transform: scale(1.05) translate3d(0, 12%, -10vmin) translate(calc((var(--swing-x, 0) * 0.05) * 1%), calc((var(--swing-y) * 0.05) * 1%));
-            z-index: -1;
-        }
+    h1:after {
+        -webkit-animation: swing var(--speed) infinite alternate ease-in-out;
+        animation: swing var(--speed) infinite alternate ease-in-out;
+        content: "404";
+        position: absolute;
+        top: 0;
+        left: 0;
+        color: var(--shadow);
+        filter: blur(1.5vmin);
+        transform: scale(1.05) translate3d(0, 12%, -10vmin) translate(calc((var(--swing-x, 0) * 0.03) * 1%), calc((var(--swing-y) * 0.05) * 1%));
     }
 
     .cloak {
@@ -85,7 +95,7 @@
         width: 100%;
         transform-origin: 50% 30%;
         transform: rotate(calc(var(--swing-x) * -0.25deg));
-        background: radial-gradient(40% 40% at 50% 48%, transparent, #000 50%);
+        background: radial-gradient(40% 40% at 50% 48%, transparent, #000 35%);
     }
 
     .cloak__wrapper {
@@ -110,56 +120,41 @@
         text-align: center;
         line-height: 1.5;
         max-width: clamp(16rem, 90vmin, 25rem);
+    }
 
-        >p {
-            margin-bottom: 3rem;
+    .info>p {
+        margin-bottom: 3rem;
+    }
+
+    @-webkit-keyframes swing {
+        0% {
+            --swing-x: -100;
+            --swing-y: -100;
         }
 
-        .home-btn button {
-            text-transform: uppercase;
-            text-decoration: none;
-            background: var(--button);
-            color: var(--button-color);
-            padding: 1rem 4rem;
-            border-radius: 4rem;
-            font-size: 0.875rem;
-            letter-spacing: 0.05rem;
-            cursor: pointer;
-            /* Ensure cursor pointer is applied */
-            border: none;
-            /* Ensure button doesn't have default border */
+        50% {
+            --swing-y: 0;
+        }
+
+        100% {
+            --swing-y: -100;
+            --swing-x: 100;
         }
     }
-}
 
-@-webkit-keyframes swing {
-    0% {
-        --swing-x: -100;
-        --swing-y: -100;
-    }
+    @keyframes swing {
+        0% {
+            --swing-x: -100;
+            --swing-y: -100;
+        }
 
-    50% {
-        --swing-y: 0;
-    }
+        50% {
+            --swing-y: 0;
+        }
 
-    100% {
-        --swing-y: -100;
-        --swing-x: 100;
-    }
-}
-
-@keyframes swing {
-    0% {
-        --swing-x: -100;
-        --swing-y: -100;
-    }
-
-    50% {
-        --swing-y: 0;
-    }
-
-    100% {
-        --swing-y: -100;
-        --swing-x: 100;
+        100% {
+            --swing-y: -100;
+            --swing-x: 100;
+        }
     }
 }
