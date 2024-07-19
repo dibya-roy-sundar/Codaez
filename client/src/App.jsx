@@ -92,7 +92,6 @@ const router = createBrowserRouter([
       { path: "404", element:(
       <>
       <Navbar />
-      <Sidebar />
       <Error_404 />
       </>  )},
       { path: "*", element: <Navigate to="/404" replace /> },
