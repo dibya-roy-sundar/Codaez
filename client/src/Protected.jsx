@@ -1,10 +1,14 @@
 import { useSelector } from "react-redux"
-import { Navigate } from "react-router-dom";
+import { Navigate, useSearchParams } from "react-router-dom";
 
 
 const Protected = ({children}) => {
     const user=useSelector(state => state.auth.auth);
+    const [searchParams]=useSearchParams();
 
+    const gauth=searchParams.get('fromgauth');
+
+    if(!gauth){
     if(!user  || Object.keys(user).length === 0){
         // pass state along with redirecting
        return  <Navigate to={"/auth"} replace state={{showToastify:true}} />
@@ -14,6 +18,8 @@ const Protected = ({children}) => {
     if(!user.username){
         return <Navigate to="/completeprofile" state={{fromregister:true}}/>
     }
+
+  }
 
   return children;
 }

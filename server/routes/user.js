@@ -37,7 +37,7 @@ router.get('/auth/google/callback',
             res.redirect(`${process.env.CLIENT_URL}/completeprofile?email=${user.email}&name=${user.name}&avatarUrl=${user.avatar.url}&fromgauth=${true}`);
         }
         else {
-            res.redirect(`${process.env.CLIENT_URL}/dashboard?email=${user.email}&name=${user.name}&username=${user.username}`);
+            res.redirect(`${process.env.CLIENT_URL}/dashboard?email=${user.email}&name=${user.name}&username=${user.username}&fromgauth=${true}`);
         }
     }
 )

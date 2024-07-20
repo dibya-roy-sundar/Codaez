@@ -12,7 +12,7 @@ import { useEffect, useRef, useState } from "react";
 import { FaBan } from "react-icons/fa";
 import { FaAngleRight, FaEnvelope, FaFloppyDisk, FaGithub, FaGraduationCap, FaHashnode, FaIdCard, FaKey, FaLinkedin, FaMedium, FaPencil, FaPenToSquare, FaUser, FaXTwitter } from "react-icons/fa6";
 import ChangePw from "./ChangePw";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate, useParams } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 import { useDispatch, useSelector } from "react-redux";
 import usePutHook from "../../hooks/usePutHook";
@@ -38,6 +38,7 @@ const Profile = () => {
     const ownprofile = current_user?.username === username;
 
     const { data, loading, error } = useFetch(`/profile/${username}`, true, reload);
+    
 
     useEffect(() => {
         if (ownprofile && data && data.user) {
@@ -270,6 +271,18 @@ const Profile = () => {
     const closeFollowModal = () => {
         followRef.current.closeModal();
     }
+
+
+    useEffect(()=>{
+        if(data &&  Object.keys(data).length>0  && !data.status ){
+            toast.error("user not found" , {
+                position: "top-right"
+            })
+        }
+    },[data])
+       
+   
+    
 
 
     return (
