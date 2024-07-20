@@ -475,7 +475,7 @@ module.exports.profile = async (req, res, next) => {
     const user = await User.findOne({ username: username }).populate('fRequests', 'senderusername');
 
     if (!user) {
-        return res.status(404).json({
+        return res.status(200).json({
             status: false,
             msg: "user not found"
         })
