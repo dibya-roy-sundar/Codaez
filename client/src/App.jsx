@@ -10,7 +10,7 @@ import {
 import Landing from "./Pages/Landing/Landing";
 import Leaderboard from "./Pages/Leaderboard/Leaderboard";
 import Profile from "./Pages/Profile/Profile";
-import Navbar from "./Pages/Navbar/Navbar";
+import Navbar from "./components/Navbar/Navbar";
 import Sidebar from "./components/Sidebar/Sidebar";
 import CompleteProfile from "./components/Register/CompleteProfile";
 import "react-toastify/dist/ReactToastify.css";

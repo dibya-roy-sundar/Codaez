@@ -1,18 +1,15 @@
-import React from 'react';
 import './Footer.scss';
-import { FaGithub } from "react-icons/fa";
+import codaez from '../../assets/codaez.png';
 
 const Footer = () => {
     return (
         <div className='footer'>
-            <div className='footer-brand'>CODEHUB</div>
+            <div className='footer-brand'>
+                <img src={codaez} alt="" />
+                <span>Cod<span className="purple">a</span>e<span className="purple">z</span></span>
+            </div>
             <div className='footer-copyrights'>
-                <div className='footer-copy'>&copy; All rights reserved.</div>
-                <div className='footer-logo'>
-                    <a href="https://github.com/your-repo" target="_blank" rel="noopener noreferrer">
-                        <FaGithub />
-                    </a>
-                </div>
+                &copy;2024 All rights reserved
             </div>
         </div>
     );

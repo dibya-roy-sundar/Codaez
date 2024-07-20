@@ -1,91 +1,95 @@
-$primary-color: #5b4ef2; // Primary color (used in buttons)
-$background-color: #0d0d0d; // Background color
-$text-color: #ffffff; // Text color
 $secondary-text-color: #888888; // Secondary text color
-$highlight-color: #444444; // Highlight color (used in cards)
-$button-background-color: #141414;
-$stat-bg-color: #0d0d0d;
+$highlight-color: #747474; // Highlight color (used in cards)
 $stat-text-color: #888888;
-$div-background-color: rgb(26, 26, 26);
+
 $grey: #333333;
 $purple: #703BF7;
 $darkpurple: #814fff;
 
 .landing {
-    background-color: $background-color;
-    color: $text-color;
-    overflow-x: hidden;
-    overflow-y: hidden;
+    // background-color: ;
+    color: white;
+    // overflow-x: hidden;
+    // overflow-y: hidden;
+    max-width: 1500px;
+    margin: 0 auto;
 
     .hero {
         display: flex;
-        flex-direction: column;
-        justify-content: center;
+        justify-content: space-between;
         align-items: center;
-        max-width: 90%;
-        margin: 2rem auto;
-        background-color: $background-color;
+        padding: 2rem;
+        gap: 2rem;
 
-        @media (min-width: 900px) {
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: center;
+        @media (max-width: 900px) {
+            flex-direction: column;
+            justify-content: center;
+            gap: 1rem;
         }
 
         .hero-content {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            width: 100%;
-
-            @media (min-width: 900px) {
-                width: 50%;
-            }
 
             .content {
                 h1 {
-                    font-size: 36px;
+                    font-size: 2.5rem;
 
-                    @media (min-width: 900px) {
-                        font-size: 2.5rem;
+                    @media (max-width: 900px) {
+                        // font-size: 3rem;
                     }
                 }
 
                 p {
-                    margin: 20px 0;
+                    margin: 1rem 0;
                     color: $secondary-text-color;
                     font-size: 1.2rem;
+                    font-weight: 600;
                 }
 
                 .buttons {
                     display: flex;
-                    flex-direction: row;
                     // justify-content: space-around;
                     align-items: center;
-
                     gap: 1.5rem;
+                    flex-wrap: wrap;
 
-                    @media (min-width: 900px) {
-                        flex-direction: row;
-                        gap: 20px;
+                    @media (max-width:500px) {
+                        gap: 0.75rem;
                     }
 
                     .btn {
-                        padding: 15px 30px;
-                        border: none;
+                        padding: 0.75rem 1.5rem;
+                        border: 2px solid $purple;
                         cursor: pointer;
-                        border-radius: 10px;
+                        border-radius: 0.5rem;
+                        font-size: 0.9rem;
+                        font-weight: 600;
+
+                        @media (max-width:500px) {
+                            padding: 0.5rem 1rem;
+                        }
 
                         &.learn-more {
-                            background-color: $button-background-color;
-                            color: $text-color;
-                            border: 1px solid $highlight-color;
+                            background-color: transparent;
+                            color: white;
+                            border: 2px solid $purple;
+                            transition: all 0.2s ease-in-out;
+
+                            &:hover {
+                                border: 2px solid $darkpurple;
+                            }
                         }
 
                         &.browse-properties {
-                            background-color: $darkpurple;
-                            color: $text-color;
-                            border: 1px solid $highlight-color;
+                            background-color: $purple;
+                            color: white;
+                            transition: all 0.2s ease-in-out;
+
+                            &:hover {
+                                background-color: $darkpurple;
+                            }
                         }
                     }
                 }
@@ -93,60 +97,45 @@ $darkpurple: #814fff;
 
             .stats {
                 display: flex;
-                flex-direction: row;
-                justify-content: space-between;
+                // justify-content: space-between;
                 padding: 1.5rem 0;
                 // margin: 2rem 0;
                 gap: 1rem;
 
-                @media (min-width: 900px) {
-                    flex-direction: row;
-                }
-
                 .stat {
-                    background-color: $div-background-color;
-                    border: 1px solid $highlight-color;
-                    padding: 0.5rem;
-                    border-radius: 14px;
-                    margin-bottom: 1rem;
-                    flex: 1;
+                    background-color: #222222;
+                    // border: 1px solid $highlight-color;
+                    // box-shadow: 0 0 10px 0 $grey;
+                    padding: 1rem;
+                    border-radius: 0.75rem;
+                    margin-bottom: 0;
+                    width: 10rem;
 
-                    @media (min-width: 900px) {
-                        margin-bottom: 0;
-                        padding: 1rem;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.25rem;
+
+                    @media (max-width: 900px) {
+                        width: fit-content;
                     }
 
                     h3 {
-                        font-size: 1rem;
-                        margin-bottom: 10px;
+                        font-size: 1.5rem;
 
-                        @media (min-width: 900px) {
-                            font-size: 1.5rem;
+                        @media (max-width: 900px) {
+                            font-size: 1rem;
                         }
                     }
 
                     p {
-                        font-size: 14px;
+                        font-size: 1rem;
                         color: $stat-text-color;
 
-                        @media (min-width: 900px) {
-                            font-size: 16px;
+                        @media (max-width: 900px) {
+                            font-size: 0.75rem;
                         }
                     }
                 }
-            }
-        }
-
-        .image {
-            width: 100%;
-
-            @media (min-width: 900px) {
-                width: 50%;
-            }
-
-            img {
-                max-width: 100%;
-                height: auto;
             }
         }
 
@@ -155,42 +144,36 @@ $darkpurple: #814fff;
             flex-direction: row;
             justify-content: center;
             align-items: center;
-            gap: 0.5rem;
-
-            @media (min-width: 900px) {
-                gap: 1.75rem;
+            gap: 1.75rem;
+            
+            @media (max-width: 900px) {
+                gap: 1rem;
+                flex-wrap: wrap;
             }
 
             .home-main-logo {
-                width: 80px;
-                height: 80px;
+                width: 10rem;
+                height: 10rem;
                 border-radius: 50%;
                 display: flex;
                 flex-direction: column;
-                background: none;
-                border: 1px solid $highlight-color;
-                box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
                 align-items: center;
                 justify-content: center;
-
-
+                border: 1px solid $highlight-color;
+                box-shadow: 0px 0px 20px rgba(120, 120, 120, 0.1);
 
                 img {
-                    width: 60%;
-                    height: 60%;
+                    width: 70%;
+                    // height: 60%;
                 }
 
-
-
-                @media (min-width: 900px) {
-                    margin: 1.75rem;
-                    width: 150px;
-                    height: 150px;
+                @media (max-width: 900px) {
+                    width: 5rem;
+                    height: 5rem;
                 }
-
             }
 
-            .app__header-circles {
+            .other-logos {
                 display: flex;
                 flex-direction: row;
                 justify-content: center;
@@ -207,13 +190,13 @@ $darkpurple: #814fff;
                     align-items: flex-start;
                     height: 100%;
                     margin-left: 0rem;
-                    margin-top: -2rem;
+                    margin-top: -1rem;
                     margin-right: 3rem;
                 }
 
                 .circle-cmp {
-                    width: 80px;
-                    height: 80px;
+                    width: 5rem;
+                    height: 5rem;
                     border-radius: 50%;
                     display: flex;
                     flex-direction: column;
@@ -224,8 +207,8 @@ $darkpurple: #814fff;
                     justify-content: center;
 
                     @media (min-width: 900px) {
-                        width: 100px;
-                        height: 100px;
+                        width: 6rem;
+                        height: 6rem;
                     }
 
                     img {
@@ -240,9 +223,8 @@ $darkpurple: #814fff;
 
                 @media screen and (max-width: 900px) {
                     div:nth-child(2) {
-                        margin: 0.5rem;
+                        margin: 1rem;
                     }
-
                 }
             }
         }
@@ -250,24 +232,18 @@ $darkpurple: #814fff;
 
     .features {
         display: flex;
-        flex-direction: column;
         justify-content: center;
-        gap: 2rem;
-        max-width: 90%;
-        margin: 2rem auto;
+        gap: 1rem;
+        padding: 2rem;
         flex-wrap: wrap;
 
-        @media (min-width: 900px) {
-            flex-direction: row;
-        }
 
         .feature {
-            flex: 1;
-            padding: 2.5rem 1rem;
-            background-color: $div-background-color;
+            width: 24rem;
+            padding: 1.5rem;
             text-align: center;
             border: 1px solid $highlight-color;
-            border-radius: 15px;
+            border-radius: 1rem;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -276,36 +252,41 @@ $darkpurple: #814fff;
 
             h4 {
                 font-size: 18px;
-                color: $primary-color;
+                color: $purple;
             }
 
             img {
                 padding: 2rem;
                 width: 100%;
                 max-width: 150px;
+
+                @media (max-width: 900px) {
+                    padding: 1rem;
+                    max-width: 120px;
+                }
             }
 
             p {
-                color: $text-color;
+                color: white;
                 text-align: justify;
+                font-weight: 500;
             }
         }
     }
 
     .project-images {
-        max-width: 95%;
-        margin: 2rem auto;
+        padding: 2rem;
+        margin-top: 4rem;
 
         .grid-container {
             display: grid;
             grid-template-columns: 1fr;
             gap: 20px;
-            padding: 20px;
             text-align: center;
 
             .heading {
                 font-size: 2rem;
-                margin-bottom: 20px;
+                margin-bottom: 1.25rem;
                 color: white;
             }
 
@@ -313,19 +294,17 @@ $darkpurple: #814fff;
             .image-grid {
                 display: grid;
                 grid-template-columns: repeat(2, 1fr);
-                gap: 20px;
+                gap: 1.5rem;
 
                 img {
                     width: 100%;
                     height: auto;
                     object-fit: cover;
-                    border-radius: 8px;
-                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                    border-radius: 0.5rem;
                 }
 
                 @media screen and (max-width: 900px) {
                     grid-template-columns: 1fr;
-
                 }
             }
 
@@ -334,56 +313,50 @@ $darkpurple: #814fff;
 
 
     .faq-section {
-        max-width: 95%;
-        margin: 2rem auto;
-        gap: 10px;
+        padding: 2rem;
 
         h3 {
-            margin-bottom: 1.3rem;
+            margin-bottom: 1.5rem;
             font-size: 2rem;
             text-align: center;
-        }
 
-        @media screen and (max-width:900px) {
-            h3 {
+            @media screen and (max-width:900px) {
                 font-size: 1.5rem;
             }
         }
 
+
         .faq-item {
-            border: 1px solid #333;
-            border-radius: 5px;
-            margin-bottom: 1.3rem;
-            overflow: hidden;
+            margin-bottom: 1rem;
 
             .faq-question {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                cursor: pointer;
+                gap: 0.5rem;
                 padding: 1rem;
-                background: #222;
+                border-radius: 0.5rem 0.5rem 0 0;
+                background: #222222;
+                cursor: pointer;
 
                 h4 {
-                    font-size: 18px;
+                    font-size: 1.2rem;
                     font-weight: 600;
                 }
 
                 .faq-icon {
-                    font-size: 18px;
-                    color: #fff;
-
-                    // padding: 0.5rem;
-
-
+                    font-size: 1rem;
+                    color: white;
+                    min-width: fit-content;
                 }
             }
 
             .faq-answer {
                 overflow: hidden;
                 max-height: 0;
-                transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+                transition: max-height 0.2s ease-in-out, padding 0.2s ease-in-out;
                 padding: 0rem 1rem;
+                border-radius: 0 0 0.5rem 0.5rem;
 
                 &.show {
                     padding: 1.3rem 1rem;

@@ -1,21 +1,30 @@
+$grey: #333333;
+$purple: #703BF7;
+$darkpurple: #814fff;
+
 .footer {
-    background-color: rgb(26, 26, 26);
-    // border: 1px solid #333;
     display: flex;
     justify-content: space-between;
-    padding: 1.5rem 1.5rem;
-    color: #fff;
     align-items: center;
-    flex-direction: row;
+    padding: 0.5rem 1rem;
+    color: #fff;
 
-    .logo {
-        cursor: pointer;
-    }
-
-    .footer-copyrights {
+    .footer-brand {
         display: flex;
-        justify-content: space-between;
+        flex-direction: column;
         align-items: center;
-        gap: 1rem;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.1rem;
+
+        img {
+            height: 2rem;
+            width: 2rem;
+            object-fit: contain;
+        }
+
+        .purple {
+            color: $purple;
+        }
     }
 }

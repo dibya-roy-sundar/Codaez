@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { FaPlus, FaMinus } from 'react-icons/fa';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { removeAuth } from '../../redux/authReducer';
@@ -25,7 +25,6 @@ import Contest from '../../assets/Contest.jpeg';
 
 const Landing = () => {
     const dispatch = useDispatch();
-    const navigate = useNavigate();
     const user = useSelector(state => state.auth.auth); // Get user from Redux state
 
     const handleLogout = async () => {
@@ -34,7 +33,6 @@ const Landing = () => {
             if (data.data) {
                 toast.success("Logged Out!", { position: "top-right" });
                 dispatch(removeAuth());
-                navigate('/');
             } else {
                 toast.error(data.error, { position: "top-right" });
             }
@@ -44,11 +42,9 @@ const Landing = () => {
     };
 
     const features = [
-        {
-            id: 1, icon: leaderboardgif, text: 'Compete and collaborate with your friends on the leaderboard. Track each other’s progress, challenge your coding skills, and celebrate victories together! having fun while learning is the best way to grow.'
-        },
-        { id: 2, icon: followgif, text: 'Connect with fellow programmers by following them. Stay updated on their activities and learn from their coding journeys. Share insights to enhance your collective growth.' },
-        { id: 3, icon: comparisongif, text: 'Utilize powerful self-analysis tools to evaluate your performance across platforms. Identify strengths, pinpoint areas for improvement, and create a personalized learning path for success.' },
+        { id: 1, icon: leaderboardgif, text: 'Collaborate with friends on the leaderboard. Track each other\'s progress, challenge your skills, and celebrate victories together!' },
+        { id: 2, icon: comparisongif, text: 'Self-analysis tools help you evaluate your performance across platforms. Upskill by identifying your inflections for improvement.' },
+        { id: 3, icon: followgif, text: 'Connect with fellow programmers by following them. Stay updated on their activities and learn from their coding journeys.' },
     ];
 
     const images = [
@@ -58,10 +54,13 @@ const Landing = () => {
         { src: Contest, alt: 'Contest', title: 'Prepare to Compete, Unleash Your Potential!' }
     ];
 
-    const handleBrowseClick = () => {
-        user ? navigate('/dashboard') : navigate('/auth');
-    };
-
+    const faqs = [
+        { question: 'Codaez, what\'s that?? Sounds fun!! ', answer: 'Codaez is a platform for coders to connect, compete, and grow together.' },
+        { question: 'How can I contact support?', answer: 'You can contact support via our contact us page.' },
+        { question: 'What features do you offer?', answer: 'We offer leaderboards, following features, and self-analysis tools.' },
+        { question: 'How do I create a profile?', answer: 'You can create a profile by signing up and completing your details.' },
+        { question: 'How do you evaluate the standings on the Leaderboard?', answer: 'You ' },
+    ];
 
 
     const FAQ = ({ faqs }) => {
@@ -86,16 +85,6 @@ const Landing = () => {
         );
     };
 
-    const faqs = [
-        { question: 'What is CodeHub?', answer: 'CodeHub is a platform for coders to connect, compete, and grow together.' },
-        { question: 'How can I contact support?', answer: 'You can contact support via our contact us page.' },
-        { question: 'What features do you offer?', answer: 'We offer leaderboards, following features, and self-analysis tools.' },
-        { question: 'How do I create a profile?', answer: 'You can create a profile by signing up and completing your details.' }
-    ];
-    const handleMoreClick = () => {
-        user ? navigate('/leaderboard') : navigate('/auth');
-    };
-
     return (
         <div className="landing">
             <HomeNavbar user={user} handleLogout={handleLogout} />
@@ -106,34 +95,34 @@ const Landing = () => {
                         <h1>Analyze, Improve, Dominate Together</h1>
                         <p>Next-Level Analysis + Next-Level Community = Next-Level You</p>
                         <div className="buttons">
-                            <button className="btn learn-more" onClick={handleMoreClick}>Peak Performers</button>
-                            <button className="btn browse-properties" onClick={handleBrowseClick}>Self-Analysis</button>
+                            <Link to={'/leaderboard'}>
+                                <button className="btn learn-more">Peak Performers</button>
+                            </Link>
+                            <Link to={'/dashboard'}>
+                                <button className="btn browse-properties">Self-Analysis</button>
+                            </Link>
                         </div>
                     </div>
-                    <section className="stats">
+                    <div className="stats">
                         <div className="stat"><h3>200+</h3><p>Total Visitors</p></div>
-                        <div className="stat"><h3>10k+</h3><p>Profiles Available</p></div>
-                        <div className="stat"><h3>3</h3><p>Supported Platforms</p></div>
-                    </section>
-
+                        <div className="stat"><h3>10K+</h3><p>Profiles Available</p></div>
+                        <div className="stat"><h3>3</h3><p>Platforms</p></div>
+                    </div>
                 </div>
 
                 <div className='home-logos' >
                     <div className='home-main-logo'>
                         <img src={codeaz} alt="" />
                     </div>
-                    <div className="app__header-circles">
+                    <div className="other-logos">
                         {[codechefIcon, codeforcesIcon, leetcodeIcon]
                             .map((circle, index) => (
-                                <div className="circle-cmp app__flex" key={`circle-${index}`}>
+                                <div className="circle-cmp app__flex" key={index}>
                                     <img src={circle} alt="platform_icons" />
                                 </div>
                             ))}
                     </div>
-
                 </div>
-
-
             </section>
 
             <section className="features">
@@ -147,7 +136,7 @@ const Landing = () => {
 
             <section className='project-images'>
                 <div className='grid-container'>
-                    <h2 className='heading'>Project Highlights</h2>
+                    <h2 className='heading'>Take a Peek Inside</h2>
                     <div className='image-grid'>
                         {images.map((image, index) => (
                             <ImageCard key={index} image={image} />
