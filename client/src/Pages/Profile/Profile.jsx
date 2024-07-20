@@ -138,7 +138,7 @@ const Profile = () => {
                 });
             }
         } catch (error) {
-            toast.error(error.message || "something went wrong!", {
+            toast.error(error.message || "Something went wrong!", {
                 position: "top-right"
             });
         } finally {
@@ -260,16 +260,14 @@ const Profile = () => {
         changeusernameref.current.closeModal();
     }
 
-    const openFollowModal = () => {
+    const [openFollow,setOpenFollow]=useState(0);
+    const openFollowModal = (x) => {
+        setOpenFollow(x);
         followRef.current.openModal();
     }
 
     const closeFollowModal = () => {
         followRef.current.closeModal();
-    }
-
-    const navigateCurrURL = () => {
-        navigate(location.pathname);
     }
 
 
@@ -280,7 +278,7 @@ const Profile = () => {
                 <div className="profileContainer" >
                     <ChangePw setReload={setFollowReload} handleClose={closepwModal} changePwRef={changepwref} user={user} />
                     <Changeuname setReload={setFollowReload} handleClose={closeChangeUsernameModal} changeUnameRef={changeusernameref} />
-                    {ownprofile && <Follow reload={followReload} handleClose={closeFollowModal} followRef={followRef} />}
+                    {ownprofile && <Follow reload={followReload} handleClose={closeFollowModal} followRef={followRef} openFollow={openFollow} setOpenFollow={setOpenFollow}/>}
                     <div className="usercard" >
                         <div className="top">
                             <div className="user-Img-Name">
@@ -309,15 +307,14 @@ const Profile = () => {
                                     </div>
                                     <div className="follow">
                                         <div className="follower">
-                                            <div className="element">
-                                                <span onClick={ownprofile ? openFollowModal : navigateCurrURL}>{user?.follower?.length}</span>
+                                            <div className="element" onClick={ownprofile ?()=> openFollowModal(0) : null}>
+                                                <span onClick={ownprofile ? openFollowModal : null}>{user?.follower?.length}</span>
                                                 <p>Followers</p>
                                             </div>
                                         </div>
                                         <div className="followings">
-                                            <div className="element">
-
-                                                <span onClick={ownprofile ? openFollowModal : navigateCurrURL}>{user?.following?.length}</span>
+                                            <div className="element" onClick={ownprofile ?()=> openFollowModal(1) : null}>
+                                                <span>{user?.following?.length}</span>
                                                 <p>Followings</p>
                                             </div>
                                         </div>
@@ -443,7 +440,7 @@ const Profile = () => {
                                                                     size={16}
                                                                     speedMultiplier={1}
                                                                 />
-                                                                Saving...
+                                                                Saving
                                                             </span>
                                                             : <>
                                                                 <FaFloppyDisk />
@@ -485,7 +482,6 @@ const Profile = () => {
                                     <Labelinput
                                         edit={edit}
                                         icon={<FaEnvelope />}
-                                        style={{ paddingRight: "1.5rem" }}
                                         name={"email"}
                                         label={"Email"}
                                         value={formdata.email}
@@ -496,7 +492,6 @@ const Profile = () => {
                                         edit={edit}
                                         icon={<FaGraduationCap />}
                                         name={"college"}
-                                        style={{ paddingRight: "1.5rem" }}
                                         onChange={changeFormdata}
                                         label={"College"}
                                         value={formdata.college}
@@ -538,7 +533,6 @@ const Profile = () => {
                                         name={"linkedin"}
                                         onChange={changeFormdata}
                                         label={"LinkedIn"}
-                                        style={{ paddingRight: "1.5rem" }}
                                         value={formdata?.linkedin}
                                     />
                                     <Labelinput
@@ -547,7 +541,6 @@ const Profile = () => {
                                         name={"github"}
                                         onChange={changeFormdata}
                                         label={"GitHub"}
-                                        style={{ paddingRight: "1.5rem" }}
                                         value={formdata.github}
                                     />
                                     <Labelinput
