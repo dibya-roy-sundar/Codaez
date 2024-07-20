@@ -23,6 +23,7 @@ import flags from '../../assets/flaticon/flags.gif'
 import favourite from '../../assets/flaticon/favourite.gif'
 import chart from '../../assets/flaticon/chart.gif'
 import upcoming from '../../assets/flaticon/upcoming.gif'
+import Loader from '../../components/Loader/Loader';
 
 const Dashboard = () => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -98,9 +99,9 @@ const Dashboard = () => {
     return (
         <div className="dashboard">
             {error
-                ? "error"
+                ? "Something went wrong!"
                 : loading
-                    ? "loading"
+                    ? <Loader />
                     : <div className="section">
                         <div className='buttonWrapper'>
                             <div className={`platformBtn ${activePlatform === 'cf' ? 'activePlatform' : ''}`} onClick={() => setActivePlatform('cf')}>

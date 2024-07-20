@@ -11,6 +11,7 @@ import { FaTrophy } from "react-icons/fa";
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import codaez from '../../assets/codaez.png'
+import Loader from '../../components/Loader/Loader';
 
 let list = []
 const Leaderboard = () => {
@@ -61,9 +62,9 @@ const Leaderboard = () => {
     return (
         <div className="leaderboard">
             {error
-                ? "error"
+                ? "Something went wrong!"
                 : loading
-                    ? "loading"
+                    ? <Loader />
                     : <>
                         <div className="top">
                             {list && list[1] &&
