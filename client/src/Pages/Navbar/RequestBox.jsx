@@ -154,7 +154,13 @@ const RequestBox = () => {
                           handleacceptFrequest(f._id);
                         }
                     }
-                    className="accept"
+                    className={acceptfr
+                      ? (follow && f.isfollowing)
+                        ? "following"
+                        : sendfr
+                          ? "requested"
+                          : "follow_back"
+                      : "accept"}
                   >
                     {acceptfr
                       ? (follow && f.isfollowing)
