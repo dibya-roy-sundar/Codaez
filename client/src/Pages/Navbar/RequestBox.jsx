@@ -8,6 +8,7 @@ import useFetch from "../../hooks/useFetch";
 import usePostFetch from "../../hooks/usePostFetch";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import ContentLoader from "react-content-loader"
 
 const RequestBox = () => {
   const [reload, setReload] = useState(0);
@@ -115,7 +116,20 @@ const RequestBox = () => {
         {error ? (
           "error"
         ) : loading ? (
-          "loading"
+          <div className="skeleton">
+            <ContentLoader
+              speed={1}
+              width={288}
+              height={35}
+              viewBox="0 0 288 35"
+              backgroundColor="#222222"
+              foregroundColor="#333333"
+            >
+              <rect x="48" y="8" rx="3" ry="3" width="160" height="6" />
+              <rect x="49" y="20" rx="3" ry="3" width="120" height="6" />
+              <circle cx="26" cy="17" r="17" />
+            </ContentLoader>
+          </div>
         ) : data?.frequests?.length > 0 ? (
           data?.frequests?.map((f) => {
             return (

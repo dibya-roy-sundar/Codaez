@@ -64,7 +64,7 @@ $darkpurple: #814fff;
             display: flex;
             gap: 0.25rem;
 
-            .accept {
+            .accept, .following {
                 padding: 0.25rem 0.5rem;
                 background: $purple;
                 border-radius: 0.25rem;
@@ -97,6 +97,25 @@ $darkpurple: #814fff;
                     background-color: #3c3944;
                 }
 
+            }
+
+            .requested,.follow_back{
+                padding: 0.2rem 0.45rem;
+                background: transparent;
+                color: $purple;
+                border-radius: 0.25rem;
+                border: 2px solid $purple;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 0.9rem;
+                font-weight: 600;
+                transition: all 0.2s ease-in-out;
+                cursor: pointer;
+
+                &:hover {
+                    background-color: transparent;
+                }
             }
         }
 
