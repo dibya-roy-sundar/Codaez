@@ -221,7 +221,7 @@ module.exports.getCodechefData = async (username) => {
             const string=problems[3];
             const totalProblemSolved = parseInt(string.split(':')[1].trim());
         const result = {
-            username: document.querySelector('.user-details-container')?.children[0]?.children[1]?.textContent || username,
+            username: document.querySelector('.user-details-container')?.children[1]?.children[0]?.children[0]?.children[1]?.children[1]?.textContent || username,
             rating: parseInt(document.querySelector(".rating-number")?.textContent) || false,
             maxRating: parseInt(document.querySelector(".rating-number")?.parentNode?.children[4]?.textContent?.split('Rating')[1])|| false,
             rank: parseInt(document.querySelector('.rating-ranks')?.children[0]?.children[0]?.children[0]?.children[0]?.innerHTML)|| false,
