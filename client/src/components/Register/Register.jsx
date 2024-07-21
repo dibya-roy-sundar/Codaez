@@ -23,7 +23,7 @@ const Register = () => {
 
 
     const googleAuth = () => {
-        window.open("http://localhost:3000/api/v1/auth/google",
+        window.open(`${import.meta.env.API_URL}auth/google`,
             '_self'
         )
     }
