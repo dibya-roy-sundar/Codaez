@@ -7,7 +7,7 @@ const {
 const { cloudinary } = require("../cloudinary/index.js");
 const Otp = require("../models/Otp.js");
 const UpContest = require("../models/UpContest.js");
-const FRequest = require("../models/frequests.js");
+const FRequest = require("../models/fRequests.js");
 const User = require("../models/user.js");
 const { transporter } = require("../utils/Mailer.js");
 const ApiFeatures = require("../utils/apiFeatures.js");
