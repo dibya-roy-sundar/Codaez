@@ -6,6 +6,7 @@ const sendjwtToken = (user, statusCode, res) => {
             Date.now() + 7 * 24 * 60 * 60 * 1000
         ),
         httpOnly: true,
+        secure: process.env.NODE_ENV === 'production', // Set to true in production
         sameSite: 'None'
     }
 
