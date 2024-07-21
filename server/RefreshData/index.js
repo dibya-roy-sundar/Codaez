@@ -144,7 +144,7 @@ module.exports.getLeetcodeData = async (username) => {
                 console.log(data.errors);
                 return {
                     success:false,
-                    error:"leetcode username not found",
+                    error:"LeetCode username not found or Server Unresponsive",
                 };
             }else{
 
@@ -239,7 +239,7 @@ module.exports.getCodechefData = async (username) => {
         console.log("error while fetching codechef data");
         return {
             success:false,
-            error:"codechef username not found",
+            error:"CodeChef username not found or Server Unresponsive",
         }
         // return next(new ErrorHand("error while fetching codechef data",500));
     }

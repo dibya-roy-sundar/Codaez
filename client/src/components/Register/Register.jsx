@@ -6,6 +6,8 @@ import './Register.scss'
 import { toast } from 'react-toastify';
 import usePostFetch from '../../hooks/usePostFetch';
 import { ClipLoader } from 'react-spinners';
+import { motion } from 'framer-motion';
+import google from '../../assets/google.png'
 
 
 const Register = () => {
@@ -73,7 +75,11 @@ const Register = () => {
 
 
     return (
-        <div className="login-container">
+        <motion.div className="login-container"
+            initial={{ x: 200, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.35 }}
+        >
             <form className="login-form" onSubmit={(e) => { handleOtpSent(e) }}>
                 <h2>Register</h2>
                 <div className="input-wrap">
@@ -97,18 +103,15 @@ const Register = () => {
                 </>
                     : "Register"}</button>
                 <div className="google-button">
-
+                    <span>OR</span>
                     <div className='google-btn-image' onClick={googleAuth}>
-                        <FaGoogle />
-                    </div>
-                    <div>
-                        <span>Register with Google</span>
+                        <img src={google} alt="" />
                     </div>
                 </div>
             </form>
 
             {otpOpen && <OTPVerification email={registerUserCredentials.email} password={registerUserCredentials.password} resend={handleOtpSent} isOpen={otpOpen} onClose={setOtpOpen} />}
-        </div>
+        </motion.div>
     )
 }
 export default Register;

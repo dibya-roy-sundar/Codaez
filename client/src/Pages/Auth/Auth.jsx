@@ -3,28 +3,28 @@ import './Auth.scss';
 import Login from '../../components/Login/Login';
 import Register from '../../components/Register/Register';
 import { useLocation } from 'react-router-dom';
-import {toast} from "react-toastify"
+import { toast } from "react-toastify"
 
 const Auth = () => {
-    const location=useLocation();
-    
-    
+    const location = useLocation();
 
-    useEffect(()=>{
-        const state=location.state ;
-       
-        if ( state &&  Object.keys(state).length>0 && state.showToastify ) {
+
+
+    useEffect(() => {
+        const state = location.state;
+
+        if (state && Object.keys(state).length > 0 && state.showToastify) {
             toast.error("You must be logged in first", {
-              position: "top-right",
+                position: "top-right",
             });
-            state.showToastify=false;
-          }
-          
-    },[location])
-  
+            state.showToastify = false;
+        }
+
+    }, [location])
+
 
     const [isLoginMode, setIsLoginMode] = useState(true);
-    
+
 
     const toggleMode = () => {
         setIsLoginMode(prevMode => !prevMode);
@@ -33,9 +33,13 @@ const Auth = () => {
     return (
         <div className="auth">
             {/* Toggle Button */}
-            <div className="toggle-container">
-                <input type="checkbox" id="reg-log" name="reg-log" className="checkbox" onChange={toggleMode} />
-                <label htmlFor="reg-log"></label>
+            <div className="toggle">
+                <span>Login</span>
+                <div className="toggle-container">
+                    <input type="checkbox" id="reg-log" name="reg-log" className="checkbox" onChange={toggleMode} />
+                    <label htmlFor="reg-log"></label>
+                </div>
+                <span>Register</span>
             </div>
             {/* Login or Register Component based on toggle state */}
             {isLoginMode ? (

@@ -9,6 +9,8 @@ import { setAuth } from '../../redux/authReducer';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { ClipLoader } from "react-spinners";
+import { motion } from 'framer-motion';
+import google from '../../assets/google.png'
 
 const Login = () => {
     const dispatch = useDispatch();
@@ -71,12 +73,16 @@ const Login = () => {
     }
 
     return (
-        <div className="login-container">
+        <motion.div className="login-container"
+            initial={{ x: -200, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.35 }}
+        >
             <form className="login-form" onSubmit={(e) => handleLoginSubmit(e)}>
                 <h2>Login</h2>
                 <div className="input-wrap">
                     <input type="text" id="userDetails" name='userDetails' value={loginUserCredentials.userDetails} placeholder='' onChange={(e) => handleLoginChange(e)} />
-                    <label htmlFor="userDetails">Email or Username </label>
+                    <label htmlFor="userDetails">Username or Email </label>
                 </div>
                 <div className="input-wrap">
                     <input type={passwordVisible ? "text" : "password"} id="password" name='password' value={loginUserCredentials.password} placeholder='' onChange={(e) => handleLoginChange(e)} />
@@ -94,18 +100,15 @@ const Login = () => {
                     />
                     : "Login"}</button>
                 <div className="google-button">
-
+                        <span>OR</span>
                     <div className='google-btn-image' onClick={googleAuth}>
-                        <FaGoogle />
-                    </div>
-                    <div>
-                        <span>Login with Google</span>
+                        <img src={google} alt="" />
                     </div>
                 </div>
             </form>
 
 
-        </div>
+        </motion.div>
     );
 };
 

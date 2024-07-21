@@ -1,7 +1,5 @@
 // Variables
 $input-background: rgb(25, 25, 25);
-$button-background: #555555;
-$google-button-background: #db4437;
 $label-color: rgb(82, 82, 82);
 $grey: #333333;
 $purple: #703BF7;
@@ -11,7 +9,7 @@ $darkpurple: #814fff;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 89vh;
     flex-direction: column;
     max-width: 500px;
     margin: 0 auto;
@@ -45,7 +43,7 @@ $darkpurple: #814fff;
 
                 &:focus {
                     outline: none;
-                    border: 2px solid $darkpurple;
+                    border: 2px solid $purple;
                 }
 
                 &:focus+label,
@@ -58,6 +56,7 @@ $darkpurple: #814fff;
                     padding: 0px 5px;
                     z-index: 1;
                     border-radius: 5px;
+                    color: $purple;
                 }
             }
 
@@ -92,47 +91,47 @@ $darkpurple: #814fff;
         .login-button {
             width: 100%;
             padding: 0.5rem;
-            background: $darkpurple;
+            background: $purple;
             border: none;
             border-radius: 4px;
             color: white;
             cursor: pointer;
             margin-bottom: 1rem;
             font-size: 1.2rem;
+            font-weight: 600;
+            transition: all 0.2s ease-in-out;
+
+            &:hover{
+                background-color: $darkpurple;
+            }
         }
 
         .google-button {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 100%;
             flex-direction: column;
-            padding: 0.5rem;
-            cursor: pointer;
             margin-bottom: 1rem;
-            font-size: 1.2rem;
+            gap: 0.5rem;
 
             .google-btn-image {
-                background: $google-button-background;
-                border: 1px solid $grey;
+                border: 1px solid rgb(173, 173, 173);
                 border-radius: 50%;
+                cursor: pointer;
                 padding: 0.5rem;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                margin-bottom: 0.5rem;
+                height: 2.5rem;
+                width: 2.5rem;
 
-                svg {
-                    color: white;
-                    display: block;
+                img {
+                    height: 100%;
+                    width: 100%;
                 }
             }
 
-            div {
-                span {
-                    font-size: 1rem;
-                    color: white;
-                }
+            span {
+                font-size: 0.75rem;
+                color: white;
+                color: $purple;
             }
         }
     }

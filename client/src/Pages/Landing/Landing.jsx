@@ -8,6 +8,7 @@ import { makeRequest } from '../../hooks/makeRequest';
 import ImageCard from './ImageCarousel';
 import Footer from '../../components/Footer/Footer';
 import './Landing.scss';
+import { motion } from 'framer-motion';
 
 // Import images
 import DashboardImg from '../../assets/Dashboard.jpeg';
@@ -49,8 +50,8 @@ const Landing = () => {
 
     const images = [
         { src: DashboardImg, alt: 'Dashboard', title: 'Navigate Your Success, One Insight at a Time' },
-        { src: ProfileImg, alt: 'Profile', title: 'Showcase Your Journey, Inspire Your Network' },
         { src: LeaderboardImg, alt: 'Leaderboard', title: 'Rise to the Top, Celebrate Your Success!' },
+        { src: ProfileImg, alt: 'Profile', title: 'Showcase Your Journey, Inspire Your Network' },
         { src: Contest, alt: 'Contest', title: 'Prepare to Compete, Unleash Your Potential!' }
     ];
 
@@ -104,22 +105,42 @@ const Landing = () => {
                         </div>
                     </div>
                     <div className="stats">
-                        <div className="stat"><h3>200+</h3><p>Total Visitors</p></div>
-                        <div className="stat"><h3>10K+</h3><p>Profiles Available</p></div>
-                        <div className="stat"><h3>3</h3><p>Platforms</p></div>
+                        <div className="stat"><motion.h3
+                            initial={{ x: 20 }}
+                            whileInView={{ x: 0 }}
+                            transition={{ duration: 0.5 }}
+                        >200+</motion.h3><p>Total Visitors</p></div>
+                        <div className="stat"><motion.h3
+                            initial={{ x: 20 }}
+                            whileInView={{ x: 0 }}
+                            transition={{ duration: 0.5 }}
+                        >10K+</motion.h3><p>Profiles Available</p></div>
+                        <div className="stat"><motion.h3
+                            initial={{ x: 20 }}
+                            whileInView={{ x: 0 }}
+                            transition={{ duration: 0.5 }}
+                        >3</motion.h3><p>Platforms</p></div>
                     </div>
                 </div>
 
                 <div className='home-logos' >
-                    <div className='home-main-logo'>
+                    <motion.div className='home-main-logo'
+                        initial={{ scale: 0, x: 15 }}
+                        whileInView={{ scale: 1, x: 0 }}
+                        transition={{ duration: 0.5 }}
+                    >
                         <img src={codeaz} alt="" />
-                    </div>
+                    </motion.div>
                     <div className="other-logos">
                         {[codechefIcon, codeforcesIcon, leetcodeIcon]
                             .map((circle, index) => (
-                                <div className="circle-cmp app__flex" key={index}>
+                                <motion.div className="circle-cmp app__flex" key={index}
+                                    initial={{ scale: 0, x: 15 }}
+                                    whileInView={{ scale: 1, x: 0 }}
+                                    transition={{ duration: 0.5 }}
+                                >
                                     <img src={circle} alt="platform_icons" />
-                                </div>
+                                </motion.div>
                             ))}
                     </div>
                 </div>
@@ -127,10 +148,14 @@ const Landing = () => {
 
             <section className="features">
                 {features.map(feature => (
-                    <div key={feature.id} className="feature">
+                    <motion.div key={feature.id} className="feature"
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.5 }}
+                    >
                         <img src={feature.icon} alt='' />
                         <p>{feature.text}</p>
-                    </div>
+                    </motion.div>
                 ))}
             </section>
 
@@ -139,7 +164,7 @@ const Landing = () => {
                     <h2 className='heading'>Take a Peek Inside</h2>
                     <div className='image-grid'>
                         {images.map((image, index) => (
-                            <ImageCard key={index} image={image} />
+                            <ImageCard key={index} image={image} index={index} />
                         ))}
                     </div>
                 </div>
