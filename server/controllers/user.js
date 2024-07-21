@@ -22,9 +22,9 @@ const otpGenerator = require('otp-generator')
 /////////////////// Auth ////////////////////////
 
 module.exports.register = async (req, res, next) => {
-    const { email, password,otp } = req.body;
+    const { email, password, otp } = req.body;
 
-    if (!(email || password ||otp)) {
+    if (!(email || password || otp)) {
         return next(new ErrorHand("All fields are  required", 400));
     }
 
@@ -36,11 +36,11 @@ module.exports.register = async (req, res, next) => {
 
     const isMatch = await bcrypt.compare(otp, record.otp);
 
-    if(!isMatch){
+    if (!isMatch) {
         return next(new ErrorHand("Invalid  OTP", 401));
     }
 
-    await Otp.deleteOne({ _id: record._id }); 
+    await Otp.deleteOne({ _id: record._id });
 
 
     //  email-checked , otp-verified
@@ -55,10 +55,10 @@ module.exports.register = async (req, res, next) => {
     sendjwtToken(user, 201, res);
 };
 
-module.exports.sendOtp=async (req,res,next) =>{
-    const {email}=req.body;
+module.exports.sendOtp = async (req, res, next) => {
+    const { email } = req.body;
 
-    
+
     const foundUser = await User.findOne({ email });
 
     if (foundUser) {
@@ -68,10 +68,10 @@ module.exports.sendOtp=async (req,res,next) =>{
         });
     }
 
-    
 
 
-    const otp=otpGenerator.generate(4, {lowerCaseAlphabets:false, upperCaseAlphabets: false, specialChars: false });
+
+    const otp = otpGenerator.generate(4, { lowerCaseAlphabets: false, upperCaseAlphabets: false, specialChars: false });
     const expiresAt = new Date(Date.now() + process.env.OTP_EXPIRY * 1000);
 
     await Otp.deleteMany({ email }); //delete all previously generated otp - if user resend otp
@@ -80,24 +80,24 @@ module.exports.sendOtp=async (req,res,next) =>{
 
     try {
         await transporter.sendMail({
-          from: process.env.SMTP_USER, // sender address
-          to: email, // recipient address
-          subject: `Your OTP Code is ${otp}`, // subject line
-          html:MailTemplate(otp)  
+            from: process.env.SMTP_USER, // sender address
+            to: email, // recipient address
+            subject: `Your OTP Code is ${otp}`, // subject line
+            html: MailTemplate(otp)
         });
         res.status(200).json({
-            success:true,
-            message:"verification code  sent to your email"
+            success: true,
+            message: "verification code  sent to your email"
         })
         // console.log('OTP email sent');
-      } catch (error) {
+    } catch (error) {
         console.error('Error sending OTP email:', error);
         res.status(500).json({
-            success:false,
-            message:"something went wrong while sending mail"
+            success: false,
+            message: "something went wrong while sending mail"
         })
-      }
-  
+    }
+
 }
 
 module.exports.completeProfile = async (req, res, next) => {
@@ -115,44 +115,44 @@ module.exports.completeProfile = async (req, res, next) => {
 
     const availableUser = await User.findOne({ username });
     if (availableUser) {
-        return next(new ErrorHand("username is not available",400));
+        return next(new ErrorHand("username is not available", 400));
     }
 
-    let lcData,cfData,ccData;
+    let lcData, cfData, ccData;
     if (lc && lc.length > 0) {
-        const data= await getLeetcodeData(lc);
-        if(data && !data.success  && data.error){
+        const data = await getLeetcodeData(lc);
+        if (data && !data.success && data.error) {
             return res.status(404).json({
-                success:false,
-                message:data.error,
+                success: false,
+                message: data.error,
             })
         }
-        lcData=data;
+        lcData = data;
     }
     if (cf && cf.length > 0) {
-        const data= await getCodeforcesData(cf);
-        if(data && !data.success && data.error){
+        const data = await getCodeforcesData(cf);
+        if (data && !data.success && data.error) {
             return res.status(404).json({
-                success:false,
-                message:data.error,
+                success: false,
+                message: data.error,
             })
         }
-        cfData=data;
+        cfData = data;
     }
     if (cc && cc.length > 0) {
-        const data= await getCodechefData(cc);
-        if(data && !data.success && data.error){
+        const data = await getCodechefData(cc);
+        if (data && !data.success && data.error) {
             return res.status(404).json({
-                success:false,
-                message:data.error,
+                success: false,
+                message: data.error,
             })
         }
-        ccData=data;
+        ccData = data;
     }
 
     const user = await User.findByIdAndUpdate(
         req.user?._id,
-        { username, name, college, linkedin, github, twitter,lc:lcData,cf:cfData,cc:ccData },
+        { username, name, college, linkedin, github, twitter, lc: lcData, cf: cfData, cc: ccData },
         { new: true }
     );
 
@@ -166,7 +166,7 @@ module.exports.completeProfile = async (req, res, next) => {
         };
     }
 
-    
+
     user.aggregateRating = calcAggregateRating(user);
     await user.save();
 
@@ -196,6 +196,7 @@ module.exports.logout = async (req, res, next) => {
     res.cookie("token", null, {
         expires: new Date(Date.now()),
         httpOnly: true,
+        sameSite: 'None',
     });
     res.status(200).json({
         status: true,
@@ -260,34 +261,34 @@ module.exports.setUsername = async (req, res, next) => {
     ) {
         return next(new ErrorHand("username is required"));
     }
-    const lcData= await getLeetcodeData(lc?.username);
-    if(lcData && !lcData.success && lcData.error){
+    const lcData = await getLeetcodeData(lc?.username);
+    if (lcData && !lcData.success && lcData.error) {
         return res.status(404).json({
-            success:false,
-            message:lcData.error,
+            success: false,
+            message: lcData.error,
         })
     }
 
-    const cfData= await  getCodeforcesData(cf?.username);
-    if(cfData && !cfData.success && cfData.error){
+    const cfData = await getCodeforcesData(cf?.username);
+    if (cfData && !cfData.success && cfData.error) {
         return res.status(404).json({
-            success:false,
-            message:cfData.error,
+            success: false,
+            message: cfData.error,
         })
     }
 
 
-    const ccData= await  getCodechefData(cc?.username);
-    if(ccData && !ccData.success && ccData.error){
+    const ccData = await getCodechefData(cc?.username);
+    if (ccData && !ccData.success && ccData.error) {
         return res.status(404).json({
-            success:false,
-            message:ccData.error,
+            success: false,
+            message: ccData.error,
         })
     }
 
-    req.user.lc = lcData ;
+    req.user.lc = lcData;
     req.user.cf = cfData;
-    req.user.cc = ccData ;
+    req.user.cc = ccData;
 
     req.user.aggregateRating = calcAggregateRating(req.user);
 
@@ -505,7 +506,7 @@ module.exports.updateProfile = async (req, res, next) => {
         linkedin,
         github,
         twitter,
-     
+
     } = req.body;
 
 
@@ -522,57 +523,57 @@ module.exports.updateProfile = async (req, res, next) => {
         },
         { new: true }
     );
-       
-    
+
+
     if (!user.lc || user.lc?.username !== lc) {
-        if(lc.length>0){
-                
-            const data= await   getLeetcodeData(lc);
-            if(data && !data.success && data.error){
+        if (lc.length > 0) {
+
+            const data = await getLeetcodeData(lc);
+            if (data && !data.success && data.error) {
                 return res.status(404).json({
-                    success:false,
-                    error:data.error,
+                    success: false,
+                    error: data.error,
                 })
             }
             user.lc = data;
-        }else{
-            user.lc=null;
+        } else {
+            user.lc = null;
         }
-        
-        
+
+
     }
     if (!user.cf || user.cf?.username !== cf) {
-        if(cf.length>0){
+        if (cf.length > 0) {
 
-            const data= await   getCodeforcesData(cf);
-            if(data && !data.success && data.error){
+            const data = await getCodeforcesData(cf);
+            if (data && !data.success && data.error) {
                 return res.status(404).json({
-                    success:false,
-                    error:data.error,
+                    success: false,
+                    error: data.error,
                 })
             }
             user.cf = data;
-        }else{
-            user.cf=null;
+        } else {
+            user.cf = null;
         }
-       
+
     }
     if (!user.cc || user.cc?.username !== cc) {
-        if(cc.length>0){
-            const data= await   getCodechefData(cc);
-            if(data && !data.success && data.error ){
+        if (cc.length > 0) {
+            const data = await getCodechefData(cc);
+            if (data && !data.success && data.error) {
                 return res.status(404).json({
-                    success:false,
-                    error:data.error,
+                    success: false,
+                    error: data.error,
                 })
-                
-            }
-                user.cc = data;
 
-        }else{
-            user.cc=null;
+            }
+            user.cc = data;
+
+        } else {
+            user.cc = null;
         }
-       
+
     }
 
     user.aggregateRating = calcAggregateRating(user);
@@ -643,7 +644,7 @@ module.exports.changeUsername = async (req, res, next) => {
             res.status(200).json({
                 success: true,
                 msg: "unique username",
-                isnormal:username.length<=18,
+                isnormal: username.length <= 18,
             })
         }
     }
@@ -662,11 +663,11 @@ module.exports.getFollowDetails = async (req, res, next) => {
 }
 
 module.exports.dashboard = async (req, res, next) => {
-    const allContests=  await UpContest.find().sort({ startTime: 1 }); //we can't store documents in sorted manner
+    const allContests = await UpContest.find().sort({ startTime: 1 }); //we can't store documents in sorted manner
     // in mongodb but while retrieving we can sort them
-    const LcContests=allContests.filter(item => item.platform==="lc");
-    const CfContests=allContests.filter(item => item.platform==="cf");
-    const CcContests=allContests.filter(item => item.platform==="cc");
+    const LcContests = allContests.filter(item => item.platform === "lc");
+    const CfContests = allContests.filter(item => item.platform === "cf");
+    const CcContests = allContests.filter(item => item.platform === "cc");
     return res.status(200).json({
         success: true,
         user: req.user,
