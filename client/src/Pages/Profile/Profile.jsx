@@ -436,7 +436,7 @@ const Profile = () => {
                             {ownprofile && (
                                 <div className="formcontainer">
                                     <form onSubmit={handleProfileSubmit}>
-                                        <p className="groupHeading">
+                                        <div className="groupHeading">
                                             <div className="submitbutton">
                                                 {edit ? (
                                                     <div className="save">
@@ -479,7 +479,7 @@ const Profile = () => {
                                                 )}
                                             </div>
                                             User Details
-                                        </p>
+                                        </div>
                                         <div className="fieldcontainer">
                                             <Labelinput edit={edit}
                                                 icon={<FaIdCard />}

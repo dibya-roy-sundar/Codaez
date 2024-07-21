@@ -61,13 +61,12 @@ $darkpurple: #814fff;
 
             input {
                 padding: 0.35rem 0.75rem;
-                border-radius: 0.75rem;
                 border: 3px solid transparent;
                 outline: none;
                 font-size: 1rem;
                 color: white;
-                border-radius: 0.5rem;
-                background: #414141;
+                border-radius: 0.25rem;
+                background: $grey;
                 transition: all 0.2s ease-in-out;
             }
 

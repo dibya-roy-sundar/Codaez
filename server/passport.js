@@ -17,7 +17,9 @@ passport.use(
                 let isNew = !user ? true : false
 
                 if (!user) {
-                    const response = await cloudinary.uploader.upload(profile.photos[0].value)
+                    const response = await cloudinary.uploader.upload(profile.photos[0].value, {
+                        folder: 'codaez'
+                    })
                     // console.log(response);
                     const avatar = {
                         url: response.url,

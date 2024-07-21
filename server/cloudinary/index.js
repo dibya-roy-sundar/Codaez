@@ -10,7 +10,7 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
     cloudinary,
     params: {
-        folder: 'codeup',
+        folder: 'codaez',
         allowedFormats: ['jpeg', 'png', 'jpg']
     }
 })
