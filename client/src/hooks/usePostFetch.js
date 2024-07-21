@@ -8,6 +8,7 @@ const usePostFetch = async (url, bodyData,makeCall = true) => {
         const resp = await makeRequest.post(url, { ...bodyData }, {
             withCredentials: true
         })
+        console.log(resp);
         // console.log(resp)
         if (resp.data) {
             return { data: resp.data };
