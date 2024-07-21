@@ -36,34 +36,27 @@ const Login = () => {
     const [isLoginprocess, setisLoginprocess] = useState(false);
     const handleLoginSubmit = async (e) => {
         e.preventDefault();
-        console.log(1)
         if (isLoginprocess) return;
         try {
             setisLoginprocess(true);
-            console.log(2)
             const data = await usePostFetch('/login', loginUserCredentials);
-            console.log(3)
 
             if (data.data && data.data.user) {
-                console.log(4)
                 toast.success(`Welcome back, ${data.data.user.name}`, {
                     position: "top-right"
                 });
                 dispatch(setAuth(data.data.user));
                 navigate('/dashboard');
             } else if (data.data) {
-                console.log(5)
                 toast.warn(data.data.error || data.data.message, {
                     position: "top-right"
                 });
             } else {
-                console.log(6)
                 toast.error(data.error, {
                     position: "top-right"
                 });
             }
         } catch (error) {
-            console.log(7)
             toast.error(error.message || "something went wrong!", {
                 position: "top-right"
             });
@@ -74,7 +67,7 @@ const Login = () => {
 
 
     const googleAuth = () => {
-        window.open(`${import.meta.env.API_URL}auth/google`,
+        window.open(`${import.meta.env.VITE_API_URL}auth/google`,
             '_self'
         )
     }
@@ -107,7 +100,7 @@ const Login = () => {
                     />
                     : "Login"}</button>
                 <div className="google-button">
-                        <span>OR</span>
+                    <span>OR</span>
                     <div className='google-btn-image' onClick={googleAuth}>
                         <img src={google} alt="" />
                     </div>

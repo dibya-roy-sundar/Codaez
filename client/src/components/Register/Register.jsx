@@ -23,7 +23,7 @@ const Register = () => {
 
 
     const googleAuth = () => {
-        window.open(`${import.meta.env.API_URL}auth/google`,
+        window.open(`${import.meta.env.VITE_API_URL}auth/google`,
             '_self'
         )
     }

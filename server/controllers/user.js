@@ -179,7 +179,6 @@ module.exports.completeProfile = async (req, res, next) => {
 
 module.exports.login = async (req, res, next) => {
     const { userDetails, password } = req.body;
-    console.log(userDetails, password);
 
     if (!userDetails) {
         return next(new ErrorHand("Email or Username is required", 400));
