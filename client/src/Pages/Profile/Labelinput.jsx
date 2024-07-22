@@ -17,7 +17,7 @@ const Labelinput = ({ name, label, value, edit, password, icon, image, type, onC
                 </label>
                 {(edit && !props?.disabled) ? <input {...props} type={password ? (showpw ? "text" : "password") : (type ? type : "text")} name={name} id={name} value={value} onChange={(e) => {
                     onChange(name, e.target.value);
-                }} /> : <p>{value?.length > 0 ? value : "- - -"}</p>}
+                }} style={password ? { paddingRight: '3.2rem' } : {}} /> : <p>{value?.length > 0 ? value : "- - -"}</p>}
                 {edit && password && (showpw ? <FaEyeSlash onClick={() => { setShowpw((prev) => !prev) }} className="eye" /> : <FaEye onClick={() => { setShowpw((prev) => !prev) }} className="eye" />)}
             </div>
         </>

@@ -16,3 +16,27 @@ a {
     text-decoration: none;
     color: inherit;
 }
+
+*::-webkit-scrollbar{
+    width: 0;
+  }
+  
+  ::-webkit-scrollbar {
+    width: 0.3rem;
+    /* background-color: blue; */
+  }
+  
+  ::-webkit-scrollbar-button {
+    /* background: yellow */
+    height: 0;
+    width: 0;
+  }
+  
+  ::-webkit-scrollbar-track-piece {
+    background: transparent
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: rgba(104, 104, 104, 0.5);
+    border-radius: 0.75rem;
+  }

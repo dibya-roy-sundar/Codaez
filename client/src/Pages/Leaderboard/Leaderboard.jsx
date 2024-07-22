@@ -13,13 +13,14 @@ import { Link } from 'react-router-dom';
 import codaez from '../../assets/codaez.png'
 import Loader from '../../components/Loader/Loader';
 
-let list = []
 const Leaderboard = () => {
     const { data, loading, error } = useFetch('/details/leaderboard');
+    const [list, setList] = useState(null);
 
     useEffect(() => {
-        list = data?.result?.leaderboard
-        list?.sort((a, b) => b.aggregateRating - a.aggregateRating)
+        const listFromData = data?.result?.leaderboard
+        listFromData?.sort((a, b) => b.aggregateRating - a.aggregateRating)
+        setList(listFromData);
     }, [data])
 
     const [defaultDesc, setDefaultDesc] = useState(true);
@@ -28,19 +29,19 @@ const Leaderboard = () => {
     const handleSortByChange = (clickedBy) => {
         if (sortBy.platform == clickedBy && sortBy.order == 'desc') {
             list?.sort((a, b) => {
-                if (a[clickedBy].rating - b[clickedBy].rating != 0)
-                    return a[clickedBy].rating - b[clickedBy].rating
+                if (a[clickedBy]?.rating - b[clickedBy]?.rating != 0)
+                    return a[clickedBy]?.rating - b[clickedBy]?.rating
                 else
-                    return a.aggregateRating - b.aggregateRating
+                    return a?.aggregateRating - b?.aggregateRating
             })
             setSortBy({ platform: clickedBy, order: 'asc' })
         }
         else {
             list?.sort((a, b) => {
-                if (b[clickedBy].rating - a[clickedBy].rating != 0)
-                    return b[clickedBy].rating - a[clickedBy].rating
+                if (b[clickedBy]?.rating - a[clickedBy]?.rating != 0)
+                    return b[clickedBy]?.rating - a[clickedBy]?.rating
                 else
-                    return b.aggregateRating - a.aggregateRating
+                    return b?.aggregateRating - a?.aggregateRating
             })
             setSortBy({ platform: clickedBy, order: 'desc' })
         }
