@@ -301,7 +301,7 @@ module.exports.refreshData = async () => {
         const result = await User.bulkWrite(bulkOps);
         // console.log('Bulk update result:', result);
         return {
-            status:200,
+            status: 200,
             success: true,
             message: "Bulk update users successful"
         };
@@ -408,9 +408,19 @@ module.exports.refreshUpContests = async () => {
         // console.log(bulkUpContest);
         const result = await UpContest.insertMany(bulkUpContest, { ordered: false });
         //ordered false means if any documents fails while inserting it will continue the process not stop due to error in one document
-        console.log('Bulk insert upcoming contests successful:');
-    } catch (error) {
-        console.error('Bulk insert upcoming contests failed:', error);
+        // console.log('Bulk insert upcoming contests successful:');
+        return {
+            status: 200,
+            success: true,
+            message: 'Bulk insert upcoming contests successful',
+        }
+    } catch (err) {
+        // console.error('Bulk insert upcoming contests failed:', error);
+        return {
+            success: false,
+            message: 'Error Occurred',
+            error: err,
+        }
     }
 }
 

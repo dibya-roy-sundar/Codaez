@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { FaPlus, FaMinus } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { removeAuth } from '../../redux/authReducer';
@@ -27,6 +27,13 @@ import Contest from '../../assets/Contest.jpeg';
 const Landing = () => {
     const dispatch = useDispatch();
     const user = useSelector(state => state.auth.auth); // Get user from Redux state
+    console.log("hello",user);
+    const location=useLocation();
+    const state=location.state || {};
+
+    if(state &&  Object.keys(state)?.length>0 && user && Object.keys(user)?.length>0 && state.loggedOut){
+        dispatch(removeAuth());
+    }
 
     const handleLogout = async () => {
         try {

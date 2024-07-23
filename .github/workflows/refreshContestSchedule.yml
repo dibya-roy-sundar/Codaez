@@ -1,0 +1,13 @@
+name: Schedule Contests Refresh
+
+on:
+  schedule:
+    - cron: '0 */2 * * *' # Every 2 hours
+  workflow_dispatch:
+
+jobs:
+  refresh-contests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger contests refresh
+        run: curl -X GET https://codaez-api.onrender.com/api/v1/details/refreshcontests

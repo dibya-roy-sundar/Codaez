@@ -27,8 +27,7 @@ const Sidebar = () => {
                 toast.success("Logged Out!", {
                     position: "top-right"
                 });
-                dispatch(removeAuth());
-                navigate("/", { state: { showToastify: false } });
+                navigate("/", { state: { loggedOut: true } });
             }
             else {
                 console.log({ error: data.error })
