@@ -193,12 +193,20 @@ module.exports.login = async (req, res, next) => {
 };
 
 module.exports.logout = async (req, res, next) => {
-    res.cookie("token", null, {
+    let options = {
         expires: new Date(Date.now()),
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production', // Set to true in production
-        sameSite: 'None',
-    });
+        // secure: process.env.NODE_ENV === 'production', // Set to true in production
+        // sameSite: 'None'
+    }
+    if (process.env.NODE_ENV === 'production') {
+        options = {
+            ...options,
+            secure: true, // Set to true in production
+            sameSite: 'None'
+        }
+    }
+    res.cookie("token", null, options);
     res.status(200).json({
         status: true,
         message: "Logged Out",
