@@ -1,0 +1,13 @@
+name: Schedule Data Refresh
+
+on:
+    schedule:
+      - cron: cron: '*/2 * * * *'
+
+jobs:
+    refresh-data:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Trigger data refresh
+              run: curl -X GET https://codaez-api.onrender.com/api/v1/details/refreshdata

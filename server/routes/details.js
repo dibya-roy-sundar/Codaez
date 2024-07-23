@@ -7,4 +7,9 @@ const router = express.Router({ mergeParams: true });
 router.route('/leaderboard').get(catchAsync(isLoggedIn),catchAsync(getLeaderboardDetails))
 router.route('/:platform').get(catchAsync(isLoggedIn), catchAsync(getUserDetails));
 
+
+router.route('/refreshdata').get((req,res,next)=>{
+    console.log('hii');
+});
+
 module.exports = router;
