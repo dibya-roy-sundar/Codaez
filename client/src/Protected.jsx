@@ -1,12 +1,18 @@
 import { useSelector } from "react-redux"
-import { Navigate, useSearchParams } from "react-router-dom";
+import { Navigate, useLocation, useSearchParams } from "react-router-dom";
 
 
 const Protected = ({children}) => {
     const user=useSelector(state => state.auth.auth);
     const [searchParams]=useSearchParams();
+    const location=useLocation();
 
     const gauth=searchParams.get('fromgauth');
+    const previousPath=location.pathname;
+
+    if(previousPath==="/") {
+      return <Navigate to={"/"} replace />
+    }
 
     if(!gauth){
     if(!user  || Object.keys(user).length === 0){
