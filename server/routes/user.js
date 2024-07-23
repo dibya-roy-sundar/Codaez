@@ -2,8 +2,8 @@ const express = require('express');
 const { login, register, logout, changePassword, setUsername, userDetails,
     sendFollowRequest, acceptFollowRequest, rejectFollowRequest, updateProfile, profile,
     editAvatar, completeProfile, getReqeusts, withdrawRequest, unFollow,
-    changeUsername, getFollowDetails, dashboard ,
-    sendOtp} = require('../controllers/user.js');
+    changeUsername, getFollowDetails, dashboard,
+    sendOtp } = require('../controllers/user.js');
 const { isLoggedIn } = require('../utils/isLoggedIn.js');
 const catchAsync = require('../utils/catchAsync');
 const multer = require('multer');
@@ -29,6 +29,8 @@ router.get('/auth/google/callback',
                 Date.now() + 7 * 24 * 60 * 60 * 1000
             ),
             httpOnly: true,
+            secure: process.env.NODE_ENV === 'production', // Set to true in production
+            sameSite: 'None'
         }
 
         res.status(200).cookie("token", token, options);
