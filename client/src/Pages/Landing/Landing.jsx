@@ -57,10 +57,9 @@ const Landing = () => {
 
     const faqs = [
         { question: 'Codaez, what\'s that?? Sounds fun!! ', answer: 'Codaez is a platform for coders to connect, compete, and grow together.' },
-        { question: 'How can I contact support?', answer: 'You can contact support via our contact us page.' },
-        { question: 'What features do you offer?', answer: 'We offer leaderboards, following features, and self-analysis tools.' },
-        { question: 'How do I create a profile?', answer: 'You can create a profile by signing up and completing your details.' },
-        { question: 'How do you evaluate the standings on the Leaderboard?', answer: 'You ' },
+        { question: 'How do I link my coding platform profiles to Codaez?', answer: 'After logging in, you can link your LeetCode, Codeforces, and CodeChef profiles while creating your profile. You can also edit and update these details anytime in your profile settings.' },
+        { question: 'How do I change my password or username?', answer: 'You can change your password by clicking on the "Change/Set Password" link on your profile and following the instructions. To change your username, click on "Change Username" link on your profile.' },
+        { question: 'How do you evaluate the standings on the Leaderboard?', answer: 'Standings are evaluated by aggregating user performance metrics from LeetCode, Codeforces, and CodeChef. We employ a min-max normalization technique to standardize the ratings from each platform, which are then combined to compute a unified aggregate rating for each user.' }
     ];
 
 

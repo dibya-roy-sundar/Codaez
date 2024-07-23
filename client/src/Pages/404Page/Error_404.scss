@@ -22,6 +22,10 @@
 }
 
 .error-404 {
+    * {
+        transform-style: preserve-3d;
+    }
+
     min-height: 89vh;
     display: flex;
     flex-direction: column;
