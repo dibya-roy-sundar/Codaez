@@ -7,9 +7,9 @@ const router = express.Router({ mergeParams: true });
 
 router.route('/leaderboard').get(catchAsync(isLoggedIn), catchAsync(getLeaderboardDetails))
 router.route('/refreshdata').get((req, res, next) => {
-    const res = refreshData();
-    return res.status(res.status || 400).json({
-        ...res
+    const data = refreshData();
+    return res.status(data.status || 400).json({
+        ...data
     });
 });
 router.route('/:platform').get(catchAsync(isLoggedIn), catchAsync(getUserDetails));
