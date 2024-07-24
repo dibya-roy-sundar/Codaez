@@ -5,9 +5,10 @@ import { trackPageView } from '../../analytics.js';
 const TrackPageView = () => {
     const location = useLocation();
 
-    useEffect(() => {
-        trackPageView(location.pathname + location.search);
-    }, [location]);
+    // useEffect(() => {
+    //     trackPageView(location.pathname + location.search);
+    // }, [location]);
+    trackPageView(location.pathname);
 
     return null;
 };
