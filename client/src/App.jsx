@@ -17,6 +17,9 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import Error_404 from "./Pages/404Page/Error_404";
 import Protected from "./Protected";
+import initializeAnalytics from './analytics.js';
+import { useEffect } from 'react';
+import TrackPageView from "./components/TrackPageView/TrackViewPage.jsx";
 
 const Layout = () => {
   return (
@@ -42,17 +45,18 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Landing />,
+        element: <>
+          <TrackPageView />
+          <Landing />
+        </>,
       },
       {
         path: "/dashboard",
         element: (
           <Protected>
-            <>
-              <Navbar />
-              <Sidebar />
-              <Dashboard />
-            </>
+            <Navbar />
+            <Sidebar />
+            <Dashboard />
           </Protected>
         ),
       },
@@ -60,27 +64,23 @@ const router = createBrowserRouter([
         path: "/leaderboard",
         element: (
           <Protected>
-            <>
-              <Navbar />
-              <Sidebar />
-              <Leaderboard />
-            </>
+            <Navbar />
+            <Sidebar />
+            <Leaderboard />
           </Protected>
         ),
       },
       {
         path: "/auth",
-        element:<Auth />,
+        element: <Auth />,
       },
       {
         path: "/profile/:username",
         element: (
           <Protected>
-            <>
-              <Navbar />
-              <Sidebar />
-              <Profile />
-            </>
+            <Navbar />
+            <Sidebar />
+            <Profile />
           </Protected>
         ),
       },
@@ -89,22 +89,27 @@ const router = createBrowserRouter([
         element:
           <CompleteProfile />
       },
-      { path: "404", element:(
-      <>
-      <Navbar />
-      <Error_404 />
-      </>  )},
+      {
+        path: "404", element: (
+          <>
+            <Navbar />
+            <Error_404 />
+          </>)
+      },
       { path: "*", element: <Navigate to="/404" replace /> },
     ],
   },
 ]);
 
+
 function App() {
+  useEffect(() => {
+    initializeAnalytics();
+  }, []);
+
   return (
     <>
-      <div>
-        <RouterProvider router={router} />
-      </div>
+      <RouterProvider router={router} />
     </>
   );
 }

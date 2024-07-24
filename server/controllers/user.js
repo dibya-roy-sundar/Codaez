@@ -119,8 +119,8 @@ module.exports.completeProfile = async (req, res, next) => {
     }
 
     let lcData, cfData, ccData;
-    if (lc && lc.length > 0) {
-        const data = await getLeetcodeData(lc);
+    if (lc && lc?.trim().length > 0) {
+        const data = await getLeetcodeData(lc.trim());
         if (data && !data.success && data.error) {
             return res.status(404).json({
                 success: false,
@@ -129,8 +129,8 @@ module.exports.completeProfile = async (req, res, next) => {
         }
         lcData = data;
     }
-    if (cf && cf.length > 0) {
-        const data = await getCodeforcesData(cf);
+    if (cf && cf?.trim().length > 0) {
+        const data = await getCodeforcesData(cf.trim());
         if (data && !data.success && data.error) {
             return res.status(404).json({
                 success: false,
@@ -139,8 +139,8 @@ module.exports.completeProfile = async (req, res, next) => {
         }
         cfData = data;
     }
-    if (cc && cc.length > 0) {
-        const data = await getCodechefData(cc);
+    if (cc && cc?.trim().length > 0) {
+        const data = await getCodechefData(cc?.trim());
         if (data && !data.success && data.error) {
             return res.status(404).json({
                 success: false,
@@ -272,7 +272,7 @@ module.exports.setUsername = async (req, res, next) => {
     ) {
         return next(new ErrorHand("username is required"));
     }
-    const lcData = await getLeetcodeData(lc?.username);
+    const lcData = await getLeetcodeData(lc?.username?.trim());
     if (lcData && !lcData.success && lcData.error) {
         return res.status(404).json({
             success: false,
@@ -280,7 +280,7 @@ module.exports.setUsername = async (req, res, next) => {
         })
     }
 
-    const cfData = await getCodeforcesData(cf?.username);
+    const cfData = await getCodeforcesData(cf?.username?.trim());
     if (cfData && !cfData.success && cfData.error) {
         return res.status(404).json({
             success: false,
@@ -289,7 +289,7 @@ module.exports.setUsername = async (req, res, next) => {
     }
 
 
-    const ccData = await getCodechefData(cc?.username);
+    const ccData = await getCodechefData(cc?.username?.trim());
     if (ccData && !ccData.success && ccData.error) {
         return res.status(404).json({
             success: false,
@@ -536,10 +536,10 @@ module.exports.updateProfile = async (req, res, next) => {
     );
 
 
-    if (!user.lc || user.lc?.username !== lc) {
-        if (lc.length > 0) {
+    if (!user.lc || user.lc?.username !== lc?.trim()) {
+        if (lc?.trim().length > 0) {
 
-            const data = await getLeetcodeData(lc);
+            const data = await getLeetcodeData(lc.trim());
             if (data && !data.success && data.error) {
                 return res.status(404).json({
                     success: false,
@@ -553,10 +553,10 @@ module.exports.updateProfile = async (req, res, next) => {
 
 
     }
-    if (!user.cf || user.cf?.username !== cf) {
-        if (cf.length > 0) {
+    if (!user.cf || user.cf?.username !== cf?.trim()) {
+        if (cf?.trim().length > 0) {
 
-            const data = await getCodeforcesData(cf);
+            const data = await getCodeforcesData(cf.trim());
             if (data && !data.success && data.error) {
                 return res.status(404).json({
                     success: false,
@@ -569,9 +569,9 @@ module.exports.updateProfile = async (req, res, next) => {
         }
 
     }
-    if (!user.cc || user.cc?.username !== cc) {
-        if (cc.length > 0) {
-            const data = await getCodechefData(cc);
+    if (!user.cc || user.cc?.username !== cc?.trim()) {
+        if (cc?.trim().length > 0) {
+            const data = await getCodechefData(cc.trim());
             if (data && !data.success && data.error) {
                 return res.status(404).json({
                     success: false,
@@ -686,5 +686,14 @@ module.exports.dashboard = async (req, res, next) => {
         CcContests,
         LcContests,
         CfContests
+    })
+}
+
+module.exports.landing=async (req,res,next) => {
+    const users=await User.find({});
+
+    res.status(200).json({
+        success:true,
+        activeUsers:users?.length,
     })
 }
