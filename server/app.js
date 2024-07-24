@@ -40,7 +40,7 @@ app.use('/api/v1/details', detailsRoutes);
 app.use(error);
 
 // refreshData();
-// refreshUpContests();//this timer will be greater than refreshData
+refreshUpContests();//this timer will be greater than refreshData
 
 const port = process.env.PORT;
 app.listen(port, () => {

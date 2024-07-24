@@ -409,6 +409,7 @@ module.exports.refreshUpContests = async () => {
         const result = await UpContest.insertMany(bulkUpContest, { ordered: false });
         //ordered false means if any documents fails while inserting it will continue the process not stop due to error in one document
         // console.log('Bulk insert upcoming contests successful:');
+        console.log(result);
         return {
             status: 200,
             success: true,
@@ -425,28 +426,3 @@ module.exports.refreshUpContests = async () => {
 }
 
 
-
-// const url = "https://www.codechef.com/contests?itm_medium=home&itm_campaign=allcontests";
-// const browser = await Puppeteer.launch();
-// const page = await browser.newPage();
-
-// await page.goto(url);
-
-
-
-// let upcomingContests = await page.evaluate(() => {
-//     let results = []
-//     let items = document.querySelectorAll('#future-contests-data tr')
-//     items.forEach((item) => {
-//         results.push({
-//             code: item.querySelector('td:nth-child(1)').innerText,
-//             title: item.querySelector('td:nth-child(2)').innerText,
-//             url: "https://www.codechef.com" + item.querySelector('td:nth-child(2) a').getAttribute('href'),
-//             startDate: item.querySelector('td:nth-child(3)').innerText.substring(0, 11),
-//             startTime: item.querySelector('td:nth-child(3)').innerText.substring(12, 21),
-//             duration: item.querySelector('td:nth-child(4)').innerText,
-//             startsIn: item.querySelector('td:nth-child(5)').innerText
-//         })
-//     })
-//     return results
-// })
