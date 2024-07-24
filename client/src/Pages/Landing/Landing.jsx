@@ -23,6 +23,8 @@ import leetcodeIcon from '../../assets/leetcode.png';
 import HomeNavbar from './HomepageNavbar';
 import codeaz from '../../assets/codaez.png';
 import Contest from '../../assets/Contest.jpeg';
+import useFetch from '../../hooks/useFetch';
+import Loader from '../../components/Loader/Loader';
 
 const Landing = () => {
     const dispatch = useDispatch();
@@ -92,8 +94,16 @@ const Landing = () => {
         );
     };
 
+    const {data,loading,error}=useFetch('/landing');
+
     return (
-        <div className="landing">
+        <>
+        {error  ?
+         "Something went wrong"
+         : loading ?
+            <Loader />
+            :
+            <div className="landing">
             <HomeNavbar user={user} handleLogout={handleLogout} />
 
             <section className="hero">
@@ -120,7 +130,7 @@ const Landing = () => {
                             initial={{ x: 20 }}
                             whileInView={{ x: 0 }}
                             transition={{ duration: 0.5 }}
-                        >10K+</motion.h3><p>Profiles Available</p></div>
+                        >{data.activeUsers}+</motion.h3><p>Active Users</p></div>
                         <div className="stat"><motion.h3
                             initial={{ x: 20 }}
                             whileInView={{ x: 0 }}
@@ -178,7 +188,10 @@ const Landing = () => {
 
             <FAQ faqs={faqs} />
             <Footer />
-        </div>
+            </div>
+         }
+        </>
+        
     );
 };
 
