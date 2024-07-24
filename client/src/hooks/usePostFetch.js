@@ -1,6 +1,7 @@
 import { makeRequest } from "./makeRequest";
+import Cookies from 'js-cookie';
 
-const usePostFetch = async (url, bodyData,makeCall = true) => {
+const usePostFetch = async (url, bodyData, makeCall = true) => {
     try {
         if (!makeCall) {
             return {};
@@ -8,8 +9,13 @@ const usePostFetch = async (url, bodyData,makeCall = true) => {
         const resp = await makeRequest.post(url, { ...bodyData }, {
             withCredentials: true
         })
-        // console.log(resp)
         if (resp.data) {
+            if (resp.data.token) {
+                Cookies.set('token', resp.data.token, {
+                    ...resp.data.cookieOptions,
+                    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+                });
+            }
             return { data: resp.data };
         }
         else {

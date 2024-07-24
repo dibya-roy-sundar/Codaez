@@ -15,6 +15,7 @@ import { ClipLoader } from "react-spinners";
 import { SiTicktick } from "react-icons/si";
 import { RiErrorWarningLine } from "react-icons/ri";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import Cookies from 'js-cookie';
 
 
 const CompleteProfile = () => {
@@ -49,7 +50,12 @@ const CompleteProfile = () => {
 
 
     useEffect(() => {
-        if (searchParams.get('email')) {
+        if (searchParams.get('email') && searchParams.get('token')) {
+            Cookies.set('token', searchParams.get('token'), {
+                ...searchParams.get('cookieOptions'),
+                expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+            });
+
             setUser({
                 email: searchParams.get('email'),
                 name: searchParams.get('name'),

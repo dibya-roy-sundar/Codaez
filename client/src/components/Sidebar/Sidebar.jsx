@@ -9,6 +9,7 @@ import { removeAuth } from "../../redux/authReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import codaez from '../../assets/codaez.png'
+import Cookies from 'js-cookie';
 
 const Sidebar = () => {
     const dispatch = useDispatch();
@@ -23,7 +24,8 @@ const Sidebar = () => {
             });
 
             if (data.data) {
-                console.log({ data: data.data });
+                // console.log({ data: data.data });
+                Cookies.remove('token');
                 toast.success("Logged Out!", {
                     position: "top-right"
                 });

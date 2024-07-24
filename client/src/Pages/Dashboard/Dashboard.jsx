@@ -24,17 +24,25 @@ import favourite from '../../assets/flaticon/favourite.gif'
 import chart from '../../assets/flaticon/chart.gif'
 import upcoming from '../../assets/flaticon/upcoming.gif'
 import Loader from '../../components/Loader/Loader';
+import Cookies from 'js-cookie';
 
 const Dashboard = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const { data, loading, error } = useFetch("/dashboard");
+    const [reload, setReload] = useState(0);
+    const { data, loading, error } = useFetch("/dashboard", true, reload);
     const user = data.user
 
     useEffect(() => {
-        if (searchParams.get('email') && searchParams.get('username')) {
+        if (searchParams.get('email') && searchParams.get('username') && searchParams.get('token')) {
+            Cookies.set('token', searchParams.get('token'), {
+                ...searchParams.get('cookieOptions'),
+                expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+            });
+            setReload(prev => prev + 1);
+
             dispatch(setAuth({
                 email: searchParams.get('email'),
                 name: searchParams.get('name') || '',

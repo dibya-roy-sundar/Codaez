@@ -28,7 +28,7 @@ router.get('/auth/google/callback',
             expires: new Date(
                 Date.now() + 7 * 24 * 60 * 60 * 1000
             ),
-            httpOnly: true,
+            // httpOnly: true,
             // secure: process.env.NODE_ENV === 'production', // Set to true in production
             // sameSite: 'None'
         }
@@ -40,13 +40,13 @@ router.get('/auth/google/callback',
             }
         }
 
-        res.status(200).cookie("token", token, options);
+        // res.status(200).cookie("token", token, options);
 
         if (isNew) {
-            res.redirect(`${process.env.CLIENT_URL}/completeprofile?email=${user.email}&name=${user.name}&avatarUrl=${user.avatar.url}&fromgauth=${true}`);
+            res.redirect(`${process.env.CLIENT_URL}/completeprofile?email=${user.email}&name=${user.name}&avatarUrl=${user.avatar.url}&fromgauth=${true}&token=${token}&cookieOptions=${JSON.stringify(options)}`);
         }
         else {
-            res.redirect(`${process.env.CLIENT_URL}/dashboard?email=${user.email}&name=${user.name}&username=${user.username}&fromgauth=${true}`);
+            res.redirect(`${process.env.CLIENT_URL}/dashboard?email=${user.email}&name=${user.name}&username=${user.username}&fromgauth=${true}&token=${token}&cookieOptions=${JSON.stringify(options)}`);
         }
     }
 )
