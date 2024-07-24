@@ -17,9 +17,9 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import Error_404 from "./Pages/404Page/Error_404";
 import Protected from "./Protected";
-import initializeAnalytics, { trackPageView } from './analytics.js';
+import initializeAnalytics from './analytics.js';
 import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import TrackPageView from "./components/TrackPageView/TrackViewPage.jsx";
 
 const Layout = () => {
   return (
@@ -45,17 +45,18 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Landing />,
+        element: <>
+          <TrackPageView />
+          <Landing />
+        </>,
       },
       {
         path: "/dashboard",
         element: (
           <Protected>
-            <>
-              <Navbar />
-              <Sidebar />
-              <Dashboard />
-            </>
+            <Navbar />
+            <Sidebar />
+            <Dashboard />
           </Protected>
         ),
       },
@@ -63,11 +64,9 @@ const router = createBrowserRouter([
         path: "/leaderboard",
         element: (
           <Protected>
-            <>
-              <Navbar />
-              <Sidebar />
-              <Leaderboard />
-            </>
+            <Navbar />
+            <Sidebar />
+            <Leaderboard />
           </Protected>
         ),
       },
@@ -79,11 +78,9 @@ const router = createBrowserRouter([
         path: "/profile/:username",
         element: (
           <Protected>
-            <>
-              <Navbar />
-              <Sidebar />
-              <Profile />
-            </>
+            <Navbar />
+            <Sidebar />
+            <Profile />
           </Protected>
         ),
       },
@@ -105,18 +102,6 @@ const router = createBrowserRouter([
 ]);
 
 
-
-
-const TrackPageView = () => {
-  const location = useLocation();
-
-  useEffect(() => {
-    trackPageView(location.pathname + location.search);
-  }, [location]);
-
-  return null;
-};
-
 function App() {
   useEffect(() => {
     initializeAnalytics();
@@ -124,7 +109,6 @@ function App() {
 
   return (
     <>
-      <TrackPageView />
       <RouterProvider router={router} />
     </>
   );
