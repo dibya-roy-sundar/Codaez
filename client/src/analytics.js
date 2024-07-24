@@ -1,4 +1,4 @@
-import ReactGA from 'react-ga';
+import ReactGA from 'react-ga4';
 
 const initializeAnalytics = () => {
     ReactGA.initialize(import.meta.env.VITE_YOUR_MEASUREMENT_ID);
