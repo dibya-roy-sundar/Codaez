@@ -64,7 +64,8 @@ $darkpurple: #814fff;
             display: flex;
             gap: 0.25rem;
 
-            .accept, .following {
+            .accept,
+            .following {
                 padding: 0.25rem 0.5rem;
                 background: $purple;
                 border-radius: 0.25rem;
@@ -99,7 +100,8 @@ $darkpurple: #814fff;
 
             }
 
-            .requested,.follow_back{
+            .requested,
+            .follow_back {
                 padding: 0.2rem 0.45rem;
                 background: transparent;
                 color: $purple;
@@ -123,5 +125,9 @@ $darkpurple: #814fff;
 
     .noRequests {
         padding: 0.6rem;
+    }
+
+    @media (max-width:400px) {
+        right: 0;
     }
 }

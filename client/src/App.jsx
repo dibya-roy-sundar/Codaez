@@ -17,6 +17,9 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import Error_404 from "./Pages/404Page/Error_404";
 import Protected from "./Protected";
+import initializeAnalytics, { trackPageView } from './analytics.js';
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const Layout = () => {
   return (
@@ -70,7 +73,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/auth",
-        element:<Auth />,
+        element: <Auth />,
       },
       {
         path: "/profile/:username",
@@ -89,22 +92,40 @@ const router = createBrowserRouter([
         element:
           <CompleteProfile />
       },
-      { path: "404", element:(
-      <>
-      <Navbar />
-      <Error_404 />
-      </>  )},
+      {
+        path: "404", element: (
+          <>
+            <Navbar />
+            <Error_404 />
+          </>)
+      },
       { path: "*", element: <Navigate to="/404" replace /> },
     ],
   },
 ]);
 
+
+
+
+const TrackPageView = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    trackPageView(location.pathname + location.search);
+  }, [location]);
+
+  return null;
+};
+
 function App() {
+  useEffect(() => {
+    initializeAnalytics();
+  }, []);
+
   return (
     <>
-      <div>
-        <RouterProvider router={router} />
-      </div>
+      <TrackPageView />
+      <RouterProvider router={router} />
     </>
   );
 }

@@ -39,8 +39,6 @@ app.use('/api/v1/details', detailsRoutes);
 
 app.use(error);
 
-setInterval(() => {
-}, 100000000);
 // refreshData();
 // refreshUpContests();//this timer will be greater than refreshData
 
