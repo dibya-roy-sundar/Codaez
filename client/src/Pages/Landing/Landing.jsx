@@ -42,7 +42,7 @@ const Landing = () => {
         try {
             const data = await makeRequest.get('/logout', { withCredentials: true });
             if (data.data) {
-                Cookies.remove('token');
+                // Cookies.remove('token');
                 toast.success("Logged Out!", { position: "top-right" });
                 dispatch(removeAuth());
             } else {

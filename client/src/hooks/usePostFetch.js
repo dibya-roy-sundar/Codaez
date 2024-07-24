@@ -10,12 +10,12 @@ const usePostFetch = async (url, bodyData, makeCall = true) => {
             withCredentials: true
         })
         if (resp.data) {
-            if (resp.data.token) {
-                Cookies.set('token', resp.data.token, {
-                    ...resp.data.cookieOptions,
-                    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-                });
-            }
+            // if (resp.data.token) {
+            //     Cookies.set('token2', resp.data.token, {
+            //         ...resp.data.cookieOptions,
+            //         expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+            //     });
+            // }
             return { data: resp.data };
         }
         else {

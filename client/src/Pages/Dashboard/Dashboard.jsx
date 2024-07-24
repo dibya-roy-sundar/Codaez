@@ -36,12 +36,12 @@ const Dashboard = () => {
     const user = data.user
 
     useEffect(() => {
-        if (searchParams.get('email') && searchParams.get('username') && searchParams.get('token')) {
-            Cookies.set('token', searchParams.get('token'), {
-                ...searchParams.get('cookieOptions'),
-                expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-            });
-            setReload(prev => prev + 1);
+        if (searchParams.get('email') && searchParams.get('username')) {
+            // Cookies.set('token2', searchParams.get('token'), {
+            //     ...searchParams.get('cookieOptions'),
+            //     expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+            // });
+            // setReload(prev => prev + 1);
 
             dispatch(setAuth({
                 email: searchParams.get('email'),

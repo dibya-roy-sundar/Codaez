@@ -25,7 +25,7 @@ const Sidebar = () => {
 
             if (data.data) {
                 // console.log({ data: data.data });
-                Cookies.remove('token');
+                // Cookies.remove('token');
                 toast.success("Logged Out!", {
                     position: "top-right"
                 });

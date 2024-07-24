@@ -2,19 +2,21 @@ const sendjwtToken = (user, statusCode, res) => {
     const token = user.getJWTToken();
 
     let options = {
-        expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
-        // httpOnly: true,
+        expires: new Date(
+            Date.now() + 7 * 24 * 60 * 60 * 1000
+        ),
+        httpOnly: true,
         // secure: process.env.NODE_ENV === 'production', // Set to true in production
-        // sameSite: 'None'
+        sameSite: 'Lax'
     }
     if (process.env.NODE_ENV === 'production') {
         options = {
             ...options,
             secure: true, // Set to true in production
-            sameSite: 'None'
+            sameSite: 'Strict'
         }
     }
-
+    res.cookie("token", token, options);
     res.status(statusCode).json({
         success: true,
         user,

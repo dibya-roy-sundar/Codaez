@@ -195,23 +195,23 @@ module.exports.login = async (req, res, next) => {
 module.exports.logout = async (req, res, next) => {
     let options = {
         expires: new Date(Date.now()),
-        // httpOnly: true,
+        httpOnly: true,
         // secure: process.env.NODE_ENV === 'production', // Set to true in production
-        // sameSite: 'None'
+        sameSite: 'Lax'
     }
     if (process.env.NODE_ENV === 'production') {
         options = {
             ...options,
             secure: true,
-            sameSite: 'None'
+            sameSite: 'Strict'
         }
     }
-    // res.cookie("token", null, options);
+    res.cookie("token", null, options);
     res.status(200).json({
         status: true,
         message: "Logged Out",
-        token: null,
-        cookieOptions: options,
+        // token: null,
+        // cookieOptions: options,
     });
 };
 

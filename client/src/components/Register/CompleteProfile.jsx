@@ -50,11 +50,11 @@ const CompleteProfile = () => {
 
 
     useEffect(() => {
-        if (searchParams.get('email') && searchParams.get('token')) {
-            Cookies.set('token', searchParams.get('token'), {
-                ...searchParams.get('cookieOptions'),
-                expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-            });
+        if (searchParams.get('email')) {
+            // Cookies.set('token2', searchParams.get('token'), {
+            //     ...searchParams.get('cookieOptions'),
+            //     expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+            // });
 
             setUser({
                 email: searchParams.get('email'),
