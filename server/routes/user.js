@@ -3,7 +3,8 @@ const { login, register, logout, changePassword, setUsername, userDetails,
     sendFollowRequest, acceptFollowRequest, rejectFollowRequest, updateProfile, profile,
     editAvatar, completeProfile, getReqeusts, withdrawRequest, unFollow,
     changeUsername, getFollowDetails, dashboard,
-    sendOtp } = require('../controllers/user.js');
+    sendOtp, 
+    landing} = require('../controllers/user.js');
 const { isLoggedIn } = require('../utils/isLoggedIn.js');
 const catchAsync = require('../utils/catchAsync');
 const multer = require('multer');
@@ -77,5 +78,6 @@ router.route('/changepw').put(catchAsync(isLoggedIn), catchAsync(changePassword)
 router.route('/change-username').put(catchAsync(isLoggedIn), catchAsync(changeUsername));
 router.route('/get-follow').get(catchAsync(isLoggedIn), catchAsync(getFollowDetails));
 router.route('/dashboard').get(catchAsync(isLoggedIn), catchAsync(dashboard));
+router.route('/landing').get(catchAsync(landing));
 
 module.exports = router;
