@@ -125,11 +125,6 @@ const Landing = () => {
                             initial={{ x: 20 }}
                             whileInView={{ x: 0 }}
                             transition={{ duration: 0.5 }}
-                        >200+</motion.h3><p>Total Visitors</p></div>
-                        <div className="stat"><motion.h3
-                            initial={{ x: 20 }}
-                            whileInView={{ x: 0 }}
-                            transition={{ duration: 0.5 }}
                         >{data.activeUsers}+</motion.h3><p>Active Users</p></div>
                         <div className="stat"><motion.h3
                             initial={{ x: 20 }}
