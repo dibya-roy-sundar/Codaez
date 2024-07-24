@@ -5,7 +5,8 @@ const initializeAnalytics = () => {
 };
 
 export const trackPageView = (path) => {
-    ReactGA.pageview(path);
+    // ReactGA.pageview(path);
+    ReactGA.send({ hitType: "pageview", page: path, title: "Codaez Page View" });
 };
 
 export default initializeAnalytics;
