@@ -193,20 +193,20 @@ module.exports.login = async (req, res, next) => {
 };
 
 module.exports.logout = async (req, res, next) => {
-    let options = {
-        expires: new Date(Date.now()),
-        httpOnly: true,
-        // secure: process.env.NODE_ENV === 'production', // Set to true in production
-        sameSite: 'Lax'
-    }
-    if (process.env.NODE_ENV === 'production') {
-        options = {
-            ...options,
-            secure: true,
-            sameSite: 'Strict'
-        }
-    }
-    res.cookie("token", null, options);
+    // let options = {
+    //     expires: new Date(Date.now()),
+    //     httpOnly: true,
+    //     // secure: process.env.NODE_ENV === 'production', // Set to true in production
+    //     // sameSite: 'None'
+    // }
+    // if (process.env.NODE_ENV === 'production') {
+    //     options = {
+    //         ...options,
+    //         secure: true,
+    //         sameSite: 'None'
+    //     }
+    // }
+    // res.cookie("token", null, options);
     res.status(200).json({
         status: true,
         message: "Logged Out",
