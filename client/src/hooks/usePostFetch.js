@@ -1,5 +1,4 @@
 import { makeRequest } from "./makeRequest";
-import Cookies from 'js-cookie';
 
 const usePostFetch = async (url, bodyData, makeCall = true) => {
     try {
@@ -7,15 +6,15 @@ const usePostFetch = async (url, bodyData, makeCall = true) => {
             return {};
         }
         const resp = await makeRequest.post(url, { ...bodyData }, {
-            withCredentials: true
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            }
         })
+        console.log()
         if (resp.data) {
-            // if (resp.data.token) {
-            //     Cookies.set('token2', resp.data.token, {
-            //         ...resp.data.cookieOptions,
-            //         expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-            //     });
-            // }
+            if (resp.data.token) {
+                localStorage.setItem("token", resp.data.token);
+            }
             return { data: resp.data };
         }
         else {

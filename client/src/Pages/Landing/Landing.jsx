@@ -25,7 +25,6 @@ import codeaz from '../../assets/codaez.png';
 import Contest from '../../assets/Contest.jpeg';
 import useFetch from '../../hooks/useFetch';
 import Loader from '../../components/Loader/Loader';
-import Cookies from 'js-cookie';
 
 const Landing = () => {
     const dispatch = useDispatch();
@@ -42,7 +41,6 @@ const Landing = () => {
         try {
             const data = await makeRequest.get('/logout', { withCredentials: true });
             if (data.data) {
-                // Cookies.remove('token');
                 toast.success("Logged Out!", { position: "top-right" });
                 dispatch(removeAuth());
             } else {

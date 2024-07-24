@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { makeRequest } from "./makeRequest";
 
-const useFetch = (url, makeCall = true,reload=0) => {
+const useFetch = (url, makeCall = true, reload = 0) => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
@@ -14,7 +14,9 @@ const useFetch = (url, makeCall = true,reload=0) => {
                 }
                 setLoading(true);
                 const resp = await makeRequest.get(url, {
-                    withCredentials: true,
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    }
                 })
                 setData(resp.data);
             }
@@ -25,7 +27,7 @@ const useFetch = (url, makeCall = true,reload=0) => {
             setLoading(false);
         }
         fetchData();
-    }, [url,reload])
+    }, [url, reload])
 
     return { data, loading, error };
 }

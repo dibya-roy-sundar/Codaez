@@ -5,7 +5,10 @@ const usePutHook = async (url, bodyData, options = {}) => {
     // pass options only when some extra options are also to be given e.g. while uploading image, option.header is required
     try {
         const data = await makeRequest.put(url, { ...bodyData }, {
-            withCredentials: true,
+            // withCredentials: true,
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            },
             ...options
         });
         // console.log(data)
