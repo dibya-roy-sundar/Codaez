@@ -50,7 +50,7 @@ const Dashboard = () => {
     }, []);
 
     const [activePlatform, setActivePlatform] = useState('cf');
-    const [lineGraphData, setLineGraphData] = useState([]);
+    const [lineGraphData, setLineGraphData] = useState(null);
     const [pieChartData, setPieChartData] = useState({});
     const [details, setDetails] = useState({});
 
@@ -226,7 +226,7 @@ const Dashboard = () => {
                                     : null}
                             </div>
                             <div className="graphs">
-                                {lineGraphData && <div className="lineGraph">
+                                {lineGraphData && lineGraphData.length>0 && <div className="lineGraph">
                                     <LineGraph data={lineGraphData} platform={activePlatform} />
                                 </div>}
                                 {pieChartData && activePlatform === 'cf' && <div className="piechart">
