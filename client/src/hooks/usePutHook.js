@@ -7,7 +7,7 @@ const usePutHook = async (url, bodyData, options = {}) => {
         const data = await makeRequest.put(url, { ...bodyData }, {
             // withCredentials: true,
             headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Authorization': `Bearer ${localStorage.getItem('codaeztoken')}`,
             },
             ...options
         });

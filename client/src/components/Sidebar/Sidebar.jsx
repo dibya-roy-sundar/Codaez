@@ -19,12 +19,14 @@ const Sidebar = () => {
 
         try {
             const data = await makeRequest.get('/logout', {
-                withCredentials: true
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('codaeztoken')}`,
+                }
             });
 
             if (data.data) {
                 // console.log({ data: data.data });
-                localStorage.removeItem('token');
+                localStorage.removeItem('codaeztoken');
                 toast.success("Logged Out!", {
                     position: "top-right"
                 });

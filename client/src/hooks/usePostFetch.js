@@ -7,13 +7,13 @@ const usePostFetch = async (url, bodyData, makeCall = true) => {
         }
         const resp = await makeRequest.post(url, { ...bodyData }, {
             headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Authorization': `Bearer ${localStorage.getItem('codaeztoken')}`,
             }
         })
         console.log()
         if (resp.data) {
             if (resp.data.token) {
-                localStorage.setItem("token", resp.data.token);
+                localStorage.setItem("codaeztoken", resp.data.token);
             }
             return { data: resp.data };
         }

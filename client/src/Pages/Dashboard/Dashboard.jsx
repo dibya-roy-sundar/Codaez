@@ -37,7 +37,7 @@ const Dashboard = () => {
 
     useEffect(() => {
         if (searchParams.get('email') && searchParams.get('username') && searchParams.get('token')) {
-            localStorage.setItem('token', searchParams.get('token'))
+            localStorage.setItem('codaeztoken', searchParams.get('token'))
 
             setReload(prev => prev + 1);
 

@@ -38,8 +38,14 @@ const Landing = () => {
 
     const handleLogout = async () => {
         try {
-            const data = await makeRequest.get('/logout', { withCredentials: true });
+            const data = await makeRequest.get('/logout', {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('codaeztoken')}`,
+                }
+            });
+            
             if (data.data) {
+                localStorage.removeItem('codaeztoken');
                 toast.success("Logged Out!", { position: "top-right" });
                 dispatch(removeAuth());
             } else {
