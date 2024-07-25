@@ -115,12 +115,12 @@ const LineGraph = ({ data, platform }) => {
                     label: function (context) {
                         return [`Rating: ${context.raw.y}`, `Rank: ${context.raw.rank}`];
                     },
-                    title: function (tooltipItems) {
-                        if (tooltipItems?.length === 0) {
-                            return 0;
-                        }
-                        return tooltipItems.map(item => item.label).reduce((a, b) => a + b, 0); // Providing initial value ''
-                    }
+                    // title: function (tooltipItems) {
+                    //     if (tooltipItems?.length === 0) {
+                    //         return 0;
+                    //     }
+                    //     return tooltipItems.map(item => item.label).reduce((a, b) => a + b, 0); // Providing initial value ''
+                    // }
                 },
                 bodyFont: {
                     family: 'Urbanist',
