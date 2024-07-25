@@ -25,6 +25,7 @@ import chart from '../../assets/flaticon/chart.gif'
 import upcoming from '../../assets/flaticon/upcoming.gif'
 import Loader from '../../components/Loader/Loader';
 import UpcomingContests from './UpcomingContests';
+import ErrorBoundary from './ErrorBoundary';
 
 const Dashboard = () => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -220,13 +221,19 @@ const Dashboard = () => {
                             </div>
                             <div className="graphs">
                                 {lineGraphData && lineGraphData.length>0 && <div className="lineGraph">
-                                    <LineGraph data={lineGraphData} platform={activePlatform} />
+                                    <ErrorBoundary>
+                                     <LineGraph data={lineGraphData} platform={activePlatform} />
+                                    </ErrorBoundary>
                                 </div>}
                                 {pieChartData && activePlatform === 'cf' && <div className="piechart">
-                                    <PieChart data={pieChartData} platform={activePlatform} />
+                                    <ErrorBoundary>
+                                     <PieChart data={pieChartData} platform={activePlatform} />
+                                    </ErrorBoundary>
                                 </div>}
                                 {pieChartData && activePlatform === 'lc' && <div className="piechart">
-                                    <PieChart data={pieChartData} platform={activePlatform} />
+                                    <ErrorBoundary>
+                                        <PieChart data={pieChartData} platform={activePlatform} />
+                                    </ErrorBoundary>
                                 </div>}
                             </div>
                         </div>
