@@ -150,7 +150,7 @@ userSchema.statics.findAndValidate = async function (userDetails, password) {
     ).select("+password");
     //if a user is found, this means that the username is already in use
     if (!foundUser) return false;
-
+    if(!foundUser.password) return false;
     //if username is unique, then we will verify the password
     const isValid = await bcrypt.compare(password, foundUser.password);
     return isValid ? foundUser : false;
