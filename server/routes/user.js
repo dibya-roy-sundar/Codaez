@@ -61,7 +61,7 @@ router.route('/setusername').post(catchAsync(isLoggedIn), catchAsync(setUsername
 router.route('/logout').get(catchAsync(logout));
 
 
-router.route('/userdetails').get(catchAsync(userDetails));//search catchAsync(isLoggedIn),
+router.route('/userdetails').get(catchAsync(isLoggedIn),catchAsync(userDetails));//search 
 
 router.route('/get-requests').get(catchAsync(isLoggedIn), catchAsync(getReqeusts));//
 router.route('/sendfrequest').post(catchAsync(isLoggedIn), catchAsync(sendFollowRequest));
