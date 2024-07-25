@@ -133,7 +133,11 @@ All API endpoints start with http://localhost:3000/api/v1/
 
 
 ## Setup Instructions
-
+  Clone the repository:
+  
+  ```
+  git clone https://github.com/vanshulagarwal/Codaez.git
+  ```
 
 ### Client (React)
 
