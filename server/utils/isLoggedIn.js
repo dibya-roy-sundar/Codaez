@@ -5,7 +5,8 @@ const ErrorHand = require('./errorHand.js');
 
 module.exports.isLoggedIn = async (req, res, next) => {
     // const {token} = req.cookies;
-    const token = req?.header("Authorization")?.replace("Bearer ", "");
+    // const token = req?.header("Authorization")?.replace("Bearer ", "");
+    const token=req.headers.authorization.split(' ')[1];
     if (!token) {
         return next(new ErrorHand("You need to log in first", 401));
     }
