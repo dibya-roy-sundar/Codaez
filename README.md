@@ -6,6 +6,14 @@ Codaez is a comprehensive platform for DSA enthusiasts and competitive programme
 ## Live Link
 https://codaez.onrender.com
 
+## Table of Contents
+
+1. [Features](#features)
+2. [Technologies Used](#technologies-used)
+3. [API Endpoints](#api-endpoints)
+4. [Setup Instructions](#setup-instructions)
+
+
 
 ## Features
 
