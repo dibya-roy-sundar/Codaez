@@ -162,7 +162,7 @@ const CompleteProfile = () => {
         }, {
             headers: {
                 'Content-Type': 'multipart/form-data',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Authorization': `Bearer ${localStorage.getItem('codaeztoken')}`,
             }
         });
 
