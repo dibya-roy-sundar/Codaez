@@ -114,7 +114,9 @@ module.exports.completeProfile = async (req, res, next) => {
         twitter = "",
     } = req.body;
 
-    const availableUser = await User.findOne({ username });
+    const lowUsername=username.toLowerCase();
+
+    const availableUser = await User.findOne({ username:lowUsername });
     if (availableUser) {
         return next(new ErrorHand("username is not available", 400));
     }
@@ -153,7 +155,7 @@ module.exports.completeProfile = async (req, res, next) => {
 
     const user = await User.findByIdAndUpdate(
         req.user?._id,
-        { username, name, college, linkedin, github, twitter, lc: lcData, cf: cfData, cc: ccData },
+        { username:lowUsername, name, college, linkedin, github, twitter, lc: lcData, cf: cfData, cc: ccData },
         { new: true }
     );
 
@@ -484,8 +486,9 @@ module.exports.getReqeusts = async (req, res, next) => {
 
 module.exports.profile = async (req, res, next) => {
     const { username } = req.params;
+    const lowUsername=username.toLowerCase();
 
-    const user = await User.findOne({ username: username }).populate('fRequests', 'senderusername');
+    const user = await User.findOne({ username: lowUsername }).populate('fRequests', 'senderusername');
 
     if (!user) {
         return res.status(200).json({
@@ -626,8 +629,9 @@ module.exports.changeUsername = async (req, res, next) => {
             msg: "username is required"
         })
     }
+    const lowUsername=username.toLowerCase();
 
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ username:lowUsername });
 
     if (user) {
         return res.status(200).json({
@@ -642,7 +646,7 @@ module.exports.changeUsername = async (req, res, next) => {
                     msg: "change username limit crossed"
                 })
             } else {
-                req.user.username = username;
+                req.user.username = lowUsername;
                 req.user.usernameChanged = true;
                 await req.user.save();
 
