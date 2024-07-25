@@ -34,7 +34,7 @@ const Dashboard = () => {
 
     const [reload, setReload] = useState(0);
     const { data, loading, error } = useFetch("/dashboard", true, reload);
-    const user = data?.user
+    const user = data.user
 
     useEffect(() => {
         if (searchParams.get('email') && searchParams.get('username') && searchParams.get('token')) {
@@ -221,19 +221,19 @@ const Dashboard = () => {
                             </div>
                             <div className="graphs">
                                 {lineGraphData && lineGraphData.length>0 && <div className="lineGraph">
-                                    <ErrorBoundary>
+                                    {/* <ErrorBoundary> */}
                                      <LineGraph data={lineGraphData} platform={activePlatform} />
-                                    </ErrorBoundary>
+                                    {/* </ErrorBoundary> */}
                                 </div>}
                                 {pieChartData && activePlatform === 'cf' && <div className="piechart">
-                                    <ErrorBoundary>
+                                    {/* <ErrorBoundary> */}
                                      <PieChart data={pieChartData} platform={activePlatform} />
-                                    </ErrorBoundary>
+                                    {/* </ErrorBoundary> */}
                                 </div>}
                                 {pieChartData && activePlatform === 'lc' && <div className="piechart">
-                                    <ErrorBoundary>
+                                    {/* <ErrorBoundary> */}
                                         <PieChart data={pieChartData} platform={activePlatform} />
-                                    </ErrorBoundary>
+                                    {/* </ErrorBoundary> */}
                                 </div>}
                             </div>
                         </div>
