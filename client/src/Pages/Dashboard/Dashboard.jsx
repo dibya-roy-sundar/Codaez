@@ -52,7 +52,7 @@ const Dashboard = () => {
     }, []);
 
     const [activePlatform, setActivePlatform] = useState('cf');
-    const [lineGraphData, setLineGraphData] = useState([]);
+    const [lineGraphData, setLineGraphData] = useState(null);
     const [pieChartData, setPieChartData] = useState({});
     const [details, setDetails] = useState({});
 
@@ -71,7 +71,7 @@ const Dashboard = () => {
             }
             data.push({ x: date, y: contestPaticipation[i]?.rating, rank: contestPaticipation[i]?.rank });
         }
-        setLineGraphData(data?.length > 0 ? data : [])
+        setLineGraphData(data?.length > 0 ? data : null)
 
         let piedata = {}
         if (activePlatform === 'cf') {
