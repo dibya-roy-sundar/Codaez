@@ -29,7 +29,6 @@ import Loader from '../../components/Loader/Loader';
 const Landing = () => {
     const dispatch = useDispatch();
     const user = useSelector(state => state.auth.auth); // Get user from Redux state
-    console.log("hello",user);
     const location=useLocation();
     const state=location.state || {};
 

@@ -41,27 +41,27 @@ const LineGraph = ({ data, platform }) => {
             x: {
                 type: 'number',
                 easing: 'linear',
-                duration: (ctx) => easingFunction(ctx.index / data.length) * totalDuration,
+                duration: (ctx) => easingFunction(ctx?.index / data?.length) * totalDuration,
                 from: NaN, // the point is initially skipped
                 delay(ctx) {
                     if (ctx.type !== 'data' || ctx.xStarted) {
                         return 0;
                     }
                     ctx.xStarted = true;
-                    return easingFunction(ctx.index / data.length) * totalDuration;
+                    return easingFunction(ctx?.index / data?.length) * totalDuration;
                 }
             },
             y: {
                 type: 'number',
                 easing: 'linear',
-                duration: (ctx) => easingFunction(ctx.index / data.length) * totalDuration,
+                duration: (ctx) => easingFunction(ctx.index / data?.length) * totalDuration,
                 from: (ctx) => (ctx.index === 0 ? 0 : ctx.chart.getDatasetMeta(0).data[ctx.index - 1].y),
                 delay(ctx) {
                     if (ctx.type !== 'data' || ctx.yStarted) {
                         return 0;
                     }
                     ctx.yStarted = true;
-                    return easingFunction(ctx.index / data.length) * totalDuration;
+                    return easingFunction(ctx.index / data?.length) * totalDuration;
                 }
             },
         },
@@ -114,6 +114,12 @@ const LineGraph = ({ data, platform }) => {
                 callbacks: {
                     label: function (context) {
                         return [`Rating: ${context.raw.y}`, `Rank: ${context.raw.rank}`];
+                    },
+                    title: function (tooltipItems) {
+                        if (tooltipItems?.length === 0) {
+                            return 0;
+                        }
+                        return tooltipItems.map(item => item.label).reduce((a, b) => a + b, 0); // Providing initial value ''
                     }
                 },
                 bodyFont: {

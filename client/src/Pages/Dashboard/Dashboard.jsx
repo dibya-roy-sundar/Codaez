@@ -32,7 +32,7 @@ const Dashboard = () => {
 
     const [reload, setReload] = useState(0);
     const { data, loading, error } = useFetch("/dashboard", true, reload);
-    const user = data.user
+    const user = data?.user
 
     useEffect(() => {
         if (searchParams.get('email') && searchParams.get('username') && searchParams.get('token')) {
@@ -50,7 +50,7 @@ const Dashboard = () => {
     }, []);
 
     const [activePlatform, setActivePlatform] = useState('cf');
-    const [lineGraphData, setLineGraphData] = useState(null);
+    const [lineGraphData, setLineGraphData] = useState([]);
     const [pieChartData, setPieChartData] = useState({});
     const [details, setDetails] = useState({});
 
@@ -70,7 +70,7 @@ const Dashboard = () => {
             }
             data.push({ x: date, y: contestPaticipation[i]?.rating, rank: contestPaticipation[i]?.rank });
         }
-        setLineGraphData(data?.length > 0 ? data : null)
+        setLineGraphData(data?.length > 0 ? data : [])
 
         let piedata = {}
         if (activePlatform === 'cf') {
