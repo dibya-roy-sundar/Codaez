@@ -35,6 +35,7 @@ const Dashboard = () => {
     const [reload, setReload] = useState(0);
     const { data, loading, error } = useFetch("/dashboard", true, reload);
     const user = data?.user
+    console.log(user)
 
     useEffect(() => {
         if (searchParams.get('email') && searchParams.get('username') && searchParams.get('token')) {
@@ -119,41 +120,41 @@ const Dashboard = () => {
 
                         <div className="detailsSection">
                             <div className="topDetails">
-                                {details?.contestParticipation?.length > 0 && <div className="eachDetail">
+                                {details?.contestParticipation?.length > 0 ? <div className="eachDetail">
                                     <img src={contest} alt="" />
                                     <div className="content">
                                         <span className='heading'>Contests</span>
                                         <span className='data'>{details?.contestParticipation.length}</span>
                                     </div>
-                                </div>}
-                                {details?.rating && <div className="eachDetail">
+                                </div>:null}
+                                {details?.rating ? <div className="eachDetail">
                                     <img src={chart} alt="" />
                                     <div className="content">
                                         <span className='heading'>Rating</span>
                                         <span className='data'>{details?.rating}</span>
                                     </div>
-                                </div>}
-                                {details?.maxRating && <div className="eachDetail">
+                                </div>:null}
+                                {details?.maxRating ? <div className="eachDetail">
                                     <img src={upRightArrow} alt="" />
                                     <div className="content">
                                         <span className='heading'>Max Rating</span>
                                         <span className='data'>{details?.maxRating}</span>
                                     </div>
-                                </div>}
-                                {details?.rank && <div className="eachDetail">
+                                </div>:null}
+                                {details?.rank ? <div className="eachDetail">
                                     <img src={militaryMedal} alt="" />
                                     <div className="content">
                                         <span className='heading'>Rank</span>
                                         <span className='data'>{details?.rank}</span>
                                     </div>
-                                </div>}
-                                {details?.maxRank && <div className="eachDetail">
+                                </div> : null}
+                                {details?.maxRank ? <div className="eachDetail">
                                     <img src={ratings} alt="" />
                                     <div className="content">
                                         <span className='heading'>Max Rank</span>
                                         <span className='data'>{details?.maxRank}</span>
                                     </div>
-                                </div>}
+                                </div>:null}
                                 {details?.totalSuccessfullSubmissions > 0 ? <div className="eachDetail">
                                     <img src={question} alt="" />
                                     <div className="content">
@@ -164,20 +165,20 @@ const Dashboard = () => {
                                     : details?.totalSuccessfullSubmissions == 0 && 'No Submission Found'
                                 }
 
-                                {details?.badge && <div className="eachDetail">
+                                {details?.badge ? <div className="eachDetail">
                                     <img src={bestQuality} alt="" />
                                     <div className="content">
                                         <span className='heading'>Badge</span>
                                         <span className='data'>{details?.badge}</span>
                                     </div>
-                                </div>}
-                                {details?.topPercentage && <div className="eachDetail">
+                                </div>:null}
+                                {details?.topPercentage ? <div className="eachDetail">
                                     <img src={blackFriday} alt="" />
                                     <div className="content">
                                         <span className='heading'>Top Percentage</span>
                                         <span className='data'>{details?.topPercentage}</span>
                                     </div>
-                                </div>}
+                                </div>:null}
                                 {details?.totalquestions ? <div className="eachDetail">
                                     <img src={question} alt="" />
                                     <div className="content">
@@ -187,20 +188,20 @@ const Dashboard = () => {
                                 </div>
                                     : details?.totalquestions == 0 && 'No Submission Found'}
 
-                                {details?.countryRank && <div className="eachDetail">
+                                {details?.countryRank ? <div className="eachDetail">
                                     <img src={flags} alt="" />
                                     <div className="content">
                                         <span className='heading'>Country Rank</span>
                                         <span className='data'>{details?.countryRank}</span>
                                     </div>
-                                </div>}
-                                {details?.stars && <div className="eachDetail">
+                                </div> : null}
+                                {details?.stars ? <div className="eachDetail">
                                     <img src={favourite} alt="" />
                                     <div className="content">
                                         <span className='heading'>Stars</span>
                                         <span className='data'>{details?.stars}</span>
                                     </div>
-                                </div>}
+                                </div>:null}
                                 {details?.totalProblemSolved ? <div className="eachDetail">
                                     <img src={question} alt="" />
                                     <div className="content">
