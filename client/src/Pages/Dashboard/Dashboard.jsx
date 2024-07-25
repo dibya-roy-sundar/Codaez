@@ -125,21 +125,21 @@ const Dashboard = () => {
                                         <span className='heading'>Contests</span>
                                         <span className='data'>{details?.contestParticipation.length}</span>
                                     </div>
-                                </div>:null}
+                                </div> : null}
                                 {details?.rating ? <div className="eachDetail">
                                     <img src={chart} alt="" />
                                     <div className="content">
                                         <span className='heading'>Rating</span>
                                         <span className='data'>{details?.rating}</span>
                                     </div>
-                                </div>:null}
+                                </div> : null}
                                 {details?.maxRating ? <div className="eachDetail">
                                     <img src={upRightArrow} alt="" />
                                     <div className="content">
                                         <span className='heading'>Max Rating</span>
                                         <span className='data'>{details?.maxRating}</span>
                                     </div>
-                                </div>:null}
+                                </div> : null}
                                 {details?.rank ? <div className="eachDetail">
                                     <img src={militaryMedal} alt="" />
                                     <div className="content">
@@ -153,7 +153,7 @@ const Dashboard = () => {
                                         <span className='heading'>Max Rank</span>
                                         <span className='data'>{details?.maxRank}</span>
                                     </div>
-                                </div>:null}
+                                </div> : null}
                                 {details?.totalSuccessfullSubmissions > 0 ? <div className="eachDetail">
                                     <img src={question} alt="" />
                                     <div className="content">
@@ -170,14 +170,14 @@ const Dashboard = () => {
                                         <span className='heading'>Badge</span>
                                         <span className='data'>{details?.badge}</span>
                                     </div>
-                                </div>:null}
+                                </div> : null}
                                 {details?.topPercentage ? <div className="eachDetail">
                                     <img src={blackFriday} alt="" />
                                     <div className="content">
                                         <span className='heading'>Top Percentage</span>
                                         <span className='data'>{details?.topPercentage}</span>
                                     </div>
-                                </div>:null}
+                                </div> : null}
                                 {details?.totalquestions ? <div className="eachDetail">
                                     <img src={question} alt="" />
                                     <div className="content">
@@ -200,7 +200,7 @@ const Dashboard = () => {
                                         <span className='heading'>Stars</span>
                                         <span className='data'>{details?.stars}</span>
                                     </div>
-                                </div>:null}
+                                </div> : null}
                                 {details?.totalProblemSolved ? <div className="eachDetail">
                                     <img src={question} alt="" />
                                     <div className="content">
@@ -220,24 +220,24 @@ const Dashboard = () => {
                                     : null}
                             </div>
                             <div className="graphs">
-                                {lineGraphData && lineGraphData.length>0 && <div className="lineGraph">
+                                {lineGraphData && lineGraphData.length > 0 && <div className="lineGraph">
                                     {/* <ErrorBoundary> */}
-                                     <LineGraph data={lineGraphData} platform={activePlatform} />
+                                    <LineGraph data={lineGraphData} platform={activePlatform} />
                                     {/* </ErrorBoundary> */}
                                 </div>}
                                 {pieChartData && activePlatform === 'cf' && <div className="piechart">
                                     {/* <ErrorBoundary> */}
-                                     <PieChart data={pieChartData} platform={activePlatform} />
+                                    <PieChart data={pieChartData} platform={activePlatform} />
                                     {/* </ErrorBoundary> */}
                                 </div>}
                                 {pieChartData && activePlatform === 'lc' && <div className="piechart">
                                     {/* <ErrorBoundary> */}
-                                        <PieChart data={pieChartData} platform={activePlatform} />
+                                    <PieChart data={pieChartData} platform={activePlatform} />
                                     {/* </ErrorBoundary> */}
                                 </div>}
                             </div>
                         </div>
-                        <UpcomingContests data={data}/>
+                        <UpcomingContests data={data} />
                     </div>
             }
         </div>
