@@ -50,7 +50,7 @@ const CompleteProfile = () => {
 
     useEffect(() => {
         if (searchParams.get('email') && searchParams.get('token')) {
-            localStorage.setItem('token', searchParams.get('token'))
+            localStorage.setItem('codaeztoken', searchParams.get('token'))
             
             setUser({
                 email: searchParams.get('email'),

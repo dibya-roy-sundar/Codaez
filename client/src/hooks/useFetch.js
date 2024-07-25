@@ -15,7 +15,7 @@ const useFetch = (url, makeCall = true, reload = 0) => {
                 setLoading(true);
                 const resp = await makeRequest.get(url, {
                     headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                        'Authorization': `Bearer ${localStorage.getItem('codaeztoken')}`,
                     }
                 })
                 setData(resp.data);
