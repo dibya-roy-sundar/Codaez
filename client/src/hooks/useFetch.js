@@ -12,6 +12,7 @@ const useFetch = (url, makeCall = true, reload = 0) => {
                 if (!makeCall) {
                     return { data, loading, error };
                 }
+                setError(false);
                 setLoading(true);
                 const resp = await makeRequest.get(url, {
                     headers: {
