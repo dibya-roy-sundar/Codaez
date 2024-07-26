@@ -75,18 +75,18 @@ module.exports.getCodeforcesData = async (username) => {
             return result;
         }
         else if (data.comment) {
-            return false;
+            return {};
             // return next(new ErrorHand(data.comment || "data fetching error in codeforces", 500))
         }
         else {
-            return false;
+            return {};
             // return next(new ErrorHand(data || "data fetching error in codeforces", 500))
         }
     }
     catch (error) {
         // req.user = await User.findByIdAndUpdate(req.user._id, { $set: { cf: { username } } }, { new: true })
         console.log(error);
-        return false;
+        return {};
         // return next(new ErrorHand("error while fetching codeforces data", 500));
     }
 }
