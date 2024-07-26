@@ -38,11 +38,11 @@ const Dashboard = () => {
 
     useEffect(() => {
         if (searchParams.get('email') && searchParams.get('username') && searchParams.get('token')) {
-            localStorage.setItem('codaeztoken', searchParams.get('token'))
+            // localStorage.setItem('codaeztoken', searchParams.get('token'))
 
-            setTimeout(() => {
-                setReload(prev => prev + 1);
-            }, 1000);
+            // setTimeout(() => {
+            //     setReload(prev => prev + 1);
+            // }, 1000);
 
             dispatch(setAuth({
                 email: searchParams.get('email'),
@@ -52,6 +52,10 @@ const Dashboard = () => {
             navigate('', { replace: true });
         }
     }, []);
+
+    if (searchParams.get('token')) {
+        localStorage.setItem('codaeztoken', searchParams.get('token'))
+    }
 
     const [activePlatform, setActivePlatform] = useState('cf');
     const [lineGraphData, setLineGraphData] = useState(null);
@@ -223,12 +227,12 @@ const Dashboard = () => {
                             </div>
                             <div className="graphs">
                                 {lineGraphData && lineGraphData.length > 0 && <div className="lineGraph">
-                                     <ErrorBoundary> 
-                                         <LineGraph data={lineGraphData} platform={activePlatform} />
-                                    </ErrorBoundary> 
+                                    <ErrorBoundary>
+                                        <LineGraph data={lineGraphData} platform={activePlatform} />
+                                    </ErrorBoundary>
                                 </div>}
                                 {pieChartData && activePlatform === 'cf' && <div className="piechart">
-                                    <ErrorBoundary> 
+                                    <ErrorBoundary>
                                         <PieChart data={pieChartData} platform={activePlatform} />
                                     </ErrorBoundary>
                                 </div>}
