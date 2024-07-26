@@ -7,7 +7,6 @@ const axios = require('axios');
 const mongoose = require('mongoose');
 const calcAggregateRating = require("../utils/calcAggregateRating");
 const UpContest = require("../models/UpContest");
-const { response } = require("express");
 
 module.exports.getCodeforcesData = async (username) => {
     try {
@@ -86,7 +85,9 @@ module.exports.getCodeforcesData = async (username) => {
     catch (error) {
         // req.user = await User.findByIdAndUpdate(req.user._id, { $set: { cf: { username } } }, { new: true })
         console.log(error);
-        return {};
+        return {
+            update: 'no',
+        };
         // return next(new ErrorHand("error while fetching codeforces data", 500));
     }
 }
@@ -147,7 +148,6 @@ module.exports.getLeetcodeData = async (username) => {
                     error: "LeetCode username not found or Server Unresponsive",
                 };
             } else {
-
                 return {};
             }
             // return next(new ErrorHand(data.errors?.message, 500))
@@ -189,7 +189,9 @@ module.exports.getLeetcodeData = async (username) => {
     catch (error) {
         // req.user = await User.findByIdAndUpdate(req.user._id, { $set: { lc: { username } } }, { new: true })
         console.log(error);
-        return {};
+        return {
+            update: 'no',
+        };
         // return next(new ErrorHand("error while fetching leetcode data", 500));
     }
 }
@@ -259,7 +261,15 @@ module.exports.refreshData = async () => {
             await delay(1000 / 3);  // Delay to ensure 3 API calls per second
             if (data) {
                 flag = true;
-                updateObj.cf = data;
+                if (data.update) {
+
+                }
+                else if (!data.success && data.error) {
+                    updateObj.cf = {};
+                }
+                else {
+                    updateObj.cf = data;
+                }
             }
         }
         if (user.lc && user.lc.username) {
@@ -268,7 +278,15 @@ module.exports.refreshData = async () => {
             // console.log(data)
             if (data) {
                 flag = true;
-                updateObj.lc = data
+                if (data.update) {
+
+                }
+                else if (!data.success && data.error) {
+                    updateObj.lc = {};
+                }
+                else {
+                    updateObj.lc = data
+                }
             }
         }
         if (user.cc && user.cc.username) {
@@ -277,7 +295,12 @@ module.exports.refreshData = async () => {
             // console.log(data)
             if (data) {
                 flag = true;
-                updateObj.cc = data
+                if (!data.success && data.error) {
+                    updateObj.cc = {};
+                }
+                else {
+                    updateObj.cc = data
+                }
             }
         }
         if (flag) {
@@ -353,9 +376,16 @@ const getLCupContests = async () => {
                 platform: "lc",
             })
         })
+
+        return {
+            update: true,
+        }
         // console.log(bulkUpContest);
     } catch (error) {
         console.log("error while fetching leetcode upcoming contest details", error);
+        return {
+            update: false,
+        }
     }
 }
 
@@ -372,9 +402,16 @@ const getCFupContests = async () => {
                 platform: "cf",
             })
         }
+
+        return {
+            update: true
+        }
         // console.log(bulkUpContest);
     } catch (error) {
         console.log("Error while fetching codeforces upcoming contests", error);
+        return {
+            update: false
+        }
     }
 }
 
@@ -390,19 +427,36 @@ const getCCupContests = async () => {
                 platform: "cc",
             })
         }
+
+        return {
+            update: true
+        }
         // console.log(bulkUpContest);
     } catch (error) {
         console.log("Error while fetching codechef upcoming contests", error);
+
+        return {
+            update: false
+        }
     }
 }
 
 
 module.exports.refreshUpContests = async () => {
-    await UpContest.deleteMany();
 
-    await getLCupContests();
-    await getCFupContests();
-    await getCCupContests();
+    const lcupdate = await getLCupContests();
+    const cfupdate = await getCFupContests();
+    const ccupdate = await getCCupContests();
+
+    if (lcupdate.update) {
+        await UpContest.deleteMany({ platform: 'lc' });
+    }
+    if (cfupdate.update) {
+        await UpContest.deleteMany({ platform: 'cf' });
+    }
+    if (ccupdate.update) {
+        await UpContest.deleteMany({ platform: 'cc' });
+    }
 
     try {
         // console.log(bulkUpContest);
