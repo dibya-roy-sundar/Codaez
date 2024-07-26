@@ -42,7 +42,7 @@ const Dashboard = () => {
 
             setTimeout(() => {
                 setReload(prev => prev + 1);
-            }, 500);
+            }, 1000);
 
             dispatch(setAuth({
                 email: searchParams.get('email'),
