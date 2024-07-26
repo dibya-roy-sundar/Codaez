@@ -11,18 +11,18 @@ import './Landing.scss';
 import { motion } from 'framer-motion';
 
 // Import images
-import DashboardImg from '../../assets/Dashboard.jpeg';
-import ProfileImg from '../../assets/Profile.jpeg';
-import LeaderboardImg from '../../assets/LeaderBoard.jpeg'
+import DashboardImg from '../../assets/Dashboard.png';
+import ProfileImg from '../../assets/Profile.png';
+import LeaderboardImg from '../../assets/LeaderBoard.png';
 import leaderboardgif from '../../assets/leaderboard.gif';
 import comparisongif from '../../assets/comparison.gif';
-import followgif from '../../assets/follow.gif'
+import followgif from '../../assets/follow.gif';
 import codeforcesIcon from '../../assets/codeforces.png';
 import codechefIcon from '../../assets/codechef.png';
 import leetcodeIcon from '../../assets/leetcode.png';
 import HomeNavbar from './HomepageNavbar';
 import codeaz from '../../assets/codaez.png';
-import Contest from '../../assets/Contest.jpeg';
+import Contest from '../../assets/Contest.png';
 import useFetch from '../../hooks/useFetch';
 import Loader from '../../components/Loader/Loader';
 

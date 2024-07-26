@@ -40,7 +40,9 @@ const Dashboard = () => {
         if (searchParams.get('email') && searchParams.get('username') && searchParams.get('token')) {
             localStorage.setItem('codaeztoken', searchParams.get('token'))
 
-            setReload(prev => prev + 1);
+            setTimeout(() => {
+                setReload(prev => prev + 1);
+            }, 500);
 
             dispatch(setAuth({
                 email: searchParams.get('email'),

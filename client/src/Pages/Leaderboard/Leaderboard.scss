@@ -236,6 +236,7 @@ $darkpurple: #814fff;
                         color: $darkpurple;
                         font-weight: 700;
                         transition: all 0.2s ease-in-out;
+                        width: fit-content;
 
                         &:hover {
                             background: #45424f;

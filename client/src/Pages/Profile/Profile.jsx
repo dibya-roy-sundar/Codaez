@@ -33,6 +33,8 @@ const Profile = () => {
     const current_user = useSelector(state => state.auth.auth)
     const [reload, setReload] = useState(0);
     const [followReload, setFollowReload] = useState(0);
+    const [edit, setEdit] = useState(false);
+    const [sendfr, setSendfr] = useState(false);
 
     const { username } = useParams();
     const ownprofile = current_user?.username === username;
@@ -46,6 +48,7 @@ const Profile = () => {
             // othwerwise follow updated when user accept follow request    
             dispatch(setAuth(data.user));
         }
+        setSendfr(false);
     }, [data])
 
 
@@ -61,8 +64,6 @@ const Profile = () => {
 
 
 
-    const [edit, setEdit] = useState(false);
-    const [sendfr, setSendfr] = useState(false);
     const changepwref = useRef();
     const changeusernameref = useRef();
     const followRef = useRef();
