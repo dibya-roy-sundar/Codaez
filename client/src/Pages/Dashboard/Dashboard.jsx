@@ -223,19 +223,19 @@ const Dashboard = () => {
                             </div>
                             <div className="graphs">
                                 {lineGraphData && lineGraphData.length > 0 && <div className="lineGraph">
-                                    {/* <ErrorBoundary> */}
-                                    <LineGraph data={lineGraphData} platform={activePlatform} />
-                                    {/* </ErrorBoundary> */}
+                                     <ErrorBoundary> 
+                                         <LineGraph data={lineGraphData} platform={activePlatform} />
+                                    </ErrorBoundary> 
                                 </div>}
                                 {pieChartData && activePlatform === 'cf' && <div className="piechart">
-                                    {/* <ErrorBoundary> */}
-                                    <PieChart data={pieChartData} platform={activePlatform} />
-                                    {/* </ErrorBoundary> */}
+                                    <ErrorBoundary> 
+                                        <PieChart data={pieChartData} platform={activePlatform} />
+                                    </ErrorBoundary>
                                 </div>}
                                 {pieChartData && activePlatform === 'lc' && <div className="piechart">
-                                    {/* <ErrorBoundary> */}
-                                    <PieChart data={pieChartData} platform={activePlatform} />
-                                    {/* </ErrorBoundary> */}
+                                    <ErrorBoundary>
+                                        <PieChart data={pieChartData} platform={activePlatform} />
+                                    </ErrorBoundary>
                                 </div>}
                             </div>
                         </div>

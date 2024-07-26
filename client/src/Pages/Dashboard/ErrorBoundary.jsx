@@ -17,7 +17,7 @@ class ErrorBoundary extends React.Component {
     // Reload the page after a short delay
     setTimeout(() => {
       window.location.reload();
-    }, 5000); // 5 second delay before reload
+    }, 500); // 5 second delay before reload
   }
 
   render() {
