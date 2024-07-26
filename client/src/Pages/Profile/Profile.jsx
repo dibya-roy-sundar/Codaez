@@ -28,8 +28,6 @@ import Loader from "../../components/Loader/Loader.jsx";
 
 const Profile = () => {
     const dispatch = useDispatch();
-    const location = useLocation();
-    const navigate = useNavigate();
     const current_user = useSelector(state => state.auth.auth)
     const [reload, setReload] = useState(0);
     const [followReload, setFollowReload] = useState(0);
@@ -187,63 +185,93 @@ const Profile = () => {
             });
         }
     }
-
+    const [isSendingFR,setisSendingFR]=useState(false);
     const handleSendFollowRequest = async () => {
-        const data = await usePostFetch('/sendfrequest', { userId: user?._id });
-
-        if (data.data && data.data.success) {
-            setSendfr(true);
-        }
-        else if (data.data) {
-            toast.warn(data.data.error || data.data.message, {
+        if(isSendingFR) return ;
+        try {
+            setisSendingFR(true);
+            const data = await usePostFetch('/sendfrequest', { userId: user?._id });
+    
+            if (data.data && data.data.success) {
+                setSendfr(true);
+            }
+            else if (data.data) {
+                toast.warn(data.data.error || data.data.message, {
+                    position: "top-right"
+                });
+            }
+            else {
+                console.log(data);
+                toast.error(data.error, {
+                    position: "top-right"
+                });
+            }
+    
+        } catch (error) {
+            toast.error(error.message || "Something went wrong!", {
                 position: "top-right"
             });
+        }finally{
+            setisSendingFR(false);
         }
-        else {
-            console.log(data);
-            toast.error(data.error, {
-                position: "top-right"
-            });
-        }
-
     }
 
     const handleWithdrawFollowRequest = async () => {
-        const data = await usePostFetch('/withdraw-request', { userId: user?._id });
-        if (data.data && data.data.success) {
-            // console.log(data.msg); toastify
-            setSendfr(false);
-        }
-        else if (data.data) {
-            toast.warn(data.data.error || data.data.message, {
+        if(isSendingFR) return ;
+       try {
+            setisSendingFR(true);
+         const data = await usePostFetch('/withdraw-request', { userId: user?._id });
+         if (data.data && data.data.success) {
+             // console.log(data.msg); toastify
+             setSendfr(false);
+         }
+         else if (data.data) {
+             toast.warn(data.data.error || data.data.message, {
+                 position: "top-right"
+             });
+         }
+         else {
+             console.log(data);
+             toast.error(data.error, {
+                 position: "top-right"
+             });
+         }
+       }catch (error) {
+            toast.error(error.message || "Something went wrong!", {
                 position: "top-right"
             });
-        }
-        else {
-            console.log(data);
-            toast.error(data.error, {
-                position: "top-right"
-            });
-        }
+       }finally{
+            setisSendingFR(false);
+       }
     }
     const handleUnfollow = async () => {
-        const data = await usePostFetch('/unfollow', { userId: user?._id });
-
-        if (data.data && data.data.success) {
-            // console.log(data.msg); toastify
-            setReload(prev => prev + 1);
-            dispatch(setAuth(data.data.curr_user));
-        }
-        else if (data.data) {
-            toast.warn(data.data.error || data.data.message, {
+        if(isSendingFR) return ;
+       try {
+            setisSendingFR(true);
+         const data = await usePostFetch('/unfollow', { userId: user?._id });
+ 
+         if (data.data && data.data.success) {
+             // console.log(data.msg); toastify
+             setReload(prev => prev + 1);
+             dispatch(setAuth(data.data.curr_user));
+         }
+         else if (data.data) {
+             toast.warn(data.data.error || data.data.message, {
+                 position: "top-right"
+             });
+         }
+         else {
+             console.log(data);
+             toast.error(data.error, {
+                 position: "top-right"
+             });
+         }
+       }catch (error) {
+            toast.error(error.message || "Something went wrong!", {
                 position: "top-right"
             });
-        }
-        else {
-            console.log(data);
-            toast.error(data.error, {
-                position: "top-right"
-            });
+        }finally{
+            setisSendingFR(false);
         }
 
     }
@@ -355,7 +383,16 @@ const Profile = () => {
                                         <button className={`${(isFollowing || isRequested || sendfr) ? "isFollowing" : ""} btn`}
                                             onClick={(isRequested || sendfr) ? handleWithdrawFollowRequest : (isFollowing ? handleUnfollow : handleSendFollowRequest)}
                                         >
-                                            {(isRequested || sendfr) ? "Requested" : (isFollowing ? "Following" : "Follow")}
+                                         {isSendingFR ?
+                                         <>
+                                            <ClipLoader
+                                            color="#ffffff"
+                                            className="icon"
+                                            size={16}
+                                            speedMultiplier={1}
+                                            />
+                                        </>
+                                            : ((isRequested || sendfr) ? "Requested" : (isFollowing ? "Following" : "Follow"))}
                                         </button>
                                     </div>
                                 )}

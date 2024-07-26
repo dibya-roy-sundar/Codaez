@@ -15,7 +15,7 @@ $darkpurple: #814fff;
     gap: 0.7rem;
     padding: 0.5rem;
     background-color: $grey;
-    width: 18rem;
+    width: 22rem;
     max-height: 20rem;
     border-radius: 0.5rem;
 
@@ -127,7 +127,7 @@ $darkpurple: #814fff;
         padding: 0.6rem;
     }
 
-    @media (max-width:400px) {
-        right: 0;
+    @media (max-width:440px) {
+        right: -4rem;
     }
 }
