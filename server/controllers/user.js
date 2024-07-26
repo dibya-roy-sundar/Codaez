@@ -114,9 +114,9 @@ module.exports.completeProfile = async (req, res, next) => {
         twitter = "",
     } = req.body;
 
-    const lowUsername=username.toLowerCase();
+    const lowUsername = username.toLowerCase();
 
-    const availableUser = await User.findOne({ username:lowUsername });
+    const availableUser = await User.findOne({ username: lowUsername });
     if (availableUser) {
         return next(new ErrorHand("username is not available", 400));
     }
@@ -155,7 +155,7 @@ module.exports.completeProfile = async (req, res, next) => {
 
     const user = await User.findByIdAndUpdate(
         req.user?._id,
-        { username:lowUsername, name, college, linkedin, github, twitter, lc: lcData, cf: cfData, cc: ccData },
+        { username: lowUsername, name, college, linkedin, github, twitter, lc: lcData, cf: cfData, cc: ccData },
         { new: true }
     );
 
@@ -486,9 +486,9 @@ module.exports.getReqeusts = async (req, res, next) => {
 
 module.exports.profile = async (req, res, next) => {
     const { username } = req.params;
-    const lowUsername=username.toLowerCase();
+    const lowUsername = username.toLowerCase();
 
-    const user = await User.findOne({ username: lowUsername }).populate('fRequests', 'senderusername');
+    const user = await User.findOne({ username: lowUsername }).populate('fRequests', 'sender');
 
     if (!user) {
         return res.status(200).json({
@@ -497,7 +497,7 @@ module.exports.profile = async (req, res, next) => {
         })
     }
 
-    const isrequested = user?.fRequests?.some((fr) => fr.senderusername === req.user?.username);
+    const isrequested = user?.fRequests?.some((fr) => fr.sender.toString() === req.user?._id.toString());
     const isfollowing = user?.follower.some((el) => el.toString() === req.user._id.toString());
 
     res.status(200).json({
@@ -629,9 +629,9 @@ module.exports.changeUsername = async (req, res, next) => {
             msg: "username is required"
         })
     }
-    const lowUsername=username.toLowerCase();
+    const lowUsername = username.toLowerCase();
 
-    const user = await User.findOne({ username:lowUsername });
+    const user = await User.findOne({ username: lowUsername });
 
     if (user) {
         return res.status(200).json({
@@ -694,11 +694,11 @@ module.exports.dashboard = async (req, res, next) => {
     })
 }
 
-module.exports.landing=async (req,res,next) => {
-    const users=await User.find({});
+module.exports.landing = async (req, res, next) => {
+    const users = await User.find({});
 
     res.status(200).json({
-        success:true,
-        activeUsers:users?.length,
+        success: true,
+        activeUsers: users?.length,
     })
 }
