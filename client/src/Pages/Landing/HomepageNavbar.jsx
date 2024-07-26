@@ -36,7 +36,7 @@ const HomeNavbar = ({ user, handleLogout }) => {
                     )
                 }
                 <ul className={`nav-menu ${isOpen ? 'active' : ''}`}>
-                    {(user && Object.keys(user).length>0)? (
+                    {(user && Object.keys(user).length > 0) ? (
                         <>
                             <li className="nav-item">
                                 <Link to="/dashboard" className="nav-links" onClick={toggleMenu}>

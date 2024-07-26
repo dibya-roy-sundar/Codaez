@@ -12,20 +12,15 @@ const PieChart = ({ data, platform }) => {
                 label: `${platform === 'cf' ? 'CodeForces' : 'Leetcode'} Question`,
                 data: Object.values(data),
                 backgroundColor: [
-                    '#FF6384',
-                    '#36A2EB',
-                    '#FFCE56',
-                    '#4BC0C0',
-                    '#9966FF',
-                    '#FF9F40',
+                    '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40',
+                    '#B4A7D6', '#76A5AF', '#E06666', '#F6B26B', '#FFD966', '#93C47D',
+                    '#C27BA0', '#A64D79'
                 ],
+
                 hoverBackgroundColor: [
-                    '#FF6384',
-                    '#36A2EB',
-                    '#FFCE56',
-                    '#4BC0C0',
-                    '#9966FF',
-                    '#FF9F40',
+                    '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40',
+                    '#B4A7D6', '#76A5AF', '#E06666', '#F6B26B', '#FFD966', '#93C47D',
+                    '#C27BA0', '#A64D79'
                 ],
                 hoverOffset: 4,
             }
