@@ -84,7 +84,7 @@ const Navbar = () => {
                             onChange={(e) => {
                                 setValue(e.target.value);
                             }}
-                            placeholder="Search username..."
+                            placeholder="Search"
                         />
                         {openSearchResults && (
                             <div className="options" onMouseDown={handleMouseDown}>

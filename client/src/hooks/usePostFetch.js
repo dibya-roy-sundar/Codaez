@@ -25,7 +25,7 @@ const usePostFetch = async (url, bodyData, makeCall = true) => {
         console.log(err);
         return {
             success: false,
-            status: err.response.status,
+            status: err?.response?.status,
             error: `${err.response.data.error}`
         }
     }
