@@ -1,5 +1,4 @@
 import "./Navbar.scss";
-import leetcode from "../../assets/leetcode.png";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
@@ -7,6 +6,7 @@ import { RiUserFollowFill } from "react-icons/ri";
 import RequestBox from "./RequestBox";
 import noProfileImage from '../../assets/noProfileImage.png'
 import codaez from '../../assets/codaez.png'
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
     const [value, setValue] = useState("");
@@ -15,6 +15,9 @@ const Navbar = () => {
     const [inputvalue, setinputvalue] = useState("");
     const inputref = useRef();
     const friendref = useRef();
+
+    const requestCount=useSelector(state=>state.auth.auth.fRequests?.length)
+    console.log(requestCount)
 
 
     const { data, loading, error } = useFetch(`/userdetails?keyword=${inputvalue}`, inputvalue.length > 0)
@@ -70,6 +73,7 @@ const Navbar = () => {
                 <div className="searchcontainer">
                     <div ref={friendref} className="request">
                         <RiUserFollowFill onClick={handleFr} className="icon" />
+                        <span className="requestCount">{requestCount || 0}</span>
                         {openFr && <RequestBox />}
                     </div>
 

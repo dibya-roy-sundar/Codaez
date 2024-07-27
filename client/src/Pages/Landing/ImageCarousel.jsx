@@ -11,7 +11,7 @@ const ImageCard = ({ image, index }) => {
                         index === 2 ? { x: 0, y: 20, opacity: 0 } :
                             index === 3 ? { x: 20, y: 0, opacity: 0 } : null
             }
-            whileInView={{ x: 0, y: 0, opacity: 1 }}
+            animate={{ x: 0, y: 0, opacity: 1 }}
             transition={{ duration: 0.2 }}
         >
             <h3 className='card-heading'>{image.title}</h3>

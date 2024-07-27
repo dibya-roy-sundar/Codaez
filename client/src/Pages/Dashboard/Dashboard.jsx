@@ -37,7 +37,7 @@ const Dashboard = () => {
     const user = data.user
 
     useEffect(() => {
-        if (searchParams.get('email') && searchParams.get('username') && searchParams.get('token')) {
+        if (searchParams.get('email') && searchParams.get('username')) {
             // localStorage.setItem('codaeztoken', searchParams.get('token'))
 
             // setTimeout(() => {
@@ -63,6 +63,10 @@ const Dashboard = () => {
     const [details, setDetails] = useState({});
 
     useEffect(() => {
+        if(user?.username && user?.fRequests){
+            dispatch(setAuth(user));
+        }
+
         setDetails(user?.[`${activePlatform}`]);
         const contestPaticipation = user?.[`${activePlatform}`]?.contestParticipation
 
