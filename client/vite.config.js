@@ -11,25 +11,20 @@ export default defineConfig({
       manifest: {
         name: 'Codaez',
         short_name: 'Codaez',
-        description: 'Analyze, Improve, Dominate Together',
-        theme_color: '#ffffff',
-        background_color: '#ffffff',
+        description: 'Codaez Web App',
+        theme_color: '#000',
+        background_color: '#000',
         display: 'standalone',
         scope: '/',
         start_url: '/',
         icons: [
           {
-            src: '/icons/favicon.png',
+            src: '/icons/codaez.png',
             sizes: '192x192',
             type: 'image/png',
           },
-          // {
-          //   src: '/icons/icon-512x512.png',
-          //   sizes: '512x512',
-          //   type: 'image/png',
-          // },
         ],
-        orientation: 'portrait'
+        // orientation: 'portrait'
       },
     }),
   ],
