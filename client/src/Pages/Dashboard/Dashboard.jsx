@@ -108,7 +108,7 @@ const Dashboard = () => {
     return (
         <div className="dashboard">
             {error
-                ? "Something went wrong!"
+                ? "Something went wrong! Try Re-logging"
                 : loading
                     ? <Loader />
                     : <div className="section">

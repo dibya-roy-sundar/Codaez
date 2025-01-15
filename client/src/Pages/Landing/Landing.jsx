@@ -104,7 +104,7 @@ const Landing = () => {
     return (
         <>
         {error  ?
-         "Something went wrong"
+         "Something went wrong! Try Re-logging"
          : loading ?
             <Loader />
             :

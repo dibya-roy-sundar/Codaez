@@ -320,7 +320,7 @@ const Profile = () => {
             {/*  Loading component */}
             <div className="profileContainer" >
                 {error
-                    ? "Something went wrong!"
+                    ? "Something went wrong! Try Re-logging"
                     : loading
                         ? <Loader />
                         : <><ChangePw setReload={setFollowReload} handleClose={closepwModal} changePwRef={changepwref} user={user} />

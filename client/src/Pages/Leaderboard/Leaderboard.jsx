@@ -63,7 +63,7 @@ const Leaderboard = () => {
     return (
         <div className="leaderboard">
             {error
-                ? "Something went wrong!"
+                ? "Something went wrong! Try Re-logging"
                 : loading
                     ? <Loader />
                     : <>
