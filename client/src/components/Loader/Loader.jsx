@@ -58,6 +58,8 @@ const Loader = () => {
                     ))}
                 </div>
             </div>
+
+            <div className="disclaimer">Server may take upto a minute to start as it is hosted on a free tier </div>
         </div >
     )
 };
