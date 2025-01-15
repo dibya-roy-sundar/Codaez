@@ -421,7 +421,7 @@ const getCCupContests = async () => {
         for (const contest of response?.data?.future_contests) {
             bulkUpContest.push({
                 title: contest.contest_name,
-                startTime: new Date(contest.contest_start_date).getTime(),
+                startTime: new Date(contest.contest_start_date_iso).getTime(),
                 duration: (contest.contest_duration / 60),
                 url: `https://www.codechef.com/${contest.contest_code}`,
                 platform: "cc",
