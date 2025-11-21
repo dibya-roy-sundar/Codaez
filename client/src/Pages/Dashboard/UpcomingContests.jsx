@@ -94,6 +94,7 @@ const UpcomingContests = ({ data }) => {
 							<Link
 								to={contest.url}
 								target="_blank"
+								rel="noopener noreferrer"
 								className="viewBtn"
 							>
 								View <BiLinkExternal />
