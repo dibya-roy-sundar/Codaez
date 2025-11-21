@@ -102,12 +102,12 @@ const Register = () => {
                     />
                 </>
                     : "Register"}</button>
-                <div className="google-button">
+                {/* <div className="google-button">
                     <span>OR</span>
                     <div className='google-btn-image' onClick={googleAuth}>
                         <img src={google} alt="" />
                     </div>
-                </div>
+                </div> */}
             </form>
 
             {otpOpen && <OTPVerification email={registerUserCredentials.email} password={registerUserCredentials.password} resend={handleOtpSent} isOpen={otpOpen} onClose={setOtpOpen} />}

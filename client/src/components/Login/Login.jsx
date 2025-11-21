@@ -99,12 +99,12 @@ const Login = () => {
                         speedMultiplier={1}
                     />
                     : "Login"}</button>
-                <div className="google-button">
+                {/* <div className="google-button">
                     <span>OR</span>
                     <div className='google-btn-image' onClick={googleAuth}>
                         <img src={google} alt="" />
                     </div>
-                </div>
+                </div> */}
             </form>
 
 
