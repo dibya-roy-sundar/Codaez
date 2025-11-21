@@ -1,5 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
 
+/* Hide scrollbar globally */
+html, body {
+  -ms-overflow-style: none;     /* IE + old Edge */
+  scrollbar-width: none;        /* Firefox */
+}
+
+::-webkit-scrollbar {
+  display: none;                /* Chrome, Safari */
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -16,27 +26,3 @@ a {
     text-decoration: none;
     color: inherit;
 }
-
-*::-webkit-scrollbar{
-    width: 0;
-  }
-  
-  ::-webkit-scrollbar {
-    width: 0.3rem;
-    /* background-color: blue; */
-  }
-  
-  ::-webkit-scrollbar-button {
-    /* background: yellow */
-    height: 0;
-    width: 0;
-  }
-  
-  ::-webkit-scrollbar-track-piece {
-    background: transparent
-  }
-  
-  ::-webkit-scrollbar-thumb {
-    background: rgba(104, 104, 104, 0.5);
-    border-radius: 0.75rem;
-  }
